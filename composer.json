@@ -1,0 +1,46 @@
+{
+    "name": "golojan/backoffice",
+    "description": "Golojan Back Office",
+    "type": "project",
+    "version": "21.01.14",
+    "keywords": [
+        "psr4",
+        "template"
+    ],
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Golojan",
+            "email": "info@golojan.com",
+            "homepage": "https://golojan.com/",
+            "role": "Developer"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "autoload": {
+        "classmap": [
+            "_apps/",
+            "_apps/Apps/"
+        ],
+        "psr-4": {
+            "Apps\\": [
+                "_apps/",
+                "_apps/Apps/"
+            ]
+        }
+    },
+    "require": {
+        "php": ">=5.6.36",
+        "verot/class.upload.php": "dev-master"
+    },
+    "scripts": {},
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "bin": [
+        "application"
+    ]
+}
