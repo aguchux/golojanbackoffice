@@ -52,13 +52,13 @@ define("db_socket",null);
 
 
 define("enable_otp_on_logon", true);
-define("otp_live_time", 1);
+define("otp_live_time", 30);
 define("otp_code_digits", 6);
 
-//define("paystack_secrete","sk_test_2cb2fbb56d2c87a9a6991ddaad401e3bdfb7ddc7");
-define("paystack_secrete", "sk_live_37f8df71edc6cabe84e0392ef0825d03f730d93f");
+define("enable_sms_otp", false);
+define("enable_email_otp", true);
 
-define("use_express_login", true);
+define("use_express_login", false);
 define("reset_with_temp_password", true);
 
 define("smslive_owner_email", "agu.chux@yahoo.com");

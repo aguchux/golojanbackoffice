@@ -20,14 +20,14 @@
                 <div class="sidebar-balance">
                     <div class="listview-title">Live Balance</div>
                     <div class="in">
-                        <h1 class="amount">N 0.00</h1>
+                        <h1 class="amount"><?= $Core->Naira($Wallet->balance) ?></h1>
                     </div>
                 </div>
                 <!-- * balance -->
 
                 <!-- action group -->
                 <div class="action-group">
-                    <a href="#" class="action-button">
+                    <a href="/dashboard/deposit" class="action-button">
                         <div class="in">
                             <div class="iconbox">
                                 <ion-icon name="add-outline"></ion-icon>
@@ -35,7 +35,7 @@
                             Deposit
                         </div>
                     </a>
-                    <a href="#" class="action-button">
+                    <a href="/dashboard/withdraw" class="action-button">
                         <div class="in">
                             <div class="iconbox">
                                 <ion-icon name="arrow-down-outline"></ion-icon>
@@ -43,7 +43,7 @@
                             Withdraw
                         </div>
                     </a>
-                    <a href="#" class="action-button">
+                    <a href="/dashboard/networks" class="action-button">
                         <div class="in">
                             <div class="iconbox">
                                 <ion-icon name="apps-outline"></ion-icon>
@@ -51,7 +51,7 @@
                             Network
                         </div>
                     </a>
-                    <a href="#" class="action-button">
+                    <a href="/dashboard/orders" class="action-button">
                         <div class="in">
                             <div class="iconbox">
                                 <ion-icon name="card-outline"></ion-icon>
@@ -66,7 +66,7 @@
                 <div class="listview-title mt-1">Menu</div>
                 <ul class="listview flush transparent no-line image-listview">
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="pie-chart-outline"></ion-icon>
                             </div>
@@ -74,18 +74,18 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/networks" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="apps-outline"></ion-icon>
                             </div>
                             <div class="in">
                                 My Network
-                                <span class="badge badge-primary">256</span>
+                                <span class="badge badge-primary">0</span>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/marketplace" class="item">
                             <div class="icon-box bg-primary">
                             <ion-icon name="stats-chart-outline"></ion-icon>
                             </div>
@@ -95,34 +95,23 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/orders" class="item">
                             <div class="icon-box bg-primary">
                             <ion-icon name="fast-food-outline"></ion-icon>
                             </div>
                             <div class="in">
                                 Orders & Sales
-                                <span class="badge badge-danger">256</span>
+                                <span class="badge badge-danger">0</span>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/transactions" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="document-text-outline"></ion-icon>
                             </div>
                             <div class="in">
                                 My Transactions
-                            </div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#" class="item">
-                            <div class="icon-box bg-primary">
-                                <ion-icon name="card-outline"></ion-icon>
-                            </div>
-                            <div class="in">
-                                My Cards
                             </div>
                         </a>
                     </li>
@@ -135,7 +124,7 @@
                 <div class="listview-title mt-1">Others</div>
                 <ul class="listview flush transparent no-line image-listview">
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/profile" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="person-circle-outline"></ion-icon>
                             </div>
@@ -145,7 +134,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/settings" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="settings-sharp"></ion-icon>
                             </div>
@@ -155,7 +144,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/support" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="chatbubble-sharp"></ion-icon>
                             </div>
@@ -165,7 +154,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/tutorials" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="play-outline"></ion-icon>
                             </div>
@@ -175,7 +164,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="item">
+                        <a href="/dashboard/stories" class="item">
                             <div class="icon-box bg-primary">
                             <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                             </div>
@@ -184,6 +173,7 @@
                             </div>
                         </a>
                     </li>
+
                     <li>
                         <a href="/auth/logout" class="item">
                             <div class="icon-box bg-primary">

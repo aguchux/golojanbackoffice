@@ -47,43 +47,43 @@ $(function () {
 
 $(function () {
 
-/*
-    $('#xSearchTransactions').on("input", function (e) {
-
-        var val_in = this.value;
-        var key_in = e.which;
-
-        if (val_in == '') {
-            e.preventDefault();
-            return false;
-        }
-        if (key_in == 13) {
-            e.preventDefault();
-            return false;
-        }
-
-        // Declare variables
-        var input, filter, transactions, item, detail, i, txtValue;
-        input = val_in;
-        filter = input.toUpperCase();
-
-        transactions = document.getElementById("transactions");
-        item = transactions.getElementsByClassName('item');
-
-        // Loop through all list items, and hide those who don't match the search query
-        for (i = 0; i < item.length; i++) {
-            detail = item[i].getElementsByClassName("detail")[0];
-            txtValue = detail.textContent || detail.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                item[i].style.display = "";
-            } else {
-                item[i].style.display = "none";
+    /*
+        $('#xSearchTransactions').on("input", function (e) {
+    
+            var val_in = this.value;
+            var key_in = e.which;
+    
+            if (val_in == '') {
+                e.preventDefault();
+                return false;
             }
-        }
-
-    });
-
-    */
+            if (key_in == 13) {
+                e.preventDefault();
+                return false;
+            }
+    
+            // Declare variables
+            var input, filter, transactions, item, detail, i, txtValue;
+            input = val_in;
+            filter = input.toUpperCase();
+    
+            transactions = document.getElementById("transactions");
+            item = transactions.getElementsByClassName('item');
+    
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < item.length; i++) {
+                detail = item[i].getElementsByClassName("detail")[0];
+                txtValue = detail.textContent || detail.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    item[i].style.display = "";
+                } else {
+                    item[i].style.display = "none";
+                }
+            }
+    
+        });
+    
+        */
 
     $('#accountnumber').on("input", function (e) {
         var txt = $(this).val();
@@ -187,6 +187,68 @@ $(function () {
         })
     });
 });
+
+$(function () {
+    $('#MagicUploaderBtn').click(function (e) {
+        $('#MagicUploader').trigger("click");
+    });
+});
+
+$(function () {
+    $('#MagicUploader').on("change",function (e) {
+        alert('uploaded');
+    });
+});
+
+
+$(function () {
+    $('.xNotix').each(function (i, el) {
+        var el = $(this);
+        $(this).attr("tabindex", i);
+        el.on('click', function (e) {
+            var elVal = el.val();
+            var _id = el.attr("id");
+            $.ajax("/ajax/settings/" + _id, {
+                type: 'post',
+                data: { _id: elVal},
+                contentType: false,
+                processData: false,
+                async: true,
+                success: function (data, status, xhr) {
+                    Toast('errorToast');
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                }
+            }); 
+        })
+    });
+});
+
+
+$(function () {
+    $('.xMonitoredInput').each(function (i, el) {
+        var el = $(this);
+        $(this).attr("tabindex", i);
+        el.on('blur', function (e) {
+            var elVal = el.val();
+            var _id = el.attr("id");
+            $.ajax("https://litimus.com/ajax/exists/"+ _id + "/", {
+                type: 'post',
+                data: "?value=" + elVal,
+                contentType: false,
+                processData: false,
+                async: true,
+                success: function (data, status, xhr) {
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                }
+
+            });
+        })
+    });
+});
+
+
 
 
 $(function () {

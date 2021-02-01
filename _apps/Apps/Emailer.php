@@ -8,11 +8,11 @@ class Emailer
 	public $toEmail = NULL;
 	public $toName = NULL;
 
-	public $fromEmail = "ENSSAA@golojan.com";
-	public $fromName = "ENSSAA@Enugu";
-	public $replyEmail = "ENSSAA@golojan.com";
-	public $replyName = "ENSSAA@Enugu";
-	public $subject = "ENSSAA@Enugu";
+	public $fromEmail = "OTP@golojan.com";
+	public $fromName = "OTP@Enugu";
+	public $replyEmail = "OTP@golojan.com";
+	public $replyName = "OTP@Enugu";
+	public $subject = "OTP@Enugu";
 
 	private $variables = array();
 

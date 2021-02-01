@@ -6,8 +6,8 @@ namespace Apps;
 use \Apps\Model;
 use \Apps\EmailTemplate;
 use \Apps\Session;
-use \Apps\ZENITH;
-use mysqli;
+use \Apps\MysqliDb;
+
 use stdClass;
 
 
@@ -551,24 +551,46 @@ class Core extends Model
 	// Email Sending Codes//
 
 
-	/**
-	 * @param mixed $username 
-	 * @return object|null 
-	 */
-	public function UserInfo($username)
+	public function emailExists($email)
 	{
-		$UserInfo = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
-		$UserInfo = mysqli_fetch_object($UserInfo);
-		return $UserInfo;
+		$Mysqli = new MysqliDb;
+		$Mysqli->where('email', $email);
+		$email_exists = $Mysqli->getOne('golojan_accounts');
+		return (int)$email_exists['accid'];
+	}
+
+	public function mobileExists($mobile)
+	{
+		$Mysqli = new MysqliDb;
+		$Mysqli->where('mobile', $mobile);
+		$mobile_exists = $Mysqli->getOne('golojan_accounts');
+		return (int)$mobile_exists['accid'];
 	}
 
 
 
-	public function adminUsers()
+	public function RegisterAccount($fullname, $email, $mobile, $password)
 	{
-		$adminUsers = mysqli_query($this->dbCon, "select * from golojan_accounts ORDER BY accid ASC");
-		return $adminUsers;
+		mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(fullname,email,mobile,password) VALUES('$fullname','$email','$mobile','$password')");
+		$accid = (int)$this->getLastId();
+		if ($accid) {
+			return $this->NewWallet($accid);
+		}
+		return false;
 	}
+
+
+	public function NewWallet($accid)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_wallets(accid) VALUES('$accid')");
+		$wallid = (int)$this->getLastId();
+		if ($wallid) {
+			return $accid;
+		}
+		return false;
+	}
+
+
 
 
 	/**
@@ -581,37 +603,12 @@ class Core extends Model
 		$UserLogin = mysqli_query($this->dbCon, "select * from golojan_accounts where (email='$username' OR mobile='$username') AND password='$password'");
 		$UserLogin = mysqli_fetch_object($UserLogin);
 		$this->SetUserInfo($UserLogin->accid, "lastseen", date("Y-m-d g:i:s"));
-
 		return $UserLogin;
 	}
 
-	/**
-	 * @param mixed $username 
-	 * @param mixed $key 
-	 * @param mixed $val 
-	 * @return int 
-	 */
-	public function SetUserInfo($username, $key, $val)
-	{
-		mysqli_query($this->dbCon, "UPDATE golojan_accounts SET $key='$val' where email='$username' OR accid='$username' OR mobile='$username'");
-		return mysqli_affected_rows($this->dbCon);
-	}
 
-	public function UserExists($username)
-	{
-		$UserExists = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
-		$UserExists = mysqli_fetch_object($UserExists);
-		if (isset($UserExists->accid)) {
-			return true;
-		}
-		return false;
-	}
 
-	public function HECreate($fullname, $email, $mobile, $password, $level)
-	{
-		mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(fullname,email,mobile,password,level) VALUES('$fullname','$email','$mobile','$password','$level')");
-		return (int)$this->getLastId();
-	}
+
 
 	public function VerifyOTP($accid, $otp)
 	{
@@ -640,6 +637,81 @@ class Core extends Model
 		}
 		return (int)false;
 	}
+
+
+	/**
+	 * @param mixed $username 
+	 * @return object|null 
+	 */
+	public function UserInfo($username)
+	{
+		$UserInfo = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+		$UserInfo = mysqli_fetch_object($UserInfo);
+		return $UserInfo;
+	}
+
+
+
+	/**
+	 * @param mixed $username 
+	 * @param mixed $key 
+	 * @param mixed $val 
+	 * @return int 
+	 */
+	public function SetUserInfo($username, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_accounts SET $key='$val' where email='$username' OR accid='$username' OR mobile='$username'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+	public function UserExists($username)
+	{
+		$UserExists = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+		$UserExists = mysqli_fetch_object($UserExists);
+		if (isset($UserExists->accid)) {
+			return true;
+		}
+		return false;
+	}
+
+
+
+	/**
+	 * @param mixed $username 
+	 * @return object|null 
+	 */
+	public function WalletInfo($username)
+	{
+		$WalletInfo = mysqli_query($this->dbCon, "select * from golojan_wallets where accid='$username'");
+		$WalletInfo = mysqli_fetch_object($WalletInfo);
+		return $WalletInfo;
+	}
+
+
+
+	public function Wallet($username)
+	{
+		$wallet = new stdClass;
+		$WalletInfo = $this->WalletInfo($username);
+		$wallet->open = (float) ($WalletInfo->open_balance);
+		$wallet->closed = (float) $WalletInfo->closed_balance;
+		$wallet->balance = (float) $WalletInfo->open_balance +  $WalletInfo->closed_balance;
+		return $wallet;
+	}
+
+
+
+
+
+
+
+
+	public function adminUsers()
+	{
+		$adminUsers = mysqli_query($this->dbCon, "select * from golojan_accounts ORDER BY accid ASC");
+		return $adminUsers;
+	}
+
 
 
 	public function Mdas()
@@ -994,7 +1066,7 @@ class Core extends Model
 		return (float)$BankBalance->availablebalance;
 	}
 
-	
+
 	public function BankerBalance($bankerid)
 	{
 		$BankerBalance = mysqli_query($this->dbCon, "SELECT balance FROM golojan_bankers WHERE id='$bankerid'");

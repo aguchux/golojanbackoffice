@@ -1,6 +1,7 @@
 <?php
 if ($Self->auth) {
     $UserInfo = $Core->UserInfo($Self->data['accid']);
+    $Wallet = $Core->Wallet($Self->data['accid']);
 }
 ?>
 <!doctype html>

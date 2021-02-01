@@ -14,14 +14,9 @@ $Route->add('/', function () {
 
 
 
-$Route->add('/dashboard', function () {
-    $Template = new Apps\Template("/auth/login");
-    $Template->addheader("layouts.auth.header");
-    $Template->addfooter("layouts.auth.footer");
-    $Template->assign("title", "Golojan | Back Office");
-    $Template->assign("menukey", "dashboard");
-    $Template->render("dashboard");
-}, 'GET');
+require_once DOT . "/_public/authpages.php";
+require_once DOT . "/_public/dashboard.php";
+require_once DOT . "/_public/ajax.php";
 
 
 
@@ -29,10 +24,6 @@ $Route->add('/device/connection', function () {
     $Device = new Apps\Device;
     echo $Device->get_ip();
 }, 'GET');
-
-
-
-require_once DOT . "/_public/authpages.php";
 
 
 //Logout Sessions//

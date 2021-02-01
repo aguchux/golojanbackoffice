@@ -5,7 +5,7 @@
                 <div class="balance">
                     <div class="left">
                         <span class="title">Total Unclaimed Balance</span>
-                        <h1 class="total"><?= $Core->Naira(256250) ?></h1>
+                        <h1 class="total"><?= $Core->Naira($Wallet->balance) ?></h1>
                     </div>
                     <div class="right">
                         <a href="#" class="button" data-toggle="modal" data-target="#depositActionSheet">
@@ -62,13 +62,13 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Open Balance</div>
-                        <div class="value text-success"><?= $Core->Naira(5520000) ?></div>
+                        <div class="value text-success"><?= $Core->Naira($Wallet->open) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Closed Balance</div>
-                        <div class="value text-danger"><?= $Core->Naira(8699999) ?></div>
+                        <div class="value text-danger"><?= $Core->Naira($Wallet->closed) ?></div>
                     </div>
                 </div>
             </div>
@@ -76,13 +76,13 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Sales</div>
-                        <div class="value"><?= $Core->Naira(53090000) ?></div>
+                        <div class="value"><?= $Core->Naira(0) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Commission</div>
-                        <div class="value"><?= $Core->Naira(120000) ?></div>
+                        <div class="value"><?= $Core->Naira(0) ?></div>
                     </div>
                 </div>
             </div>
