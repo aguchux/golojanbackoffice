@@ -17,7 +17,7 @@
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#withdrawActionSheet">
+                        <a href="/dashboard/withdraw" data-toggle="modal" data-target="#withdrawActionSheet">
                             <div class="icon-wrapper bg-danger">
                                 <ion-icon name="arrow-down-outline"></ion-icon>
                             </div>
