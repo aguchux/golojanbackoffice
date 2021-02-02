@@ -88,3 +88,23 @@
             </div>
         </div>
         <!-- * Stats -->
+
+
+
+        <!-- Stats -->
+        <div class="section">
+            <div class="row mt-2">
+                <div class="col-12 ">
+                    <div class="stat-box">
+                        <div class="title">Open Balance</div>
+                        <div class="value text-success"><?= $Core->Naira($Wallet->open) ?></div>
+                    </div>
+                </div>
+
+                <div class="col-12 ">
+
+                </div>
+
+            </div>
+        </div>
+        <!-- * Stats -->
