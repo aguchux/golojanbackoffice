@@ -208,10 +208,12 @@ $(function () {
             window.location.href = "/dashboard/marketplace";   
         }
         if(elVal>=1){
-            window.location.href = "/dashboard/category/" + elVal + "/marketplace";;
+            window.location.href = "/dashboard/category/" + elVal + "/marketplace";
         }
     });
 });
+
+
 
 $(function () {
     $('.xNotix').each(function (i, el) {
@@ -235,6 +237,31 @@ $(function () {
         })
     });
 });
+
+
+$(function () {
+    $('.AddToWarehouseBtn').each(function (i, el) {
+        var el = $(this);
+        $(this).attr("tabindex", i);
+        el.on('click', function (e) {
+            var elVal = el.val();
+            var _id = el.attr("id");
+            $.ajax("/ajax/stores/" + _id + "/addproduct", {
+                type: 'post',
+                data: { _id: elVal },
+                contentType: false,
+                processData: false,
+                async: true,
+                success: function (data, status, xhr) {
+                    alert(data);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                }
+            });
+        })
+    });
+});
+
 
 
 $(function () {

@@ -3,12 +3,12 @@
 //Write your custome class/methods here
 namespace Apps;
 
+use stdClass;
 use \Apps\Model;
-use \Apps\EmailTemplate;
 use \Apps\Session;
 use \Apps\MysqliDb;
 
-use stdClass;
+use \Apps\EmailTemplate;
 
 
 class Core extends Model
@@ -574,6 +574,7 @@ class Core extends Model
 		mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(fullname,email,mobile,password) VALUES('$fullname','$email','$mobile','$password')");
 		$accid = (int)$this->getLastId();
 		if ($accid) {
+			$this->NewStore($accid);
 			return $this->NewWallet($accid);
 		}
 		return false;
@@ -591,6 +592,49 @@ class Core extends Model
 	}
 
 
+	public function HasStore($accid)
+	{
+		$storeid = 0;
+		$Mysqli = new MysqliDb;
+		$Mysqli->where('accid', $accid);
+		$HasStore = $Mysqli->getOne('golojan_stores');
+		if (!(int)$HasStore['id']) {
+			$storeid = $this->NewStore($accid);
+		}
+		return $storeid;
+	}
+
+
+	/**
+	 * @param mixed $accid 
+	 * @return int|false 
+	 */
+	public function NewStore($accid)
+	{
+
+		$jsmap = json_encode(array());
+		mysqli_query($this->dbCon, "INSERT INTO golojan_stores(accid,products) VALUES('$accid','$jsmap')");
+		$storid = (int)$this->getLastId();
+		if ($storid) {
+			return $storid;
+		}
+		return false;
+	}
+
+
+	public function SetStoreInfo($storeid, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_stores SET $key='$val' where id='$storeid' OR accid='$storeid'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+
+	public function StoreInfo($storeid)
+	{
+		$StoreInfo = mysqli_query($this->dbCon, "select * from golojan_stores where id='$storeid' OR accid='$storeid'");
+		$StoreInfo = mysqli_fetch_object($StoreInfo);
+		return $StoreInfo;
+	}
 
 
 	/**
@@ -650,8 +694,6 @@ class Core extends Model
 		return $UserInfo;
 	}
 
-
-
 	/**
 	 * @param mixed $username 
 	 * @param mixed $key 
@@ -663,6 +705,7 @@ class Core extends Model
 		mysqli_query($this->dbCon, "UPDATE golojan_accounts SET $key='$val' where email='$username' OR accid='$username' OR mobile='$username'");
 		return mysqli_affected_rows($this->dbCon);
 	}
+
 
 	public function UserExists($username)
 	{
@@ -699,27 +742,62 @@ class Core extends Model
 		return $wallet;
 	}
 
-
-
 	public function Categories()
 	{
 		$Categories = mysqli_query($this->dbCon, "select * from golojan_categories where enabled='1'");
 		return $Categories;
 	}
 
-
-
-
-	public function LoadCategories($catid=0)
+	/**
+	 * @param int $catid 
+	 * @return string 
+	 */
+	public function LoadCategories($catid = 0)
 	{
-		$html = "<option value=\"\">SELECT Category</option>";	
+		$html = "<option value=\"\">SELECT Category</option>";
 		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE enabled='1' ");
-		while($cat = mysqli_fetch_object($Categories)){
-			$selected = ($catid==$cat->id)?"selected":"";
+		while ($cat = mysqli_fetch_object($Categories)) {
+			$selected = ($catid == $cat->id) ? "selected" : "";
 			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
 		}
 		return $html;
 	}
+
+
+	/**
+	 * @param mixed $catid 
+	 * @return object|null 
+	 */
+	public function CategoryInfo($catid)
+	{
+		$CategoryInfo = mysqli_query($this->dbCon, "select * from golojan_categories where id='$catid'");
+		$CategoryInfo = mysqli_fetch_object($CategoryInfo);
+		return $CategoryInfo;
+	}
+
+
+
+	public function Products()
+	{
+		$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE enabled='1'");
+		return $Products;
+	}
+
+	public function CategoryProducts($catid)
+	{
+		$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE category='$catid' AND enabled='1'");
+		return $Products;
+	}
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,6 +28,8 @@
             </div>
         <?php endif; ?>
 
+  <?php require_once DOT . "/_public/footer_menu.php"; ?>
+
 
         <!-- ///////////// Js Files ////////////////////  -->
         <!-- Jquery -->

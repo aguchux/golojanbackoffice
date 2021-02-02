@@ -31,67 +31,40 @@
 
 <div class="row mt-4">
 
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 my-2">
-        <ul class="listview image-listview text inset">
+    <?php while ($product = mysqli_fetch_object($Products)):
+        $Category = $Core->CategoryInfo($product->category);  ?>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 my-2">
+            <ul class="listview image-listview text inset">
 
-            <li>
-                <a href="#" class="item">
-                    <div class="media left mr-2">
-                        <img style="width:100px" src="https://www-konga-com-res.cloudinary.com/w_auto,f_auto,fl_lossy,dpr_auto,q_auto/media/catalog/product/J/U/115097_1582214778.jpg">
-                    </div>
-                    <div class="in right">
-                        <div>Smart Intelligent Kids 10 inches Tablet</div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <div class="item">
-                    <div class="in">
-                        <div>
-                            <strong><?= $Core->Naira(50000) ?></strong>
-                            <div class="text-muted">
-                                Baby, Kids & Toys
+                <li>
+                    <a href="#" class="item">
+                        <div class="media left mr-2">
+                            <img style="width:100px" src="<?= $product->photo ?>">
+                        </div>
+                        <div class="in right">
+                            <div><?= $product->name ?></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <div class="item">
+                        <div class="in">
+                            <div>
+                                <strong><?= $Core->Naira($product->selling) ?></strong>
+                                <div class="text-muted">
+                                   <?= $Category->category ?>
+                                </div>
+                            </div>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="<?= $product->id ?>" class="custom-control-input AddToWarehouseBtn" value="<?= $product->id ?>" id="<?= $product->id ?>" />
+                                <label class="custom-control-label" for="<?= $product->id ?>"></label>
                             </div>
                         </div>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="sms_notix" class="custom-control-input xNotix" value="1" id="sms_notix" <?= $UserInfo->sms_notix ? 'checked' : '' ?> />
-                            <label class="custom-control-label" for="sms_notix"></label>
-                        </div>
                     </div>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 my-2">
-        <ul class="listview image-listview text inset">
+                </li>
+            </ul>
+        </div>
+    <?php endwhile; ?>
 
-            <li>
-                <a href="#" class="item">
-                    <div class="media left mr-2">
-                        <img style="width:100px" src="https://www-konga-com-res.cloudinary.com/w_auto,f_auto,fl_lossy,dpr_auto,q_auto/media/catalog/product/H/W/168784_1596463472.jpg">
-                    </div>
-                    <div class="in right">
-                        <div>Electric Motor Bike Glossy Ride-on</div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <div class="item">
-                    <div class="in">
-                        <div>
-                            <strong><?= $Core->Naira(50000) ?></strong>
-                            <div class="text-muted">
-                                Baby, Kids & Toys
-                            </div>
-                        </div>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="product[]" class="custom-control-input xNotix" value="1" id="sms_notix" <?= $UserInfo->sms_notix ? 'checked' : '' ?> />
-                            <label class="custom-control-label" for="sms_notix"></label>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
 
 </div>

@@ -94,11 +94,52 @@
         <!-- Stats -->
         <div class="section">
             <div class="row mt-2">
-                <div class="col-12 ">
-                    <div class="stat-box">
-                        <div class="title">Open Balance</div>
-                        <div class="value text-success"><?= $Core->Naira($Wallet->open) ?></div>
-                    </div>
+                <div class="col-12 table-responsive">
+
+                    <table class="table tabel-dark table-stripped table-bordered w-100">
+                        <tr class="bg-info">
+                            <td>LEVEL</td>
+                            <td>REFERRALS</td>
+                            <td>COMMISSION</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>0/2</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>0/4</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>0/8</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>0/16</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>0</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>0</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td></td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+                    </table>
+
+
                 </div>
 
                 <div class="col-12 ">

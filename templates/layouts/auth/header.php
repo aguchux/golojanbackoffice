@@ -52,6 +52,7 @@ if ($Self->auth) {
     <!-- * loader -->
 
     <?php if ($Me->auth) : ?>
+        
         <?php if ($menukey == "dashboard") : ?>
             <!-- App Header -->
             <div class="appHeader bg-primary text-light">
@@ -89,11 +90,10 @@ if ($Self->auth) {
                 <div class="right">
                     <a href="#" class="headerButton">
                         <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                        <span class="badge badge-danger">0</span>
+                        <span class="badge badge-danger">1</span>
                     </a>
                     <a href="#" class="headerButton">
                         <img src="<?= $UserInfo->avatar ?>" class="imaged w32">
-                        <span class="badge badge-danger">0</span>
                     </a>
                 </div>
             </div>

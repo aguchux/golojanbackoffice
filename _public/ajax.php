@@ -12,6 +12,29 @@ $Route->add('/ajax/exists/{param}', function ($param) {
 }, 'POST');
 
 
+
+$Route->add('/ajax/stores/{product}/addproduct', function ($product) {
+    $done = 0;
+    $Core = new Apps\Core();
+    $Template = new Apps\Template("/auth/login");
+    $accid = $Template->storage("accid");
+    $Core->HasStore($accid);
+
+    $StoreInfo = $Core->StoreInfo($accid);
+    $Paroducts_Array = json_decode($StoreInfo->products);
+    $Paroducts_Array[] = $product;
+    $StorCNT = count($Paroducts_Array);
+    $Paroducts_Data = json_encode($Paroducts_Array);
+    
+    $done += $Core->SetStoreInfo($accid, "store_count", $StorCNT);
+    $done += $Core->SetStoreInfo($accid, "products", $Paroducts_Data);
+    
+    echo $done;
+}, 'POST');
+
+
+
+
 $Route->add('/ajax/settings/{param}', function ($param) {
     $Core = new Apps\Core();
     $Template = new Apps\Template("/auth/login");
@@ -24,7 +47,7 @@ $Route->add('/ajax/settings/{param}', function ($param) {
             $enable_otp = 0;
         }
         $done += $Core->SetUserInfo($accid, "enable_otp", $enable_otp);
-        $Template->store("toast","OTP Enabled successfully");
+        $Template->store("toast", "OTP Enabled successfully");
     }
     $sms_notix = 1;
     if ($param == "sms_notix") {
