@@ -195,11 +195,23 @@ $(function () {
 });
 
 $(function () {
-    $('#MagicUploader').on("change",function (e) {
+    $('#MagicUploader').on("change", function (e) {
         alert('uploaded');
     });
 });
 
+$(function () {
+    $('#LoadCategories').on("change", function (e) {
+        var el = $(this);
+        var elVal = el.val();
+        if(elVal==0){
+            window.location.href = "/dashboard/marketplace";   
+        }
+        if(elVal>=1){
+            window.location.href = "/dashboard/category/" + elVal + "/marketplace";;
+        }
+    });
+});
 
 $(function () {
     $('.xNotix').each(function (i, el) {
@@ -210,7 +222,7 @@ $(function () {
             var _id = el.attr("id");
             $.ajax("/ajax/settings/" + _id, {
                 type: 'post',
-                data: { _id: elVal},
+                data: { _id: elVal },
                 contentType: false,
                 processData: false,
                 async: true,
@@ -219,7 +231,7 @@ $(function () {
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                 }
-            }); 
+            });
         })
     });
 });
@@ -232,7 +244,7 @@ $(function () {
         el.on('blur', function (e) {
             var elVal = el.val();
             var _id = el.attr("id");
-            $.ajax("https://litimus.com/ajax/exists/"+ _id + "/", {
+            $.ajax("https://litimus.com/ajax/exists/" + _id + "/", {
                 type: 'post',
                 data: "?value=" + elVal,
                 contentType: false,

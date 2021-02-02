@@ -13,29 +13,7 @@
 
 <div class="listview-title mt-1">Security & 2FA</div>
 <ul class="listview image-listview text inset">
-    <li>
-        <div class="item">
-            <div class="in">
-                <div>
-                    Device Protection
-                    <div class="text-muted">
-                        Monitor logins from suspected devices
-                    </div>
-                </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" name="device_protection" class="custom-control-input xNotix" value="1" id="device_protection" <?=  $UserInfo->device_protection?'checked':'' ?> />
-                    <label class="custom-control-label" for="device_protection"></label>
-                </div>
-            </div>
-        </div>
-    </li>
 
-</ul>
-
-
-
-<div class="listview-title mt-1">Notifications</div>
-<ul class="listview image-listview text inset">
     <li>
         <div class="item">
             <div class="in">
@@ -52,6 +30,30 @@
             </div>
         </div>
     </li>
+
+    <li>
+        <div class="item">
+            <div class="in">
+                <div>
+                    Device Protection
+                    <div class="text-muted">
+                        Monitor logins from suspected devices
+                    </div>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="device_protection" class="custom-control-input xNotix" value="1" id="device_protection" <?=  $UserInfo->device_protection?'checked':'' ?> />
+                    <label class="custom-control-label" for="device_protection"></label>
+                </div>
+            </div>
+        </div>
+    </li>
+    
+</ul>
+
+
+
+<div class="listview-title mt-1">Notifications</div>
+<ul class="listview image-listview text inset">
     <li>
         <div class="item">
             <div class="in">

@@ -701,8 +701,25 @@ class Core extends Model
 
 
 
+	public function Categories()
+	{
+		$Categories = mysqli_query($this->dbCon, "select * from golojan_categories where enabled='1'");
+		return $Categories;
+	}
 
 
+
+
+	public function LoadCategories($catid=0)
+	{
+		$html = "<option value=\"\">SELECT Category</option>";	
+		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE enabled='1' ");
+		while($cat = mysqli_fetch_object($Categories)){
+			$selected = ($catid==$cat->id)?"selected":"";
+			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
+		}
+		return $html;
+	}
 
 
 
