@@ -61,14 +61,14 @@ if ($Self->auth) {
                     </a>
                 </div>
                 <div class="pageTitle">
-                    <h1 class="text-white"><?= $UserInfo->accid ?></h1>
+                    <h1 class="text-white">#<?= $UserInfo->accid ?></h1>
                 </div>
                 <div class="right">
-                    <a href="#" class="headerButton">
+                    <a href="/dashboard/notifications" class="headerButton">
                         <ion-icon class="icon" name="notifications-outline"></ion-icon>
                         <span class="badge badge-danger">0</span>
                     </a>
-                    <a href="#" class="headerButton">
+                    <a href="/dashboard/profile" class="headerButton">
                         <img src="<?= $UserInfo->avatar ?>" class="imaged w32">
                         <span class="badge badge-danger">0</span>
                     </a>
