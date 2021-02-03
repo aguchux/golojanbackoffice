@@ -253,7 +253,11 @@ $(function () {
                 processData: false,
                 async: true,
                 success: function (data, status, xhr) {
-                    alert(data);
+                    let fData = JSON.parse(data);
+                    if( parseInt(fData.done) ){
+                        $("#xStoreTotal").html(fData.capacity);
+                        $("#xStoreCount").html(fData.count);
+                    }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                 }
@@ -261,7 +265,6 @@ $(function () {
         })
     });
 });
-
 
 
 $(function () {

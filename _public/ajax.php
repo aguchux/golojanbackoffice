@@ -12,24 +12,69 @@ $Route->add('/ajax/exists/{param}', function ($param) {
 }, 'POST');
 
 
-
 $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
+
+    $Done = array();
+
     $done = 0;
+    $added = 1;
+
     $Core = new Apps\Core();
     $Template = new Apps\Template("/auth/login");
     $accid = $Template->storage("accid");
     $Core->HasStore($accid);
 
     $StoreInfo = $Core->StoreInfo($accid);
+    $Productinfo = $Core->Productinfo($product);
     $Paroducts_Array = json_decode($StoreInfo->products);
-    $Paroducts_Array[] = $product;
-    $StorCNT = count($Paroducts_Array);
-    $Paroducts_Data = json_encode($Paroducts_Array);
-    
+
+    $store_capacity = (float)$StoreInfo->capacity;
+    $store_total = (float)$StoreInfo->store_total;
+    $product_total = (float)$Productinfo->selling;
+
+    if (in_array($product, $Paroducts_Array)) {
+       
+        //Remove from stock//
+        if ($store_total >= $product_total) {
+            $store_total -= $product_total;
+
+            $key = array_search($product, $Paroducts_Array);
+            unset($Paroducts_Array[$key]);
+            $StorCNT = count($Paroducts_Array);
+
+        }
+        $Paroducts_Data = json_encode($Paroducts_Array);
+
+    } else {
+       
+        //Add to stock//
+        $total_to_compare = $store_total + $product_total;
+        if ($total_to_compare <= $store_capacity) {
+            $store_total += $product_total;
+        } else {
+            $added = 0;
+        }
+        $Paroducts_Array[] = $product;
+        $StorCNT = count($Paroducts_Array);
+        $Paroducts_Data = json_encode($Paroducts_Array);
+
+    }
+
+
     $done += $Core->SetStoreInfo($accid, "store_count", $StorCNT);
     $done += $Core->SetStoreInfo($accid, "products", $Paroducts_Data);
-    
-    echo $done;
+    $done += $Core->SetStoreInfo($accid, "store_total", $store_total);
+
+    $Done['done'] = $done;
+    $Done['added'] = $added;
+    $Done['count'] = $StorCNT;
+
+    //$StoreInfo_new = $Core->StoreInfo($accid);
+    //$finalcapacity = (float) ($StoreInfo_new->capacity - $StoreInfo_new->store_total);
+    $Done['capacity'] = $Core->Naira(50000000);
+
+    echo json_encode($Done);
+
 }, 'POST');
 
 

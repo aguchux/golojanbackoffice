@@ -1,7 +1,4 @@
 
-    <!-- App Bottom Menu -->
-    <?php require './_public/footerdrawer.php' ?>
-    <!-- * App Bottom Menu -->
 
     <!-- App Sidebar -->
     <?php require './_public/drawer.php' ?>

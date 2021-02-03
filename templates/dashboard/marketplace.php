@@ -5,12 +5,10 @@
         <div class="balance">
             <div class="left">
                 <span class="title">Available Store Capacity</span>
-                <h1 class="total"><?= $Core->Naira($Wallet->balance) ?></h1>
+                <h1 class="total"  id="xStoreTotal"><?= $Core->Naira( (float) ($StoreInfo->capacity - $StoreInfo->store_total) ) ?></h1>
             </div>
             <div class="right">
-                <a href="#" class="button">
-                    0
-                </a>
+                <a href="#" class="button" id="xStoreCount"><?= $StoreInfo->store_count ?></a>
             </div>
         </div>
         <!-- * Balance -->
@@ -32,7 +30,9 @@
 <div class="row mt-4">
 
     <?php while ($product = mysqli_fetch_object($Products)):
-        $Category = $Core->CategoryInfo($product->category);  ?>
+        $Category = $Core->CategoryInfo($product->category); 
+        $StoreInfoProductArray = json_decode($StoreInfo->products);
+        ?>
         <div class="col-12 col-sm-12 col-md-6 col-lg-4 my-2">
             <ul class="listview image-listview text inset">
 
@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" name="<?= $product->id ?>" class="custom-control-input AddToWarehouseBtn" value="<?= $product->id ?>" id="<?= $product->id ?>" />
+                                <input type="checkbox" name="<?= $product->id ?>" class="custom-control-input AddToWarehouseBtn" value="<?= $product->id ?>" id="<?= $product->id ?>" <?= $Core->RunSwitch($product->id,$StoreInfoProductArray);  ?> />
                                 <label class="custom-control-label" for="<?= $product->id ?>"></label>
                             </div>
                         </div>

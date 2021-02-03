@@ -10,26 +10,8 @@
         </div>
         <!-- * App Capsule -->
 
-
         <?php require_once DOT . "/_public/drawer.php"; ?>
         <?php require_once DOT . "/_public/modals.php"; ?>
-
-
-
-        <?php if ($Self->storage("toast")) : ?>
-            <div class="errorToast toast-box toast-bottom bg-success">
-                <!-- toast success -->
-                <div class="in">
-                    <div class="text">
-                        Success Color Success Color Success Color Success Color Success Color Success Color Success Color Success Color Success Color Success Color Success Color Success Color Success Color
-                    </div>
-                </div>
-                <button type="button" class="btn btn-sm btn-text-light close-button">OK</button>
-            </div>
-        <?php endif; ?>
-
-  <?php require_once DOT . "/_public/footer_menu.php"; ?>
-
 
         <!-- ///////////// Js Files ////////////////////  -->
         <!-- Jquery -->

@@ -775,20 +775,39 @@ class Core extends Model
 		return $CategoryInfo;
 	}
 
-
-
 	public function Products()
 	{
 		$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE enabled='1'");
 		return $Products;
 	}
 
-	public function CategoryProducts($catid)
+	public function Productinfo($id)
 	{
-		$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE category='$catid' AND enabled='1'");
+		$Productinfo = mysqli_query($this->dbCon, "select * from golojan_products where id='$id'");
+		$Productinfo = mysqli_fetch_object($Productinfo);
+		return $Productinfo;
+	}
+
+	public function CategoryProducts($catid=0)
+	{
+		if($catid==0){
+			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE enabled='1'");
+		}else{
+			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE category='$catid' AND enabled='1'");
+		}
 		return $Products;
 	}
 
+
+	public function RunSwitch($id, $products = array())
+	{
+		if(in_array($id, $products) ){
+			return 'checked';
+		}else{
+			return '';
+		}
+	
+	}
 
 
 
