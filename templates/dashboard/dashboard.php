@@ -135,11 +135,14 @@
                         <tr>
                             <td>7</td>
                             <td>0/128</td>
+<<<<<<< HEAD
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>8</td>
                             <td>0/256</td>
+=======
+>>>>>>> 331075ab1956638ec048c3e80f13e0bfe3384e7e
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                     </table>
