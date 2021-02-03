@@ -1,12 +1,13 @@
 <div class="section mt-3 text-center">
     <div class="avatar-section">
-        <a href="javascript:;" class="btn-link">
-            <img src="<?= $UserInfo->avatar ?>" alt="<?= $UserInfo->fullname ?>" class="imaged w100 rounded">
-            <input type="file" name="MagicUploader" id="MagicUploader" class="d-none">
-            <span class="button" id="MagicUploaderBtn">
-                <ion-icon name="camera-outline"></ion-icon>
-            </span>
-        </a>
+        <form action="/auth/forms/profile" method="POST" enctype="multipart/form-data">
+            <?= $Self->tokenize() ?>
+            <a href="javascript:;" class="btn-link">
+                <img src="<?= $UserInfo->avatar ?>" alt="<?= $UserInfo->fullname ?>" class="imaged w100 rounded" id="UserInfoAvatar">
+                <input type="file" name="MagicUploader" id="MagicUploader" class="d-none">
+                <span class="button" id="MagicUploaderBtn"><ion-icon name="camera-outline"></ion-icon></span>
+            </a>
+        </form>
     </div>
 </div>
 
@@ -60,13 +61,15 @@
                 </div>
 
 
+
             </div>
         </div>
 
-
-        <div class="form-button-group transparent">
-            <button type="submit" class="btn btn-primary btn-block btn-lg">Update Profile</button>
+        <div class="my-3">
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Update Profile</button>
         </div>
+
+
 
     </form>
 

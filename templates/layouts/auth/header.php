@@ -71,8 +71,7 @@ if ($Self->auth) {
                         <span class="badge badge-danger">0</span>
                     </a>
                     <a href="/dashboard/profile" class="headerButton">
-                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32">
-                        <span class="badge badge-danger">0</span>
+                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32"  id="UserInfoAvatarTop">
                     </a>
                 </div>
             </div>
@@ -94,7 +93,7 @@ if ($Self->auth) {
                         <span class="badge badge-danger">1</span>
                     </a>
                     <a href="#" class="headerButton">
-                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32">
+                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32"  id="UserInfoAvatarTop">
                     </a>
                 </div>
             </div>

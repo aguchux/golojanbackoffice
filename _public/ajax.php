@@ -12,6 +12,54 @@ $Route->add('/ajax/exists/{param}', function ($param) {
 }, 'POST');
 
 
+$Route->add('/ajax/profile/{sponsor}/sponsor', function ($sponsor) {
+    $Core = new Apps\Core();
+    
+    echo $sponsor;
+}, 'POST');
+
+
+$Route->add('/ajax/profile/upload', function () {
+    $Core = new Apps\Core();
+    $Template = new Apps\Template("/auth/login"); 
+    $result = array();
+
+    $accid = $Template->storage("accid");
+
+    $FileDir = "./_store/accounts/profile/{$accid}";
+
+    $handle = new \Verot\Upload\Upload($_FILES['imagefile']);
+    if ($handle->uploaded) {
+
+        $handle->file_new_name_body = sha1($_FILES['imagefile']['name'] .  time());
+
+        $handle->dir_auto_create = true;
+        $handle->image_resize	= true;
+        $handle->image_ratio_crop = true;
+        $handle->image_y	=  160;
+        $handle->image_x	=  160;
+
+        $handle->file_overwrite = true;
+        $handle->dir_chmod = 0777;
+        $handle->image_ratio = true;
+
+        $handle->process($FileDir);
+        if ($handle->processed) {
+            $img_url =  $handle->file_dst_pathname;
+            $handle->clean();
+            $result['done'] = 1;
+            $result['image'] = $img_url;
+            $Core->SetUserInfo($accid,"avatar",$img_url);
+        } else {
+            $result['done'] = 0;
+        }
+        echo json_encode($result);
+    }
+
+
+}, 'POST');
+
+
 $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
 
     $Done = array();
@@ -33,7 +81,7 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $product_total = (float)$Productinfo->selling;
 
     if (in_array($product, $Paroducts_Array)) {
-       
+
         //Remove from stock//
         if ($store_total >= $product_total) {
             $store_total -= $product_total;
@@ -41,12 +89,10 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
             $key = array_search($product, $Paroducts_Array);
             unset($Paroducts_Array[$key]);
             $StorCNT = count($Paroducts_Array);
-
         }
         $Paroducts_Data = json_encode($Paroducts_Array);
-
     } else {
-       
+
         //Add to stock//
         $total_to_compare = $store_total + $product_total;
         if ($total_to_compare <= $store_capacity) {
@@ -57,7 +103,6 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
         $Paroducts_Array[] = $product;
         $StorCNT = count($Paroducts_Array);
         $Paroducts_Data = json_encode($Paroducts_Array);
-
     }
 
 
@@ -74,7 +119,6 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $Done['capacity'] = $Core->Naira(50000000);
 
     echo json_encode($Done);
-
 }, 'POST');
 
 

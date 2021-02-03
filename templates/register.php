@@ -50,6 +50,23 @@
             </div>
         </div>
 
+        <div class="listview-title my-2 text-center">Sponsor's Account ID'</div>
+
+        <div class="card">
+            <div class="card-body pb-1">
+
+                <div class="form-group basic">
+                    <div class="input-wrapper">
+                        <label class="label" for="sponsor">Your Sponsor's ID'</label>
+                        <input type="text" required class="form-control" pattern="\d*"  id="sponsor_id" name="sponsor" placeholder="Your Sponsor">
+                        <i class="clear-input">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="form-links mt-2">
             <div class="GOLOJAN_device_status text-muted"><span>Connecting...</span></div>

@@ -406,39 +406,7 @@ class Core extends Model
 		$return = $this->createPath($prev_path);
 		return ($return && is_writable($prev_path)) ? mkdir($path, 0777, true) : false;
 	}
-
-	/**
-	 * @param mixed $FileDir 
-	 * @param mixed $fileObj 
-	 * @param int $height 
-	 * @param int $width 
-	 * @return string|false|void 
-	 */
-	public function Upload($FileDir, $fileObj, $height = 1000, $width = 1000)
-	{
-		$handle = new \Verot\Upload\Upload($fileObj);
-		if ($handle->uploaded) {
-			$handle->file_new_name_body = sha1($FileDir  . $height .  time());
-
-			$handle->dir_auto_create = true;
-			$handle->image_resize	= true;
-			$handle->image_y	= $height;
-			$handle->image_x	= $width;
-			$handle->file_overwrite = true;
-			$handle->dir_chmod = 0777;
-			$handle->image_ratio = true;
-
-			$handle->process($FileDir);
-			if ($handle->processed) {
-				return $handle->file_dst_pathname;
-				$handle->clean();
-			} else {
-				return false;
-			}
-		}
-	}
-
-
+	
 	/**
 	 * @param mixed $start 
 	 * @param mixed $end 
@@ -788,11 +756,11 @@ class Core extends Model
 		return $Productinfo;
 	}
 
-	public function CategoryProducts($catid=0)
+	public function CategoryProducts($catid = 0)
 	{
-		if($catid==0){
+		if ($catid == 0) {
 			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE enabled='1'");
-		}else{
+		} else {
 			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE category='$catid' AND enabled='1'");
 		}
 		return $Products;
@@ -801,12 +769,11 @@ class Core extends Model
 
 	public function RunSwitch($id, $products = array())
 	{
-		if(in_array($id, $products) ){
+		if (in_array($id, $products)) {
 			return 'checked';
-		}else{
+		} else {
 			return '';
 		}
-	
 	}
 
 
@@ -815,8 +782,54 @@ class Core extends Model
 
 
 
+	public function ListFAQs()
+	{
+		$ListFAQs = mysqli_query($this->dbCon, "select * from golojan_faqs ORDER BY id ASC");
+		return $ListFAQs;
+	}
 
 
+
+	public function ListVideos()
+	{
+		$ListVideos = mysqli_query($this->dbCon, "select * from golojan_tutorials ORDER BY id ASC");
+		return $ListVideos;
+	}
+
+
+	public function VideoBanner($videocode, $type = 'youtube')
+	{
+
+		switch ($type) {
+			case 'youtube':
+				$vidbanner = "https://img.youtube.com/vi/{$videocode}/0.jpg";
+				break;
+
+			case 'vimeo':
+				$vidbanner = "./_store/imgs/playbtn.png";
+				break;
+
+			default:
+				$vidbanner = "./_store/imgs/playbtn.png";
+				break;
+		}
+		return $vidbanner;
+	}
+
+
+
+	public function VideoInfo($id)
+	{
+		$VideoInfo = mysqli_query($this->dbCon, "select * from golojan_tutorials where id='$id'");
+		$VideoInfo = mysqli_fetch_object($VideoInfo);
+		return $VideoInfo;
+	}
+
+
+
+
+
+	
 
 
 

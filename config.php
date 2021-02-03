@@ -68,28 +68,12 @@ define("smslive_api_key", "acdd4023-b6af-4479-a8a7-9ee45278c319");
 
 define("smslive_callback_url", "https://ebsgfinance.net/auth/smslive247/callback");
 
-//FCMB.Developers.API//
-define("fcmb_client_secrete","iG8eD5qF4wQ1hR3oC6lG1xW3kU3wI1jX2kW4fF4aS2jU1wO6kR");
-define("fcmb_client_id","b1545075-636d-4fc3-bba0-9a78c23ae9dc");
-define("fcmb_callback_url", "https://ebsgfinance.net/api/fcmb/callback");
-
-//ZENITH.Developers.API//
-define("zenith_api_url","EbonyiStateGov");
-define("zenith_caller_name","EbonyiStateGov");
-define("zenith_caller_password","3atesghdb56s??jk");
-
-define("zenith_postman_token","c97014d3-2a98-aa6d-4ff4-b7f4555268cc");
-define("zenith_callback_url", "https://ebsgfinance.net/api/zenith/callback");
-
-//UBA.Developers.API//
-define("uba_consumer_key","Ny8YACCcwcHnrJVEX9BWkcQZodQa");
-define("uba_consumer_secret","Zi3nE6JyWcy5vgGwO4Qw2ROVupEa");
-define("uba_access_token","75d713cd-63cd-39ca-864b-5736322dba76");
-define("uba_callback_url", "https://ebsgfinance.net/api/uba/callback");
-
-//FBN.Developers.API//
-define("fbn_passkey","eb156984557391o341034n027255yi");
-define("fbn_callback_url", "https://ebsgfinance.net/api/fbn/callback");
 
 define("default_transaction_days",30);
 define("pre_show_transactions",false);
+
+//Cloudinary.Developers.API//
+define("CloudName","golojan-com");
+define("APIKey","981315561269929");
+define("APISecret","EY-_3X-iL3OFHbQ0PKoZD121H0Y");
+define("APIEnvironmentVariable","CLOUDINARY_URL=cloudinary://981315561269929:EY-_3X-iL3OFHbQ0PKoZD121H0Y@golojan-com");

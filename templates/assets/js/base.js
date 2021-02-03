@@ -194,20 +194,83 @@ $(function () {
     });
 });
 
+
 $(function () {
-    $('#MagicUploader').on("change", function (e) {
-        alert('uploaded');
+    $('#sponsor_id').keyup(function (event) {
+
+        let sponsorid = $(this).val();
+        let key_in = event.which;
+        if (sponsorid == '') {
+            event.preventDefault();
+            return false;
+        }
+        if (sponsorid.length <= 5) {
+            event.preventDefault();
+            return false;
+        }
+        if (key_in == 13) {
+            event.preventDefault();
+            return false;
+        }
+
+        $.ajax("/ajax/profile/" +  sponsorid + "/sponsor", {
+            type: 'post',
+            data: null,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+
+            },
+            success: function (data, status, xhr) {
+                alert(data);
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+            }
+        });
     });
 });
+
+
+$(function () {
+    $('#MagicUploader').on("change", function (e) {
+        var file_data = $("#MagicUploader").prop("files")[0];
+        var frmData = new FormData();
+        frmData.append("imagefile", file_data);
+        $.ajax("/ajax/profile/upload", {
+            type: 'post',
+            data: frmData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $("#MagicUploaderBtn").html("<img width='90%' src='./_store/imgs/uploading.gif' alt='...'>");
+            },
+            success: function (data, status, xhr) {
+                let jDATA = JSON.parse(data);
+                let doneInt = parseInt(jDATA.done);
+                let doneUrl = (jDATA.image).toString();
+                if (doneInt) {
+                    $("#UserInfoAvatar").attr("src", doneUrl);
+                    $("#UserInfoAvatarTop").attr("src", doneUrl);
+                }
+                $("#MagicUploaderBtn").html("<ion-icon name='camera-outline'></ion-icon>");
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+            }
+        });
+    });
+});
+
 
 $(function () {
     $('#LoadCategories').on("change", function (e) {
         var el = $(this);
         var elVal = el.val();
-        if(elVal==0){
-            window.location.href = "/dashboard/marketplace";   
+        if (elVal == 0) {
+            window.location.href = "/dashboard/marketplace";
         }
-        if(elVal>=1){
+        if (elVal >= 1) {
             window.location.href = "/dashboard/category/" + elVal + "/marketplace";
         }
     });
@@ -254,7 +317,7 @@ $(function () {
                 async: true,
                 success: function (data, status, xhr) {
                     let fData = JSON.parse(data);
-                    if( parseInt(fData.done) ){
+                    if (parseInt(fData.done)) {
                         $("#xStoreTotal").html(fData.capacity);
                         $("#xStoreCount").html(fData.count);
                     }

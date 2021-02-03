@@ -17,27 +17,27 @@
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="/dashboard/withdraw" data-toggle="modal" data-target="#withdrawActionSheet">
+                        <a href="#" data-toggle="modal" data-target="#withdrawActionSheet">
                             <div class="icon-wrapper bg-danger">
+                                <ion-icon name="add-outline"></ion-icon>
+                            </div>
+                            <strong>Deposit</strong>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="#" data-toggle="modal" data-target="#sendActionSheet">
+                            <div class="icon-wrapper">
                                 <ion-icon name="arrow-down-outline"></ion-icon>
                             </div>
                             <strong>Withdraw</strong>
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#sendActionSheet">
-                            <div class="icon-wrapper">
-                                <ion-icon name="arrow-forward-outline"></ion-icon>
-                            </div>
-                            <strong>Send</strong>
-                        </a>
-                    </div>
-                    <div class="item">
-                        <a href="app-cards.html">
+                        <a href="#">
                             <div class="icon-wrapper bg-success">
                                 <ion-icon name="card-outline"></ion-icon>
                             </div>
-                            <strong>Cards</strong>
+                            <strong>My Shop</strong>
                         </a>
                     </div>
                     <div class="item">
@@ -45,7 +45,7 @@
                             <div class="icon-wrapper bg-warning">
                                 <ion-icon name="swap-vertical"></ion-icon>
                             </div>
-                            <strong>Exchange</strong>
+                            <strong>Transfer</strong>
                         </a>
                     </div>
 
