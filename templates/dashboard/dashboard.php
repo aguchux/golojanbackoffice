@@ -137,6 +137,12 @@
                             <td>0/128</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>0/256</td>
+                            <td><?= $Core->Naira(0) ?></td>
+                        </tr>
+
                     </table>
 
 
