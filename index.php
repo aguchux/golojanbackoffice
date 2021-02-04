@@ -13,6 +13,14 @@ $Route->add('/', function () {
 //Home page//
 
 
+$Route->add('/network/{accid}/{level}', function ($accid, $level) {
+    $Template = new Apps\Template;
+    $Core = new Apps\Core;
+
+    $Network = $Core->MyNetwork($accid, $level);
+    $Template->debug(($Network));
+}, 'GET');
+//Home page//
 
 require_once DOT . "/_public/authpages.php";
 require_once DOT . "/_public/dashboard.php";

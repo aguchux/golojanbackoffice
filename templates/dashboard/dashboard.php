@@ -84,7 +84,7 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Volume Stocked</div>
-                        <div class="value"><?= $Core->Naira($StoreInfo->store_total) ?></div>
+                        <div class="value"><?= $Core->Naira($Core->StockVolume($UserInfo->accid)) ?></div>
                     </div>
                 </div>
             </div>
@@ -109,42 +109,42 @@
                         </tr>
                         <tr>
                             <td>1</td>
-                            <td>0/2</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 1)) ?>/2</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td>0/4</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 2)) ?>/4</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>3</td>
-                            <td>0/8</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 3)) ?>/8</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>4</td>
-                            <td>0/16</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 4)) ?>/16</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>5</td>
-                            <td>0/32</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 5)) ?>/32</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>6</td>
-                            <td>0/64</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 6)) ?>/64</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>7</td>
-                            <td>0/128</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 7)) ?>/128</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
                         <tr>
                             <td>8</td>
-                            <td>0/256</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 8)) ?>/256</td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
 

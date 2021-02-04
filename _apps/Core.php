@@ -406,7 +406,7 @@ class Core extends Model
 		$return = $this->createPath($prev_path);
 		return ($return && is_writable($prev_path)) ? mkdir($path, 0777, true) : false;
 	}
-	
+
 	/**
 	 * @param mixed $start 
 	 * @param mixed $end 
@@ -543,7 +543,8 @@ class Core extends Model
 		$accid = (int)$this->getLastId();
 		if ($accid) {
 			$this->NewStore($accid);
-			return $this->NewWallet($accid);
+			$this->NewWallet($accid);
+			return $accid;
 		}
 		return false;
 	}
@@ -580,9 +581,8 @@ class Core extends Model
 	public function NewStore($accid)
 	{
 
-		$jsmap = json_encode(array());
 		$initial_store_capacity = initial_store_capacity;
-		mysqli_query($this->dbCon, "INSERT INTO golojan_stores(accid,products,capacity) VALUES('$accid','$jsmap','$initial_store_capacity')");
+		mysqli_query($this->dbCon, "INSERT INTO golojan_stores(accid,capacity) VALUES('$accid','$initial_store_capacity')");
 		$storid = (int)$this->getLastId();
 		if ($storid) {
 			return $storid;
@@ -768,15 +768,6 @@ class Core extends Model
 	}
 
 
-	public function RunSwitch($id, $products = array())
-	{
-		if (in_array($id, $products)) {
-			return 'checked';
-		} else {
-			return '';
-		}
-	}
-
 
 	public function ListFAQs()
 	{
@@ -821,21 +812,83 @@ class Core extends Model
 	}
 
 
-	public function inStock($product,$accid)
+
+	public function RunSwitch($product, $accid)
+	{
+		$inStock = mysqli_query($this->dbCon, "SELECT id FROM golojan_stock_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_fetch_object($inStock);
+		if (isset($inStock->id)) {
+			return " checked";
+		}
+		return " ";
+	}
+
+	public function inStock($product, $accid)
 	{
 		$inStock = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE product='$product' AND accid='$accid'");
 		$inStock = mysqli_fetch_object($inStock);
-		return $inStock->id;
+		if (isset($inStock->id)) {
+			return $inStock->id;
+		}
+		return false;
 	}
 
-	public function ComputeStore($accid)
+	public function ComputeStockList($accid)
 	{
-		$ComputeStore = mysqli_query($this->dbCon, "SELECT SUM(selling) AS total, COUNT(id) AS stocked FROM golojan_stock_list WHERE accid='$accid'");
-		$ComputeStore = mysqli_fetch_object($ComputeStore);
-		return $ComputeStore;
+		$Computed = new stdClass;
+		$count = $this->CountStock($accid);
+		$sum = 0;
+		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid'");
+		while ($stock = mysqli_fetch_object($ComputeStockList)) {
+			$ThisProduct = $this->Productinfo($stock->product);
+			$sum += $ThisProduct->selling;
+		}
+		$Computed->sum = $sum;
+		$Computed->count = $count;
+		return $Computed;
 	}
 
-	
+
+
+	public function StoreCapacity($accid)
+	{
+		$sum = 0;
+		$AvailableStoreCapacity = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid'");
+		while ($stock = mysqli_fetch_object($AvailableStoreCapacity)) {
+			$ThisProduct = $this->Productinfo($stock->product);
+			$sum += $ThisProduct->selling;
+		}
+		$Store = $this->StoreInfo($accid);
+		$capacity = $Store->capacity;
+		$available = $capacity - $sum;
+		return $available;
+	}
+
+	public function StockVolume($accid)
+	{
+		$ComputeStockList = $this->ComputeStockList($accid);
+		$StockVolume = $ComputeStockList->sum;
+		return $StockVolume;
+	}
+
+
+	public function AvailableStock($accid)
+	{
+		$ComputeStockList = $this->ComputeStockList($accid);
+		$StockVolume = $ComputeStockList->sum;
+		$ThisStore = $this->StoreInfo($accid);
+		$AvailableStock = $ThisStore->capacity - $StockVolume;
+		return (float)$AvailableStock;
+	}
+
+
+	public function CountStock($accid)
+	{
+		$CountStock = mysqli_query($this->dbCon, "SELECT COUNT(id) AS stocked FROM golojan_stock_list WHERE accid='$accid'");
+		$CountStock = mysqli_fetch_object($CountStock);
+		return $CountStock->stocked;
+	}
+
 	public function Stocklist($accid)
 	{
 		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE accid='$accid'");
@@ -851,23 +904,159 @@ class Core extends Model
 	}
 
 
-	public function AddStock($product,$accid)
+	public function AddStock($product, $accid)
 	{
-		if(!$this->inStock($product,$accid)){
-			$Product = $this->Productinfo($product);
-			$addtToStock = mysqli_query($this->dbCon, "INSERT INTO golojan_stock_list(accid,product,selling) VALUES('$accid','$product','$Product->selling')");
-			return $this->getLastId();
+		if (!$this->inStock($product, $accid)) {
+			mysqli_query($this->dbCon, "INSERT INTO golojan_stock_list(accid,product) VALUES('$accid','$product')");
+			return true;
 		}
 		return false;
 	}
 
-	public function RemoveStock($product,$accid)
+	public function RemoveStock($product, $accid)
 	{
-		$RemoveStock = mysqli_query($this->dbCon, "DELETE golojan_stock_list.* FROM golojan_stock_list  WHERE product='$product' AND accid='$accid'");
+		mysqli_query($this->dbCon, "DELETE golojan_stock_list.* FROM golojan_stock_list  WHERE product='$product' AND accid='$accid'");
 		return $this->countAffected();
 	}
 
-	
+
+	//NETWORKING//
+	public function MyNetwork($accid, $level = 0)
+	{
+
+		$l0_accids_array = array();
+		$l1_accids_array = array();
+		$l2_accids_array = array();
+		$l3_accids_array = array();
+		$l4_accids_array = array();
+		$l5_accids_array = array();
+		$l6_accids_array = array();
+		$l7_accids_array = array();
+		$l8_accids_array = array();
+
+
+		switch ($level) {
+			case '1':
+				# code...
+				$L1 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$accid'");
+				while ($l1 = mysqli_fetch_object($L1)) {
+					$l1_accids_array[] = $l1->accid;
+				}
+				return $l1_accids_array;
+				break;
+			case '2':
+				# code...
+				$Lr1 = $this->MyNetwork($accid, 1);
+				if (!count($Lr1)) return $l2_accids_array;
+				foreach ($Lr1 as $lr1) {
+					$L2 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr1'");
+					while ($l2 = mysqli_fetch_object($L2)) {
+						$l2_accids_array[] = $l2->accid;
+					}
+					return $l2_accids_array;
+				}
+				break;
+			case '3':
+				# code...
+				$Lr2 = $this->MyNetwork($accid, 2);
+				if (!count($Lr2)) return $l3_accids_array;
+				foreach ($Lr2 as $lr2) {
+					$L3 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr2'");
+					while ($l3 = mysqli_fetch_object($L3)) {
+						$l3_accids_array[] = $l3->accid;
+					}
+					return $l3_accids_array;
+				}
+				break;
+			case '4':
+				# code...
+				$Lr3 = $this->MyNetwork($accid, 3);
+				if (!count($Lr3)) return $l4_accids_array;
+				foreach ($Lr3 as $lr3) {
+					$L4 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr3'");
+					while ($l4 = mysqli_fetch_object($L4)) {
+						$l4_accids_array[] = $l4->accid;
+					}
+					return $l4_accids_array;
+				}
+				break;
+			case '5':
+				# code...
+				$Lr4 = $this->MyNetwork($accid, 4);
+				if (!count($Lr4)) return $l5_accids_array;
+				foreach ($Lr4 as $lr4) {
+					$L5 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr4'");
+					while ($l5 = mysqli_fetch_object($L5)) {
+						$l5_accids_array[] = $l5->accid;
+					}
+					return $l5_accids_array;
+				}
+				break;
+			case '6':
+				# code...
+				$Lr5 = $this->MyNetwork($accid, 5);
+				if (!count($Lr5)) return $l6_accids_array;
+				foreach ($Lr5 as $lr5) {
+					$L6 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr5'");
+					while ($l6 = mysqli_fetch_object($L6)) {
+						$l6_accids_array[] = $l6->accid;
+					}
+					return $l6_accids_array;
+				}
+				break;
+			case '7':
+				# code...
+				$Lr6 = $this->MyNetwork($accid, 6);
+				if (!count($Lr6)) return $l7_accids_array;
+				foreach ($Lr6 as $lr6) {
+					$L7 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr6'");
+					while ($l7 = mysqli_fetch_object($L7)) {
+						$l7_accids_array[] = $l7->accid;
+					}
+					return $l7_accids_array;
+				}
+				break;
+
+			case '8':
+				# code...
+				$Lr7 = $this->MyNetwork($accid, 7);
+				if (!count($Lr7)) return $l8_accids_array;
+				foreach ($Lr7 as $lr7) {
+					$L8 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$lr7'");
+					while ($l8 = mysqli_fetch_object($L8)) {
+						$l8_accids_array[] = $l8->accid;
+					}
+					return $l8_accids_array;
+				}
+				break;
+			default:
+				# code...
+				return $l0_accids_array;
+				break;
+		}
+	}
+
+
+	public function MyTree($accid, $level = 0)
+	{
+
+		$TreeRootUSer = $this->UserInfo($accid);
+
+		$script = "<script type=\"text/javascript\">";
+		$script .= "var count = 1;";
+		$script .= "var root = new TreeNode(\"{$TreeRootUSer->accid}({$TreeRootUSer->fullname})\");";
+
+		# code...
+		$L1 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$accid'");
+		while ($l1 = mysqli_fetch_object($L1)){
+
+			$TreeRootUSer = $this->UserInfo($l1->accid);
+			$script .= "root.addChild({{$TreeRootUSer->accid}({$TreeRootUSer->fullname})});";
+		}
+		$script .= "var view = new TreeView(root, \"#xNetTree\");";
+		
+		echo $script;
+	}
 
 
 

@@ -86,6 +86,9 @@
 
         <?php endif; ?>
 
+        <?php if ($menukey == "networks") : ?>
+        
+        <?php endif; ?>
 
         <script src="<?= $assets ?>js/base.js"></script>
 

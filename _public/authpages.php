@@ -58,6 +58,9 @@ $Route->add('/auth/forms/{action}', function ($action) {
         $mobile = $data->mobile;
         $password = $data->password;
 
+        $sponsor = $data->sponsor;
+        $sponsor_char = (int)strlen($sponsor);
+
         $mobileExists = $Core->mobileExists($mobile);
         $emailExists = $Core->emailExists($email);
 
@@ -67,7 +70,22 @@ $Route->add('/auth/forms/{action}', function ($action) {
 
         $accid = $Core->RegisterAccount($fullname, $email, $mobile, $password);
         if ($accid) {
-            
+
+            if ($sponsor_char) {
+                $Sponsor = $Core->UserInfo($sponsor);
+                if (isset($Sponsor->accid)) {
+                    $Core->SetUserInfo($accid, "sponsor", $sponsor);
+                } {
+                    //Generate Spillover Sponsor//
+
+                    //Generate Spillover Sponsor//
+                }
+            } else {
+                //Generate Spillover Sponsor//
+
+                //Generate Spillover Sponsor//
+            }
+
             $Login = $Core->UserInfo($accid);
             //Check if OTP is enabled//
             $otp = $Core->GenOTP(6);
@@ -100,7 +118,6 @@ $Route->add('/auth/forms/{action}', function ($action) {
                     $Mailer->send();
                     //Email Notix//
                     $Template->redirect("/auth/otp");
-
                 }
             }
 
@@ -232,19 +249,17 @@ $Route->add('/auth/forms/{action}', function ($action) {
         $User = $Core->UserInfo($accid);
 
         $fullname = $data->fullname;
-        $Core->SetUserInfo($accid,"fullname",$fullname);
+        $Core->SetUserInfo($accid, "fullname", $fullname);
 
-        if(isset($data->old_password) && isset($data->new_password)){
+        if (isset($data->old_password) && isset($data->new_password)) {
             $dbpass = $User->password;
-            $match = (int)$data->old_password==$dbpass;
-            if($match){
-                $Core->SetUserInfo($accid,"password",$data->new_password);
+            $match = (int)$data->old_password == $dbpass;
+            if ($match) {
+                $Core->SetUserInfo($accid, "password", $data->new_password);
             }
         }
 
         $Template->redirect("/dashboard/profile");
-
-
     } else {
         $Template->redirect("/auth/login");
     }

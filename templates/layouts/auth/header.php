@@ -17,6 +17,11 @@ if ($Self->auth) {
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
 
+
+    <?php if ($menukey == "networks") : ?>
+
+    <?php endif; ?>
+
     <link rel="stylesheet" href="<?= $assets ?>css/daterangepicker.css">
     <link rel="stylesheet" href="<?= $assets ?>css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
@@ -53,7 +58,7 @@ if ($Self->auth) {
     <!-- * loader -->
 
     <?php if ($Me->auth) : ?>
-        
+
         <?php if ($menukey == "dashboard") : ?>
             <!-- App Header -->
             <div class="appHeader bg-primary text-light">
@@ -71,7 +76,7 @@ if ($Self->auth) {
                         <span class="badge badge-danger">0</span>
                     </a>
                     <a href="/dashboard/profile" class="headerButton">
-                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32"  id="UserInfoAvatarTop">
+                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
                     </a>
                 </div>
             </div>
@@ -93,7 +98,7 @@ if ($Self->auth) {
                         <span class="badge badge-danger">1</span>
                     </a>
                     <a href="#" class="headerButton">
-                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32"  id="UserInfoAvatarTop">
+                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
                     </a>
                 </div>
             </div>

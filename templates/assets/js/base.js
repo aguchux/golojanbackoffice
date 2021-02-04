@@ -288,7 +288,7 @@ $(function () {
                 async: true,
                 success: function (data, status, xhr) {
                     let fData = JSON.parse(data);
-                    if (parseInt(fData.done)) {
+                    if (parseInt(fData.done)){
                         $("#xStoreTotal").html(fData.capacity);
                         $("#xStoreCount").html(fData.count);
                     }

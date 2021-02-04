@@ -89,9 +89,6 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $done = 0;
     $added = 1;
 
-    $StorCNT = 0;
-    $Paroducts_Data = null;
-
     $Core = new Apps\Core();
     $Template = new Apps\Template("/auth/login");
     $accid = $Template->storage("accid");
@@ -102,79 +99,46 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     //Read product info//
     $Productinfo = $Core->Productinfo($product);
 
-    //Is product in stock om user//
-    $in_stock = (int)$Core->inStock($product, $accid);
-    if ($in_stock) {
-        // Remove Product//
-        $done = $Core->AddStock($product, $accid);
-    } else {
-        // Add the products//
-        $done = $Core->RemoveStock($product, $accid);
-    }
-
-
     //Read store info//
     $StoreInfo = $Core->StoreInfo($accid);
+
+    //Is product in stock om user//
+    $in_stock = (int)$Core->inStock($product, $accid);
+
+    if ($in_stock) {
+        // Remove Product//
+        $done = (int)$Core->RemoveStock($product, $accid);
+    } else {
+        // Add the products//
+        $_available = $Core->StockVolume($accid);
+        $_new_volume = $_available + $Productinfo->selling;
+        if($StoreInfo->capacity >= $_new_volume){
+            $done = (int)$Core->AddStock($product, $accid);
+        }else{
+            $added = 0;
+        }
+    }
+
     //Get store capacity//
     $store_capacity = (float)$StoreInfo->capacity;
 
     //Get store total and aty socked//
-    $StoreComputed = $Core->ComputeStore($accid);
-    
     //Recompute Store Details//
-    $done += $Core->SetStoreInfo($accid, "store_count", $StorCNT);
-    $done += $Core->SetStoreInfo($accid, "products", $Paroducts_Data);
-    $done += $Core->SetStoreInfo($accid, "store_total", $store_total);
-
-
-
-    $Paroducts_Array = json_decode($StoreInfo->products);
-
-
-
-    $product_total = (float)$Productinfo->selling;
-
-    $in_array = (int)in_array($product, $Paroducts_Array);
-
-    if ($in_array) {
-
-        //Remove from stock//
-        if ($store_total >= $product_total) {
-            $store_total = $store_total - $product_total;
-            $key = array_search($product, $Paroducts_Array);
-            unset($Paroducts_Array[$key]);
-            $Paroducts_Array = array_values($Paroducts_Array);
-            $StorCNT = count($Paroducts_Array);
-        }
-        $Paroducts_Data = json_encode($Paroducts_Array);
-    } else {
-
-        //Add to stock//
-        $total_to_compare = $store_total + $product_total;
-        if ($total_to_compare <= $store_capacity) {
-            $store_total = $store_total + $product_total;
-        } else {
-            $added = 0;
-        }
-        $Paroducts_Array[] = $product;
-        $StorCNT = count($Paroducts_Array);
-        $Paroducts_Data = json_encode($Paroducts_Array);
-    }
-
-    $done += $Core->SetStoreInfo($accid, "store_count", $StorCNT);
-    $done += $Core->SetStoreInfo($accid, "products", $Paroducts_Data);
-    $done += $Core->SetStoreInfo($accid, "store_total", $store_total);
+    $StoreComputed = $Core->ComputeStockList($accid);
+    //Total stocked
+    $summed = $StoreComputed->sum;
+   
+    //Qty stocked
+    $CountStock = $Core->CountStock($accid);
+    $finalcapacity = (float) ($store_capacity - $summed);
 
     $Done['done'] = $done;
     $Done['added'] = $added;
-    $Done['count'] = $StorCNT;
-
-    $StoreInfo_new = $Core->StoreInfo($accid);
-    $finalcapacity = (float) ($StoreInfo_new->capacity - $StoreInfo_new->store_total);
-
+    $Done['count'] = $CountStock;
     $Done['capacity'] = $Core->Naira($finalcapacity);
 
     echo json_encode($Done);
+    
 }, 'POST');
 
 

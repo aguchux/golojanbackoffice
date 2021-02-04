@@ -79,5 +79,5 @@ define("APISecret","EY-_3X-iL3OFHbQ0PKoZD121H0Y");
 define("APIEnvironmentVariable","CLOUDINARY_URL=cloudinary://981315561269929:EY-_3X-iL3OFHbQ0PKoZD121H0Y@golojan-com");
 
 
-define("initial_store_capacity", 5000000);
+define("initial_store_capacity", 100000);
 
