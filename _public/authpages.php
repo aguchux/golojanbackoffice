@@ -71,10 +71,10 @@ $Route->add('/auth/forms/{action}', function ($action) {
             $Login = $Core->UserInfo($accid);
             //Check if OTP is enabled//
             $otp = $Core->GenOTP(6);
-            $Core->SetUserInfo($Login->accid, "otp_pending", 1);
-            $Core->SetUserInfo($Login->accid, "otp", strtoupper($otp));
-            $Core->SetUserInfo($Login->accid, "otp_time", date("Y-m-d g:i:S"));
-            $Template->store("accid", $Login->accid);
+            $Core->SetUserInfo($accid, "otp_pending", 1);
+            $Core->SetUserInfo($accid, "otp", strtoupper($otp));
+            $Core->SetUserInfo($accid, "otp_time", date("Y-m-d g:i:S"));
+            $Template->store("accid", $accid);
 
             $message = "NEVER DISCLOSE YOUR OTP TO ANYONE. Your OTP to login is {$otp}. Enquiry? Call: 08068573376";
             $subject = "Your OTP to login is {$otp}";
@@ -99,10 +99,12 @@ $Route->add('/auth/forms/{action}', function ($action) {
                     $Mailer->toEmail = $Login->email;
                     $Mailer->send();
                     //Email Notix//
+                    $Template->redirect("/auth/otp");
+
                 }
             }
 
-            $Template->redirect("/auth/otp");
+            $Template->redirect("/auth/login");
             //Check if OTP is enabled//
 
         }

@@ -581,7 +581,8 @@ class Core extends Model
 	{
 
 		$jsmap = json_encode(array());
-		mysqli_query($this->dbCon, "INSERT INTO golojan_stores(accid,products) VALUES('$accid','$jsmap')");
+		$initial_store_capacity = initial_store_capacity;
+		mysqli_query($this->dbCon, "INSERT INTO golojan_stores(accid,products,capacity) VALUES('$accid','$jsmap','$initial_store_capacity')");
 		$storid = (int)$this->getLastId();
 		if ($storid) {
 			return $storid;
@@ -777,17 +778,11 @@ class Core extends Model
 	}
 
 
-
-
-
-
-
 	public function ListFAQs()
 	{
 		$ListFAQs = mysqli_query($this->dbCon, "select * from golojan_faqs ORDER BY id ASC");
 		return $ListFAQs;
 	}
-
 
 
 	public function ListVideos()
@@ -826,8 +821,51 @@ class Core extends Model
 	}
 
 
+	public function inStock($product,$accid)
+	{
+		$inStock = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_fetch_object($inStock);
+		return $inStock->id;
+	}
+
+	public function ComputeStore($accid)
+	{
+		$ComputeStore = mysqli_query($this->dbCon, "SELECT SUM(selling) AS total, COUNT(id) AS stocked FROM golojan_stock_list WHERE accid='$accid'");
+		$ComputeStore = mysqli_fetch_object($ComputeStore);
+		return $ComputeStore;
+	}
+
+	
+	public function Stocklist($accid)
+	{
+		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE accid='$accid'");
+		$StockInfo = mysqli_fetch_object($StockInfo);
+		return $StockInfo;
+	}
+
+	public function StockInfo($ID)
+	{
+		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE id='$ID'");
+		$StockInfo = mysqli_fetch_object($StockInfo);
+		return $StockInfo;
+	}
 
 
+	public function AddStock($product,$accid)
+	{
+		if(!$this->inStock($product,$accid)){
+			$Product = $this->Productinfo($product);
+			$addtToStock = mysqli_query($this->dbCon, "INSERT INTO golojan_stock_list(accid,product,selling) VALUES('$accid','$product','$Product->selling')");
+			return $this->getLastId();
+		}
+		return false;
+	}
+
+	public function RemoveStock($product,$accid)
+	{
+		$RemoveStock = mysqli_query($this->dbCon, "DELETE golojan_stock_list.* FROM golojan_stock_list  WHERE product='$product' AND accid='$accid'");
+		return $this->countAffected();
+	}
 
 	
 

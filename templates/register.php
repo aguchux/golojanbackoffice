@@ -52,20 +52,36 @@
 
         <div class="listview-title my-2 text-center">Sponsor's Account ID'</div>
 
-        <div class="card">
-            <div class="card-body pb-1">
+        <div class="listview image-listview media inset mb-2 m-0 p-0 ">
+            <li id="SponsorInfo" class="d-none">
+                <a href="#" class="item">
+                    <div class="imageWrapper">
+                        <img src="assets/img/sample/photo/1.jpg" alt="image" class="imaged w64">
+                    </div>
+                    <div class="in">
+                        <div>
+                            Photos
+                            <div class="text-muted">subtext</div>
+                        </div>
+                    </div>
+                </a>
+            </li>
 
+            <div class="card-body pb-1">
                 <div class="form-group basic">
                     <div class="input-wrapper">
+
                         <label class="label" for="sponsor">Your Sponsor's ID'</label>
-                        <input type="text" required class="form-control" pattern="\d*"  id="sponsor_id" name="sponsor" placeholder="Your Sponsor">
+                        <input type="text" style="font-size:200%;" class="form-control" pattern="\d*" id="sponsor_id" name="sponsor" placeholder="Your Sponsor's ID">
                         <i class="clear-input">
                             <ion-icon name="person-outline"></ion-icon>
                         </i>
+
                     </div>
                 </div>
             </div>
         </div>
+
 
 
         <div class="form-links mt-2">

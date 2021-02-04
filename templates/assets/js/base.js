@@ -94,7 +94,10 @@ $(function () {
         $("#ShowAccountNumber").html(txt);
     });
 
+
+
     $('.xAjaxCheckBank').on("change", function (e) {
+
         e.preventDefault();
 
         var accountnumber = $("#accountnumber").val();
@@ -133,45 +136,6 @@ $(function () {
 
 });
 
-$(function () {
-    $('#FormAddUser111').submit(function (e) {
-        e.preventDefault ? e.preventDefault() : e.returnValue = false;
-        var ResultBox = $("#ModalResult");
-        var _url = $(this).attr('action');
-
-        var fullname = $(this).find("#fullname").val();
-        var email = $(this).find("#email").val();
-        var mobile = $(this).find("#mobile").val();
-        var level = $(this).find("#level").val();
-
-        var fd = new FormData;
-
-        fd.append('fullname', fullname);
-        fd.append('email', email);
-        fd.append('mobile', mobile);
-        fd.append('level', level);
-
-        // var _data = $(this).serialize();
-        $.ajax(_url, {
-            type: 'post',
-            data: fd,
-            contentType: false,
-            processData: false,
-            async: true,
-            success: function (data, status, xhr) {
-                var jData = JSON.parse(data);
-                alert(jData.status);
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert(jData.errorMessage);
-            }
-
-        });
-
-    });
-
-});
-
 
 $(function () {
     $('table').DataTable();
@@ -197,14 +161,14 @@ $(function () {
 
 $(function () {
     $('#sponsor_id').keyup(function (event) {
-
+        let El = $(this);
         let sponsorid = $(this).val();
         let key_in = event.which;
         if (sponsorid == '') {
             event.preventDefault();
             return false;
         }
-        if (sponsorid.length <= 5) {
+        if (sponsorid.length <= 4) {
             event.preventDefault();
             return false;
         }
@@ -213,17 +177,24 @@ $(function () {
             return false;
         }
 
-        $.ajax("/ajax/profile/" +  sponsorid + "/sponsor", {
+        $.ajax("/ajax/profile/" + sponsorid + "/sponsor", {
             type: 'post',
             data: null,
             cache: false,
             contentType: false,
             processData: false,
             beforeSend: function () {
-
+                $("#SponsorInfo").html('').addClass('d-none');
             },
             success: function (data, status, xhr) {
-                alert(data);
+                let jDATA = JSON.parse(data);
+                let accid = parseInt(jDATA.accid);
+                if (accid) {
+                    let info = '<a href="javacript:;" class="item"><div class="imageWrapper"><img src="' + jDATA.avatar + '" class="imaged w64"></div><div class="in"><div>' + jDATA.name + '<div class="text-muted">Joined : <strong>' + jDATA.created + '</strong></div></div></div></a>';
+                    $("#SponsorInfo").html(info).removeClass('d-none');
+                } else {
+                    $("#SponsorInfo").html('').addClass('d-none');
+                }
             },
             error: function (jqXhr, textStatus, errorMessage) {
             }
@@ -335,19 +306,25 @@ $(function () {
         var el = $(this);
         $(this).attr("tabindex", i);
         el.on('blur', function (e) {
-            var elVal = el.val();
-            var _id = el.attr("id");
-            $.ajax("https://litimus.com/ajax/exists/" + _id + "/", {
+            let elVal = el.val();
+            let _id = el.attr("id");
+            let frmData = new FormData();
+            frmData.append("dataval", elVal);
+            $.ajax("/ajax/exists/" + _id , {
                 type: 'post',
-                data: "?value=" + elVal,
+                data: frmData,
                 contentType: false,
                 processData: false,
                 async: true,
                 success: function (data, status, xhr) {
+                    let intResult = parseInt(data);
+                    if(intResult){
+                        el.css("color","red").focus().select();
+                    }else{
+                        el.css("color","green");
+                    }
                 },
-                error: function (jqXhr, textStatus, errorMessage) {
-                }
-
+                error: function (jqXhr, textStatus, errorMessage) {}
             });
         })
     });

@@ -2,26 +2,50 @@
 
 
 $Route->add('/ajax/exists/{param}', function ($param) {
+    $result = 0;
     $Core = new Apps\Core();
+    $Template = new Apps\Template;
+    $data = $Core->post($_POST);
+    $dataval = $data->dataval;
     $param = "email";
     if ($param == "email") {
-        die(1);
+        $UserEmail = $Core->UserInfo($dataval);
+        if (isset($UserEmail->accid)) {
+            $result = 1;
+        }
     } elseif ($param == "mobile") {
-        die(2);
+        $UserMobile = $Core->UserInfo($dataval);
+        if (isset($UserMobile->accid)) {
+            $result = 1;
+        }
     }
+    $Template->debug($result);
 }, 'POST');
 
 
-$Route->add('/ajax/profile/{sponsor}/sponsor', function ($sponsor) {
+$Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
+    $Done = array();
     $Core = new Apps\Core();
-    
-    echo $sponsor;
+    $Template = new Apps\Template;
+
+    $Sponsor = $Core->UserInfo($sponsorid);
+    if ((int)$Sponsor->accid) {
+        $Done['accid'] = $sponsorid;
+        $Done['avatar'] = $Sponsor->avatar;
+        $Done['name'] = $Sponsor->fullname;
+        $Done['created'] = date("jS M Y", strtotime($Sponsor->created));
+    } else {
+        $Done['accid'] = 0;
+    }
+    $Done = json_encode($Done);
+
+    $Template->debug($Done);
 }, 'POST');
 
 
 $Route->add('/ajax/profile/upload', function () {
     $Core = new Apps\Core();
-    $Template = new Apps\Template("/auth/login"); 
+    $Template = new Apps\Template("/auth/login");
     $result = array();
 
     $accid = $Template->storage("accid");
@@ -34,10 +58,10 @@ $Route->add('/ajax/profile/upload', function () {
         $handle->file_new_name_body = sha1($_FILES['imagefile']['name'] .  time());
 
         $handle->dir_auto_create = true;
-        $handle->image_resize	= true;
+        $handle->image_resize    = true;
         $handle->image_ratio_crop = true;
-        $handle->image_y	=  160;
-        $handle->image_x	=  160;
+        $handle->image_y    =  160;
+        $handle->image_x    =  160;
 
         $handle->file_overwrite = true;
         $handle->dir_chmod = 0777;
@@ -49,14 +73,12 @@ $Route->add('/ajax/profile/upload', function () {
             $handle->clean();
             $result['done'] = 1;
             $result['image'] = $img_url;
-            $Core->SetUserInfo($accid,"avatar",$img_url);
+            $Core->SetUserInfo($accid, "avatar", $img_url);
         } else {
             $result['done'] = 0;
         }
         echo json_encode($result);
     }
-
-
 }, 'POST');
 
 
@@ -67,27 +89,61 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $done = 0;
     $added = 1;
 
+    $StorCNT = 0;
+    $Paroducts_Data = null;
+
     $Core = new Apps\Core();
     $Template = new Apps\Template("/auth/login");
     $accid = $Template->storage("accid");
+
+    //create store if not exists
     $Core->HasStore($accid);
 
-    $StoreInfo = $Core->StoreInfo($accid);
+    //Read product info//
     $Productinfo = $Core->Productinfo($product);
+
+    //Is product in stock om user//
+    $in_stock = (int)$Core->inStock($product, $accid);
+    if ($in_stock) {
+        // Remove Product//
+        $done = $Core->AddStock($product, $accid);
+    } else {
+        // Add the products//
+        $done = $Core->RemoveStock($product, $accid);
+    }
+
+
+    //Read store info//
+    $StoreInfo = $Core->StoreInfo($accid);
+    //Get store capacity//
+    $store_capacity = (float)$StoreInfo->capacity;
+
+    //Get store total and aty socked//
+    $StoreComputed = $Core->ComputeStore($accid);
+    
+    //Recompute Store Details//
+    $done += $Core->SetStoreInfo($accid, "store_count", $StorCNT);
+    $done += $Core->SetStoreInfo($accid, "products", $Paroducts_Data);
+    $done += $Core->SetStoreInfo($accid, "store_total", $store_total);
+
+
+
     $Paroducts_Array = json_decode($StoreInfo->products);
 
-    $store_capacity = (float)$StoreInfo->capacity;
-    $store_total = (float)$StoreInfo->store_total;
+
+
     $product_total = (float)$Productinfo->selling;
 
-    if (in_array($product, $Paroducts_Array)) {
+    $in_array = (int)in_array($product, $Paroducts_Array);
+
+    if ($in_array) {
 
         //Remove from stock//
         if ($store_total >= $product_total) {
-            $store_total -= $product_total;
-
+            $store_total = $store_total - $product_total;
             $key = array_search($product, $Paroducts_Array);
             unset($Paroducts_Array[$key]);
+            $Paroducts_Array = array_values($Paroducts_Array);
             $StorCNT = count($Paroducts_Array);
         }
         $Paroducts_Data = json_encode($Paroducts_Array);
@@ -96,7 +152,7 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
         //Add to stock//
         $total_to_compare = $store_total + $product_total;
         if ($total_to_compare <= $store_capacity) {
-            $store_total += $product_total;
+            $store_total = $store_total + $product_total;
         } else {
             $added = 0;
         }
@@ -104,7 +160,6 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
         $StorCNT = count($Paroducts_Array);
         $Paroducts_Data = json_encode($Paroducts_Array);
     }
-
 
     $done += $Core->SetStoreInfo($accid, "store_count", $StorCNT);
     $done += $Core->SetStoreInfo($accid, "products", $Paroducts_Data);
@@ -114,9 +169,10 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $Done['added'] = $added;
     $Done['count'] = $StorCNT;
 
-    //$StoreInfo_new = $Core->StoreInfo($accid);
-    //$finalcapacity = (float) ($StoreInfo_new->capacity - $StoreInfo_new->store_total);
-    $Done['capacity'] = $Core->Naira(50000000);
+    $StoreInfo_new = $Core->StoreInfo($accid);
+    $finalcapacity = (float) ($StoreInfo_new->capacity - $StoreInfo_new->store_total);
+
+    $Done['capacity'] = $Core->Naira($finalcapacity);
 
     echo json_encode($Done);
 }, 'POST');

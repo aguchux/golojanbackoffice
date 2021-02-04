@@ -8,8 +8,8 @@
                         <h1 class="total"><?= $Core->Naira($Wallet->balance) ?></h1>
                     </div>
                     <div class="right">
-                        <a href="#" class="button" data-toggle="modal" data-target="#depositActionSheet">
-                            <ion-icon name="add-outline"></ion-icon>
+                        <a href="#" class="button flashbutton" data-toggle="modal" data-target="#depositActionSheet">
+                            <ion-icon name="arrow-up-circle-outline"></ion-icon>
                         </a>
                     </div>
                 </div>
@@ -72,20 +72,25 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box">
-                        <div class="title">Sales</div>
-                        <div class="value"><?= $Core->Naira(0) ?></div>
+                        <div class="title">Store Capacity</div>
+                        <div class="value"><?= $Core->Naira($StoreInfo->capacity) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
-                        <div class="title">Commission</div>
-                        <div class="value"><?= $Core->Naira(0) ?></div>
+                        <div class="title">Volume Stocked</div>
+                        <div class="value"><?= $Core->Naira($StoreInfo->store_total) ?></div>
                     </div>
                 </div>
             </div>
+
+
+
         </div>
         <!-- * Stats -->
 
