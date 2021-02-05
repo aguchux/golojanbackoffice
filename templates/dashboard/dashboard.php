@@ -95,6 +95,27 @@
         <!-- * Stats -->
 
 
+                
+        <!-- Stats -->
+        <div class="section">
+            <div class="row mt-2 mb-4">
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">Referred By</div>
+                        <div class="value"><?= $Core->getReferrer($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">Sponsored By</div>
+                        <div class="value"><?= $Core->getSponsor($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- * Stats -->
+
+
 
         <!-- Stats -->
         <div class="section">

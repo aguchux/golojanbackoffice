@@ -676,6 +676,32 @@ class Core extends Model
 	}
 
 
+
+	public function getSponsor($accid)
+	{
+		$getSponsor = mysqli_query($this->dbCon, "select sponsor from golojan_accounts where accid='$accid'");
+		$getSponsor = mysqli_fetch_object($getSponsor);
+		if (isset($getSponsor->sponsor)) {
+			$getSponsor = $this->UserInfo($getSponsor->sponsor);
+			return "{$getSponsor->fullname}({$getSponsor->sponsor})";
+		}
+		return "---";
+	}
+
+	public function getReferrer($accid)
+	{
+		$getReferrer = mysqli_query($this->dbCon, "select referrer from golojan_accounts where accid='$accid'");
+		$getReferrer = mysqli_fetch_object($getReferrer);
+		if (isset($getReferrer->referrer)) {
+			$getReferrer = $this->UserInfo($getReferrer->referrer);
+			return "{$getReferrer->fullname}({$getReferrer->referrer})";
+		}
+		return "---";
+	}
+
+
+
+
 	public function UserExists($username)
 	{
 		$UserExists = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
@@ -710,6 +736,7 @@ class Core extends Model
 		$wallet->balance = (float) $WalletInfo->open_balance +  $WalletInfo->closed_balance;
 		return $wallet;
 	}
+
 
 	public function Categories()
 	{
@@ -1158,8 +1185,8 @@ class Core extends Model
 	}
 
 
-	
-	public function Stories($level=0)
+
+	public function Stories($level = 0)
 	{
 		$Stories = mysqli_query($this->dbCon, "select * from golojan_stories ORDER BY created ASC");
 		return $Stories;
@@ -1173,6 +1200,108 @@ class Core extends Model
 	}
 
 
+	//PONSORS & SPILLOVERS
+	public function setSponsor($accid, $sponsor)
+	{
+		$netSP1 = $this->MyNetwork($sponsor, 1);
+		$netCT1 = count($netSP1);
+		if ($netCT1 < 2) {
+			if ($this->FillLegs($sponsor, $accid)) {
+				$h = $this->SetUserInfo($accid, "sponsor", $sponsor);
+			}
+			return true;
+		} else {
+			$new_sponsor = (int)$this->getSpillover($accid, $sponsor);
+			if ($new_sponsor) {
+				if ($this->FillLegs($sponsor, $accid)) {
+					$this->SetUserInfo($accid, "sponsor", $new_sponsor);
+				}
+			}
+			return false;
+		}
+	}
+
+
+
+	public function FillLegs($sponsor, $accid)
+	{
+		$USER = $this->UserInfo($sponsor);
+		$lleg = $USER->lleg;
+		$rleg = $USER->rleg;
+		if ($lleg == 0) {
+			$this->SetUserInfo($sponsor, "lleg", $accid);
+			return true;
+		} else {
+			if ($rleg == 0) {
+				$this->SetUserInfo($sponsor, "rleg", $accid);
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+	public function getSpillover($accid, $sponsor = 0)
+	{
+		if ($sponsor) {
+
+			$netSP1 = $this->MyNetwork($sponsor, 1);
+
+			$netSP2 = $this->MyNetwork($sponsor, 2);
+			$netCT2 = count($netSP2);
+			if ($netCT2 < 4) {
+				foreach ($netSP1 as $netsp1) {
+					$sub_net = $this->MyNetwork($netsp1, 1);
+					if (count($sub_net) < 2) {
+						return $netsp1;
+					}
+				}
+			}
+
+			$netSP3 = $this->MyNetwork($sponsor, 3);
+			$netCT3 = count($netSP3);
+			if ($netCT3 < 8) {
+				foreach ($netSP2 as $netsp2) {
+					$sub_net = $this->MyNetwork($netsp2, 1);
+					if (count($sub_net) < 2) {
+						return $netsp1;
+					}
+				}
+			}
+
+
+			$netSP4 = $this->MyNetwork($sponsor, 4);
+			$netCT4 = count($netSP4);
+			if ($netCT4 < 16) {
+				foreach ($netSP3 as $netsp3) {
+					$sub_net = $this->MyNetwork($netsp3, 1);
+					if (count($sub_net) < 2) {
+						return $netsp3;
+					}
+				}
+			}
+		} else {
+
+			//Randomely Get Spillover//
+			$new_sponsor = $this->RandomSpillover($accid);
+			//$this->debug($new_sponsor);
+
+			return $new_sponsor;
+			//Randomely Get Spillover//
+
+		}
+	}
+
+
+	public function RandomSpillover($accid, $params = array())
+	{
+		$RandomSpillover = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE (rleg='0' OR lleg='0') AND accid!='$accid' ORDER BY created ASC LIMIT 1");
+		$RandomSpillover = mysqli_fetch_object($RandomSpillover);
+		return $RandomSpillover->accid;
+	}
+
+
 
 	public function adminUsers()
 	{
@@ -1181,7 +1310,7 @@ class Core extends Model
 	}
 
 
-	
+
 
 
 

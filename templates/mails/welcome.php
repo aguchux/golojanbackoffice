@@ -118,35 +118,38 @@
             <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
-                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <img src="https://litimus.com/templates/assets/img/logo-icon.png" width="125" height="120" style="display: block; border: 0px;" />
+                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif;">
+
+                            <img src="https://ebsgfinance.net/templates/assets/img/logo-icon.png" width="125" height="120" style="display: block; border: 0px;" />
+
                             <h1 style="font-size: 48px; font-weight: 400; margin: 2;">
-                            <small  style="font-size: 20px; font-weight: 200; margin: 0; color:#666666;" class="text-muted">Your OTP</small><br/>
-                            <?= $otp ?>
+                                <small style="font-size: 20px; font-weight: 200; margin: 0; color:#666666;" class="text-muted">Welcome onboard</small><br />
+                                <?= $fullname ?>
                             </h1>
                         </td>
                     </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400;">
-                            <?= $mailbody ?>
+                        <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                                <tr>
+                                    <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400;">
+                                        <?= $mailbody ?>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
+
         <tr>
             <td bgcolor="#f4f4f4" align="center" style="padding: 30px 10px 0px 10px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td bgcolor="#FFECD1" align="center" style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">Golojan Team</h2>
-                            <p style="margin: 0;"><a href="#" style="color: #FFA73B;">De-Golojan Technologies Ltd</a></p>
+                            <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">EBSG Finance Team</h2>
+                            <p style="margin: 0;"><a href="#" style="color: #FFA73B;">Government of Ebonyi State</a></p>
                         </td>
                     </tr>
                 </table>

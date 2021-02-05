@@ -83,8 +83,8 @@
                             <img src="<?= $UserInfo->avatar ?>" class="imaged  w36">
                         </div>
                         <div class="in">
-                            <strong><?= $UserInfo->fullname ?></strong>
-                            <div class="text-muted"><?= $UserInfo->accid ?></div>
+                            <strong><?= "{$UserInfo->fullname}({$UserInfo->accid})" ?></strong>
+                            <div class="text-muted"><?= $UserInfo->email ?></div>
                         </div>
                         <a href="#" class="btn btn-link btn-icon sidebar-close" data-dismiss="modal">
                             <ion-icon name="close-outline"></ion-icon>

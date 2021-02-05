@@ -317,7 +317,6 @@ $(function () {
                         $("#xStoreTotal").html(fData.capacity);
                         $("#xStoreCount").html(fData.count);
                     }
-                    if(!parseInt(fData.added)){$(this).one("click", ()=> {alert("Product not added, your store capacity cannot contain product");});}
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                 }

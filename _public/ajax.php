@@ -29,6 +29,7 @@ $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
     $Template = new Apps\Template;
 
     $Sponsor = $Core->UserInfo($sponsorid);
+
     if ((int)$Sponsor->accid) {
         $Done['accid'] = $sponsorid;
         $Done['avatar'] = $Sponsor->avatar;
@@ -38,6 +39,9 @@ $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
         $Done['accid'] = 0;
     }
     $Done = json_encode($Done);
+
+    echo $Done;
+
 }, 'POST');
 
 
