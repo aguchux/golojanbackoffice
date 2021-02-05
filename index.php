@@ -13,23 +13,9 @@ $Route->add('/', function () {
 //Home page//
 
 
-$Route->add('/spill/{accid}', function ($accid) {
-    $Core = new Apps\Core;
-    $Template = new Apps\Template;
-
-    $accd = $Core->getSpillover($accid);
-    $Template->debug($accd);
-
-}, 'GET');
-
-
-
-
-
 require_once DOT . "/_public/authpages.php";
 require_once DOT . "/_public/dashboard.php";
 require_once DOT . "/_public/ajax.php";
-
 
 
 $Route->add('/device/connection', function () {
@@ -50,5 +36,6 @@ $Route->add(
     'GET'
 );
 //Logout Sessions//
+
 
 $Route->run('/');

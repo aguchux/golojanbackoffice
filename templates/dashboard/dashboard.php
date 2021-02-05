@@ -18,26 +18,18 @@
                 <div class="wallet-footer">
                     <div class="item">
                         <a href="#" data-toggle="modal" data-target="#withdrawActionSheet">
-                            <div class="icon-wrapper bg-danger">
+                            <div class="icon-wrapper bg-primary">
                                 <ion-icon name="add-outline"></ion-icon>
                             </div>
-                            <strong>Deposit</strong>
+                            <strong>Sell Item</strong>
                         </a>
                     </div>
                     <div class="item">
                         <a href="#" data-toggle="modal" data-target="#sendActionSheet">
-                            <div class="icon-wrapper">
+                            <div class="icon-wrapper bg-success">
                                 <ion-icon name="arrow-down-outline"></ion-icon>
                             </div>
                             <strong>Withdraw</strong>
-                        </a>
-                    </div>
-                    <div class="item">
-                        <a href="#">
-                            <div class="icon-wrapper bg-success">
-                                <ion-icon name="card-outline"></ion-icon>
-                            </div>
-                            <strong>My Shop</strong>
                         </a>
                     </div>
                     <div class="item">
@@ -48,6 +40,17 @@
                             <strong>Transfer</strong>
                         </a>
                     </div>
+                    
+                    <div class="item">
+                        <a href="#">
+                            <div class="icon-wrapper bg-success">
+                                <ion-icon name="card-outline"></ion-icon>
+                            </div>
+                            <strong>My Shop</strong>
+                        </a>
+                    </div>
+
+
 
                 </div>
                 <!-- * Wallet Footer -->
@@ -95,7 +98,7 @@
         <!-- * Stats -->
 
 
-                
+
         <!-- Stats -->
         <div class="section">
             <div class="row mt-2 mb-4">
