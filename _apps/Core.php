@@ -10,6 +10,7 @@ use \Apps\MysqliDb;
 
 use \Apps\EmailTemplate;
 
+use function GuzzleHttp\json_decode;
 
 class Core extends Model
 {
@@ -178,7 +179,7 @@ class Core extends Model
 	 */
 	public function Passwordify($password)
 	{
-		$Passwordify = md5($password);
+		$Passwordify = $this->encode($password);
 		return $Passwordify;
 	}
 	/**
@@ -187,7 +188,7 @@ class Core extends Model
 	 */
 	public function encode($data)
 	{
-		$encode = sha1(md5($data));
+		$encode = sha1(md5($data . encrypt_salt ));
 		return $encode;
 	}
 
@@ -539,7 +540,9 @@ class Core extends Model
 
 	public function RegisterAccount($fullname, $email, $mobile, $password)
 	{
-		mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(fullname,email,mobile,password) VALUES('$fullname','$email','$mobile','$password')");
+		$pass_word = $this->Passwordify($password);
+
+		mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(fullname,email,mobile,password) VALUES('$fullname','$email','$mobile','$pass_word')");
 		$accid = (int)$this->getLastId();
 		if ($accid) {
 			$this->NewStore($accid);
@@ -613,13 +616,12 @@ class Core extends Model
 	 */
 	public function UserLogin($username, $password)
 	{
-		$UserLogin = mysqli_query($this->dbCon, "select * from golojan_accounts where (email='$username' OR mobile='$username') AND password='$password'");
+		$pass_word = $this->Passwordify($password);
+		$UserLogin = mysqli_query($this->dbCon, "select * from golojan_accounts where (email='$username' OR mobile='$username') AND password='$pass_word'");
 		$UserLogin = mysqli_fetch_object($UserLogin);
 		$this->SetUserInfo($UserLogin->accid, "lastseen", date("Y-m-d g:i:s"));
 		return $UserLogin;
 	}
-
-
 
 
 
@@ -677,24 +679,28 @@ class Core extends Model
 
 
 
+
+
 	public function getSponsor($accid)
 	{
-		$getSponsor = mysqli_query($this->dbCon, "select sponsor from golojan_accounts where accid='$accid'");
+		$getSponsor = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE accid='$accid'");
 		$getSponsor = mysqli_fetch_object($getSponsor);
-		if (isset($getSponsor->sponsor)) {
-			$getSponsor = $this->UserInfo($getSponsor->sponsor);
-			return "{$getSponsor->fullname}({$getSponsor->sponsor})";
+		$sponsor = $getSponsor->sponsor;
+		if (isset($sponsor)) {
+			$MySponsor = $this->UserInfo($sponsor);
+			return "{$MySponsor->fullname}({$MySponsor->accid})";
 		}
 		return "---";
 	}
 
 	public function getReferrer($accid)
 	{
-		$getReferrer = mysqli_query($this->dbCon, "select referrer from golojan_accounts where accid='$accid'");
+		$getReferrer = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE accid='$accid'");
 		$getReferrer = mysqli_fetch_object($getReferrer);
-		if (isset($getReferrer->referrer)) {
-			$getReferrer = $this->UserInfo($getReferrer->referrer);
-			return "{$getReferrer->fullname}({$getReferrer->referrer})";
+		$referrer = $getReferrer->referrer;
+		if (isset($referrer)) {
+			$MyReferrer = $this->UserInfo($referrer);
+			return "{$MyReferrer->fullname}({$getReferrer->accid})";
 		}
 		return "---";
 	}
@@ -710,6 +716,32 @@ class Core extends Model
 			return true;
 		}
 		return false;
+	}
+
+	public function LevelInfo($level)
+	{
+		$LevelInfo = mysqli_query($this->dbCon, "select * from golojan_levels where level='$level'");
+		$LevelInfo = mysqli_fetch_object($LevelInfo);
+		return $LevelInfo;
+	}
+
+	public function LoadUserBadge($accid)
+	{
+		$LoadBadges = mysqli_query($this->dbCon, "select badges from golojan_accounts where accid='$accid'");
+		$LoadBadges = mysqli_fetch_object($LoadBadges);
+		$badges = $LoadBadges->badges;
+		$badges = json_decode($badges);
+		$top_badge = max($badges);
+		$BadgeInfo = $this->BadgeInfo($top_badge);
+		return $BadgeInfo;
+	}
+
+
+	public function BadgeInfo($id)
+	{
+		$BadgeInfo = mysqli_query($this->dbCon, "select * from golojan_badges where id='$id'");
+		$BadgeInfo = mysqli_fetch_object($BadgeInfo);
+		return $BadgeInfo;
 	}
 
 
@@ -1303,465 +1335,6 @@ class Core extends Model
 
 
 
-	public function adminUsers()
-	{
-		$adminUsers = mysqli_query($this->dbCon, "select * from golojan_accounts ORDER BY accid ASC");
-		return $adminUsers;
-	}
-
-
-
-
-
-
-	public function Mdas()
-	{
-		$Mdas = mysqli_query($this->dbCon, "select * from golojan_mdas where enabled='1'");
-		return $Mdas;
-	}
-
-
-	public function BankerInfo($id)
-	{
-		$BankerInfo = mysqli_query($this->dbCon, "select * from golojan_bankers where id='$id'");
-		$BankerInfo = mysqli_fetch_object($BankerInfo);
-		return $BankerInfo;
-	}
-
-	public function SetBankerInfo($id, $key, $val)
-	{
-		mysqli_query($this->dbCon, "UPDATE golojan_bankers SET $key='$val' WHERE id='$id'");
-		return mysqli_affected_rows($this->dbCon);
-	}
-
-
-	public function BankerInfoToBank($id)
-	{
-		$result = new \stdClass;
-
-		$BankerInfo = mysqli_query($this->dbCon, "select * from golojan_bankers where id='$id'");
-		$BankerInfo = mysqli_fetch_object($BankerInfo);
-
-		$result->accountname = $BankerInfo->accountname;
-		$result->accountnumber = $BankerInfo->accountnumber;
-
-		$Banker = $this->BankInfo($BankerInfo->bankid);
-		$result->bank = $Banker->bank;
-
-		return $result;
-	}
-
-	public function Bankers()
-	{
-		$Bankers = mysqli_query($this->dbCon, "select * from golojan_bankers");
-		return $Bankers;
-	}
-
-	public function MdaBankers($mda)
-	{
-		$MdaBankers = mysqli_query($this->dbCon, "select * from golojan_bankers where mda='$mda'");
-		return $MdaBankers;
-	}
-
-	public function Accounts()
-	{
-		$Accounts = mysqli_query($this->dbCon, "select * from golojan_accounts");
-		return $Accounts;
-	}
-
-	public function CountUsers()
-	{
-		$result = new \stdClass;
-
-		//SELECT id, category_id, post_title FROM posts WHERE id IN(SELECT MAX(id) FROM posts GROUP BY category_id);
-		$CountUsers = mysqli_query($this->dbCon, "select count(accid) as nusers from golojan_accounts");
-		$CountUsers = mysqli_fetch_object($CountUsers);
-		$result->nusers = $CountUsers->nusers;
-
-		$now_time = time();
-
-		$CountOnlineUsers = mysqli_query($this->dbCon, "SELECT count(*) As ousers FROM `golojan_accounts` WHERE `lastaction` >= DATE_SUB(NOW(), INTERVAL {$this->session_timout} MINUTE)");
-		$CountOnlineUsers = mysqli_fetch_object($CountOnlineUsers);
-		$result->ousers = $CountOnlineUsers->ousers;
-
-		return $result;
-	}
-
-
-	public function MdaInfo($mda)
-	{
-		$MdaInfo = mysqli_query($this->dbCon, "select * from golojan_mdas where id='$mda'");
-		$MdaInfo = mysqli_fetch_object($MdaInfo);
-		return $MdaInfo;
-	}
-
-
-	public function CreateMDA($parent, $category, $mda, $orgcode)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_mdas(parent,category,mda,orgcode) VALUES('$parent','$category','$mda','$orgcode')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-	public function CreateNewMDA($orgcode, $mda)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_mdas(orgcode,mda) VALUES('$orgcode','$mda')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-
-	public function MDAexists($orgcode)
-	{
-		$MDAexists = mysqli_query($this->dbCon, "select count(id) as ismda from golojan_mdas where orgcode='$orgcode'");
-		$MDAexists = mysqli_fetch_object($MDAexists);
-		return $MDAexists->ismda;
-	}
-
-
-	public function MdaAccountExists($bankid, $accountnumber, $mda)
-	{
-		$MdaAccountExists = mysqli_query($this->dbCon, "select count(id) as mdacnt from golojan_bankers where mda='$mda' AND (accountnumber='$accountnumber' AND bankid='$bankid')");
-		$MdaAccountExists = mysqli_fetch_object($MdaAccountExists);
-		return (int)$MdaAccountExists->mdacnt;
-	}
-
-
-	public function BankInfo($bankerid)
-	{
-		$BankInfo = mysqli_query($this->dbCon, "select * from golojan_banks where id='$bankerid'");
-		$BankInfo = mysqli_fetch_object($BankInfo);
-		return $BankInfo;
-	}
-
-	public function CreateAccount($category, $sn, $fn, $email, $mobile, $username, $password, $office)
-	{
-		$roots = ($category == "admin") ? "my" : "user";
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(category,roots,lastname,firstname,email,mobile,username,password,office) VALUES('$category','$roots','$sn','$fn','$email','$mobile','$username','$password','$office')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-	public function ListBankers()
-	{
-		$ListBankers = mysqli_query($this->dbCon, "select * from golojan_bankers where mda=0");
-		return $ListBankers;
-	}
-
-	public function ListBanks()
-	{
-		$ListBanks = mysqli_query($this->dbCon, "select * from golojan_banks");
-		return $ListBanks;
-	}
-
-	public  function setBankInfo($id, $name, $value)
-	{
-		mysqli_query($this->dbCon, "UPDATE golojan_banks SET `$name`='$value' WHERE id='$id'");
-		return $this->countAffected();
-	}
-
-
-	public function GroupBankersForDasboard()
-	{
-		$GroupBankersForDasboard = mysqli_query($this->dbCon, "select COUNT(bankid) as bcount, bankid from golojan_bankers where mda='0' group by bankid");
-		return $GroupBankersForDasboard;
-	}
-
-	public function GroupMDABankersForDasboard()
-	{
-		$GroupMDABankersForDasboard = mysqli_query($this->dbCon, "select COUNT(bankid) as bcount, bankid, mda from golojan_bankers where mda!='0' group by mda");
-		return $GroupMDABankersForDasboard;
-	}
-
-	public function GetBankersForSubDasboard($bankid)
-	{
-		$GetBankersForSubDasboard = mysqli_query($this->dbCon, "select * from golojan_bankers where bankid = '$bankid'");
-		return $GetBankersForSubDasboard;
-	}
-
-	public function GetMDABankersForSubDasboard($mda)
-	{
-		$GetBankersForSubDasboard = mysqli_query($this->dbCon, "select * from golojan_bankers where mda = '$mda'");
-		return $GetBankersForSubDasboard;
-	}
-
-	public function CountMdaBankers($mda)
-	{
-		$CountMdaBankers = mysqli_query($this->dbCon, "select count(id) AS bnum from golojan_bankers where mda='$mda'");
-		$CountMdaBankers = mysqli_fetch_object($CountMdaBankers);
-		return $CountMdaBankers->bnum;
-	}
-
-
-	public function CounMDAs()
-	{
-		$CountMdAs = mysqli_query($this->dbCon, "select count(id) AS bnum from golojan_bankers where mda!='0'");
-		$CountMdAs = mysqli_fetch_object($CountMdAs);
-		return $CountMdAs->bnum;
-	}
-
-
-
-	/** @return mixed  */
-	public function CounBankers()
-	{
-		$CounBankers = mysqli_query($this->dbCon, "SELECT COUNT(id) AS tigr FROM golojan_bankers where mda='0'");
-		$CounBankers = mysqli_fetch_object($CounBankers);
-		return $CounBankers->tigr;
-	}
-
-
-
-	public function GetIGRBankersForSubDasboard()
-	{
-		$GetIGRBankersForSubDasboard = mysqli_query($this->dbCon, "select * from golojan_bankers where is_igr = '1'");
-		return $GetIGRBankersForSubDasboard;
-	}
-
-	public function CreateBank($banker, $branch, $accountname, $accountnumber)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_bankers(bankid,branch,accountname,accountnumber) VALUES('$banker','$branch','$accountname','$accountnumber')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-	public function CreateBankAccount($banker, $accountname, $accnum)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_bankers(`bankid`,`bank_id`,`bank_code`,`accountname`,`accountnumber`) VALUES('$banker','$accountname','$accnum')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-	public function setConnection($accid, $ip, $os, $browser, $device)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_connections(accid,ip,os,browser,device) VALUES('$accid','$ip','$os','$browser','$device')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-	public function Connections()
-	{
-		$Connections = mysqli_query($this->dbCon, "select * from golojan_connections ORDER BY created");
-		return $Connections;
-	}
-
-
-	public function AllIGRBankerIDsToArray()
-	{
-		$AllIGRBankerIDsToArray_array = array();
-		$AllIGRBankerIDsToArray = mysqli_query($this->dbCon, "SELECT id FROM golojan_bankers WHERE is_igr='1'");
-		while ($banker_id = mysqli_fetch_object($AllIGRBankerIDsToArray)) {
-			$AllIGRBankerIDsToArray_array[] = $banker_id->id;
-		}
-
-		$AllIGRBankerIDsToArray_array = array_map('intval', $AllIGRBankerIDsToArray_array);
-		$AllIGRBankerIDsToArray_array = implode("','", $AllIGRBankerIDsToArray_array);
-
-		return $AllIGRBankerIDsToArray_array;
-	}
-
-	public function AddBankerTrigger($accid, $type, $mode, $amount, $bankerid, $bankid)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_triggers(accid,type,mode,amount,bankerid,bankid) VALUES('$accid','$type','$mode','$amount','$bankerid','$bankid')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-
-	public function AddBankTrigger($accid, $type, $mode, $amount, $bankid)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_triggers(accid,type,mode,amount,bankid) VALUES('$accid','$type','$mode','$amount','$bankid')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-
-	public function AddTransaction($bankerid, $acct, $mode, $amount, $balance, $vdate, $memo)
-	{
-		$query = mysqli_query($this->dbCon, "INSERT INTO golojan_transactions(bankerid,accountnumber,mode,amount,balance,valuedate,memo) VALUES('$bankerid','$acct','$mode','$amount','$balance','$vdate','$memo')");
-		return (int)mysqli_insert_id($this->dbCon);
-	}
-
-
-
-	/** @return mixed  */
-	public function CountUserTriggers($accid)
-	{
-		$CountUserTriggers = mysqli_query($this->dbCon, "SELECT COUNT(id) AS tigr FROM golojan_triggers where accid='$accid'");
-		$CountUserTriggers = mysqli_fetch_object($CountUserTriggers);
-		return (int)$CountUserTriggers->tigr;
-	}
-
-
-	/** @return mixed  */
-	public function CountBankerTriggers($bankerid)
-	{
-		$CountBankerTriggers = mysqli_query($this->dbCon, "SELECT COUNT(id) AS tigr FROM golojan_triggers where bankerid='$bankerid'");
-		$CountBankerTriggers = mysqli_fetch_object($CountBankerTriggers);
-		return (int)$CountBankerTriggers->tigr;
-	}
-
-
-	/** @return mixed  */
-	public function UserTriggers($accid)
-	{
-		$UserTriggers = mysqli_query($this->dbCon, "SELECT * FROM golojan_triggers where accid='$accid'");
-		return $UserTriggers;
-	}
-
-
-	/** @return mixed  */
-	public function BankerTriggers($bankerid)
-	{
-		$BankerTriggers = mysqli_query($this->dbCon, "SELECT * FROM golojan_triggers where bankerid='$bankerid'");
-		return $BankerTriggers;
-	}
-
-
-
-	/**
-	 * @param mixed $accid 
-	 * @return \mysqli_result|bool 
-	 */
-	public function UserSupports($accid)
-	{
-		$UserSupports = mysqli_query($this->dbCon, "SELECT * FROM golojan_supports where accid='$accid'");
-		return $UserSupports;
-	}
-
-
-
-
-	public function Transactions($accountnumber)
-	{
-	}
-
-
-
-
-
-
-	public function AllTimeBankerBalance($bankerid)
-	{
-		return 0;
-	}
-
-	public function AllTimeAccountBalance($accountnumber)
-	{
-		return 0;
-	}
-
-
-	public function CountBankers($bankid)
-	{
-		$CountBankers = mysqli_query($this->dbCon, "SELECT COUNT(id) AS cnt FROM golojan_bankers where bankid='$bankid'");
-		$CountBankers = mysqli_fetch_object($CountBankers);
-		return (int)$CountBankers->cnt;
-	}
-
-
-	public function AllTimeBalance()
-	{
-		$AllTimeBalance = mysqli_query($this->dbCon, "SELECT SUM(availablebalance) AS balance FROM golojan_banks");
-		$AllTimeBalance = mysqli_fetch_object($AllTimeBalance);
-		return (float)$AllTimeBalance->balance;
-	}
-
-
-	public function BankBalance($bankid)
-	{
-		$BankBalance = mysqli_query($this->dbCon, "SELECT availablebalance FROM golojan_banks WHERE id='$bankid'");
-		$BankBalance = mysqli_fetch_object($BankBalance);
-		return (float)$BankBalance->availablebalance;
-	}
-
-
-	public function BankerBalance($bankerid)
-	{
-		$BankerBalance = mysqli_query($this->dbCon, "SELECT balance FROM golojan_bankers WHERE id='$bankerid'");
-		$BankerBalance = mysqli_fetch_object($BankerBalance);
-		return (float)$BankerBalance->balance;
-	}
-
-	public function AllTimeBankBalance($bankid)
-	{
-		$Bankers = mysqli_query($this->dbCon, "SELECT balance FROM golojan_bankers where bankid='$bankid'");
-		$FinalSum = 0;
-		while ($banker = mysqli_fetch_object($Bankers)) {
-			$FinalSum += $banker->balance;
-		}
-		return floatval($FinalSum);
-	}
-
-
-	public function AllTimeAccountCredit($accountnumber)
-	{
-		return 0;
-	}
-
-	public function AllTimeAccountDebit($accountnumber)
-	{
-		return 0;
-	}
-
-
-
-
-	public function AllTimeCredit()
-	{
-		return 0;
-	}
-
-	public function AllTimeDebit()
-	{
-		return 0;
-	}
-
-	public function SumBankersAllTimeBalanceForDasboard($bankerid)
-	{
-		return 0;
-	}
-
-
-	public function SumBankersAllTimeCreditForDasboard($bankerid)
-	{
-		return 0;
-	}
-
-	public function SumBankersAllTimeDebitForDasboard($bankerid)
-	{
-		return 0;
-	}
-
-	public function SumMDABankersAllTimeBalanceForDasboard($mda)
-	{
-		return 0;
-	}
-
-	public function SumMDABankersAllTimeCreditForDasboard($mda)
-	{
-		return 0;
-	}
-
-	public function SumMDABankersAllTimeDebitForDasboard($mda)
-	{
-		return 0;
-	}
-
-	public function SumBankersCreditForSubDasboard($bankid)
-	{
-		return 0;
-	}
-	public function SumBankersDebitForSubDasboard($bankid)
-	{
-		return 0;
-	}
-
-	public function SumMDABankersCreditForSubDasboard($mda)
-	{
-		return 0;
-	}
-
-	public function SumMDABankersDebitForSubDasboard($mda)
-	{
-		return 0;
-	}
-
-
-
-
-
 
 	/** @return \mysqli_result|bool  */
 	public  function SiteInfos()
@@ -1791,44 +1364,4 @@ class Core extends Model
 		mysqli_query($this->dbCon, "UPDATE dati_siteinfo SET value='$value' WHERE name='$name'");
 		return $this->countAffected();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// Function to get the client IP address
-	/** @return string|array|false  */
-	public function getIP()
-	{
-		$ipaddress = '';
-		if (getenv('HTTP_CLIENT_IP'))
-			$ipaddress = getenv('HTTP_CLIENT_IP');
-		else if (getenv('HTTP_X_FORWARDED_FOR'))
-			$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-		else if (getenv('HTTP_X_FORWARDED'))
-			$ipaddress = getenv('HTTP_X_FORWARDED');
-		else if (getenv('HTTP_FORWARDED_FOR'))
-			$ipaddress = getenv('HTTP_FORWARDED_FOR');
-		else if (getenv('HTTP_FORWARDED'))
-			$ipaddress = getenv('HTTP_FORWARDED');
-		else if (getenv('REMOTE_ADDR'))
-			$ipaddress = getenv('REMOTE_ADDR');
-		else
-			$ipaddress = 'UNKNOWN';
-		return $ipaddress;
-	}
-
-
-	// Admin//
-
 }

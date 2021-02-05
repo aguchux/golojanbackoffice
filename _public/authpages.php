@@ -3,8 +3,8 @@
 
 $Route->add('/auth/register', function () {
     $Template = new Apps\Template();
-    $Template->addheader("layouts.auth.header");
-    $Template->addfooter("layouts.auth.footer");
+    $Template->addheader("layouts.header");
+    $Template->addfooter("layouts.footer");
     $Template->assign("title", "Secure Register");
     $Template->assign("menukey", "register");
     $Template->render("register");
@@ -14,8 +14,8 @@ $Route->add('/auth/register', function () {
 
 $Route->add('/auth/login', function () {
     $Template = new Apps\Template();
-    $Template->addheader("layouts.auth.header");
-    $Template->addfooter("layouts.auth.footer");
+    $Template->addheader("layouts.header");
+    $Template->addfooter("layouts.footer");
     $Template->assign("title", "Secure Login");
     $Template->assign("menukey", "login");
     $Template->render("login");
@@ -24,8 +24,8 @@ $Route->add('/auth/login', function () {
 
 $Route->add('/auth/reset', function () {
     $Template = new Apps\Template();
-    $Template->addheader("layouts.auth.header");
-    $Template->addfooter("layouts.auth.footer");
+    $Template->addheader("layouts.header");
+    $Template->addfooter("layouts.footer");
     $Template->assign("title", "Reset Account ");
     $Template->assign("menukey", "login");
     $Template->render("reset");
@@ -34,8 +34,8 @@ $Route->add('/auth/reset', function () {
 
 $Route->add('/auth/otp', function () {
     $Template = new Apps\Template();
-    $Template->addheader("layouts.auth.header");
-    $Template->addfooter("layouts.auth.footer");
+    $Template->addheader("layouts.header");
+    $Template->addfooter("layouts.footer");
     $Template->assign("title", "Enter Secure OTP ");
     $Template->assign("menukey", "login");
     $Template->render("otp");
@@ -271,11 +271,12 @@ $Route->add('/auth/forms/{action}', function ($action) {
         $fullname = $data->fullname;
         $Core->SetUserInfo($accid, "fullname", $fullname);
 
-        if (isset($data->old_password) && isset($data->new_password)) {
-            $dbpass = $User->password;
-            $match = (int)$data->old_password == $dbpass;
+        if (isset($data->password) && isset($data->re_password)) {
+            $match = (int)($data->password == $data->re_password);
+
             if ($match) {
-                $Core->SetUserInfo($accid, "password", $data->new_password);
+                $paswodified = $Core->Passwordify($data->re_password);
+                $Core->SetUserInfo($accid, "password", $paswodified);
             }
         }
 

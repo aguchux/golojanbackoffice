@@ -1,8 +1,10 @@
 <?php
 if ($Self->auth) {
+
     $UserInfo = $Core->UserInfo($Self->data['accid']);
     $Wallet = $Core->Wallet($Self->data['accid']);
     $StoreInfo = $Core->StoreInfo($Self->data['accid']);
+    $LevelInfo = $Core->LevelInfo($UserInfo->level);
 }
 ?>
 <!doctype html>
@@ -16,11 +18,6 @@ if ($Self->auth) {
     <link rel="stylesheet" href="<?= $assets ?>css/bootstrap-select.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
-
-
-    <?php if ($menukey == "networks") : ?>
-
-    <?php endif; ?>
 
     <link rel="stylesheet" href="<?= $assets ?>css/daterangepicker.css">
     <link rel="stylesheet" href="<?= $assets ?>css/style.css">
@@ -40,7 +37,6 @@ if ($Self->auth) {
     <link rel="apple-touch-icon" sizes="180x180" href="<?= "{$assets}" ?>img\icons\apple-touch-icon-180x180.png" />
     <!-- icons -->
 
-
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -53,67 +49,51 @@ if ($Self->auth) {
 
     <!-- loader -->
     <div id="loader">
-        <img src="<?= $assets ?>img/logo-icon.png" alt="icon" class="loading-icon">
+        <img src="<?= $assets ?>img/logo-icon.png" alt="Golojan.com" class="loading-icon">
     </div>
     <!-- * loader -->
-
-    <?php if ($Me->auth) : ?>
-
-        <?php if ($menukey == "dashboard") : ?>
-            <!-- App Header -->
-            <div class="appHeader bg-primary text-light">
-                <div class="left">
-                    <a href="#" class="headerButton" data-toggle="modal" data-target="#sidebarPanel">
-                        <ion-icon name="menu-outline"></ion-icon>
-                    </a>
-                </div>
-                <div class="pageTitle">
-                    <h1 class="text-white">#<?= $UserInfo->accid ?></h1>
-                </div>
-                <div class="right">
-                    <a href="/dashboard/notifications" class="headerButton">
-                        <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                        <span class="badge badge-danger">0</span>
-                    </a>
-                    <a href="/dashboard/profile" class="headerButton">
-                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
-                    </a>
-                </div>
+    <?php if ($menukey == "dashboard") : ?>
+        <!-- App Header -->
+        <div class="appHeader bg-primary text-light">
+            <div class="left">
+                <a href="#" class="headerButton" data-toggle="modal" data-target="#sidebarPanel">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </a>
             </div>
-            <!-- * App Header -->
-        <?php else : ?>
-            <!-- App Header -->
-            <div class="appHeader">
-                <div class="left">
-                    <a href="#goBack" class="headerButton goBack">
-                        <ion-icon name="chevron-back-outline"></ion-icon>
-                    </a>
-                </div>
-                <div class="pageTitle">
-                    <?= isset($heading) ? $heading : strtoupper($menukey) ?>
-                </div>
-                <div class="right">
-                    <a href="#" class="headerButton">
-                        <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                        <span class="badge badge-danger">1</span>
-                    </a>
-                    <a href="#" class="headerButton">
-                        <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
-                    </a>
-                </div>
+            <div class="pageTitle text-center pt-4 pb-1">
+                
+                <h1 class="text-white text-center" style="line-height: 0.5em;"><img src="<?= $Core->LoadUserBadge($UserInfo->accid)->badge ?>" class="imaged rounded w36 mt-n2 p-0 mr-1"><?= "{$UserInfo->accid}" ?><br /><small class="text-white" style="font-size: 40%;"><?= "{$LevelInfo->name}" ?></small></h1>
             </div>
-            <!-- * App Header -->
-        <?php endif; ?>
+            <div class="right">
+                <a href="/dashboard/notifications" class="headerButton">
+                    <ion-icon class="icon" name="notifications-outline"></ion-icon>
+                    <span class="badge badge-danger">0</span>
+                </a>
+                <a href="/dashboard/profile" class="headerButton">
+                    <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
+                </a>
+            </div>
+        </div>
+        <!-- * App Header -->
     <?php else : ?>
         <!-- App Header -->
-        <div class="appHeader no-border transparent position-absolute">
+        <div class="appHeader">
             <div class="left">
                 <a href="#goBack" class="headerButton goBack">
                     <ion-icon name="chevron-back-outline"></ion-icon>
                 </a>
             </div>
-            <div class="pageTitle"></div>
+            <div class="pageTitle">
+                <?= isset($heading) ? $heading : strtoupper($menukey) ?>
+            </div>
             <div class="right">
+                <a href="#" class="headerButton">
+                    <ion-icon class="icon" name="notifications-outline"></ion-icon>
+                    <span class="badge badge-danger">1</span>
+                </a>
+                <a href="#" class="headerButton">
+                    <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
+                </a>
             </div>
         </div>
         <!-- * App Header -->
