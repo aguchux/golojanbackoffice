@@ -101,53 +101,61 @@
             <div class="row mt-2">
                 <div class="col-12 table-responsive">
 
-                    <table class="table tabel-dark table-stripped table-bordered w-100">
-                        <tr class="bg-info">
+                    <table class="table table-stripped rounded table-bordered w-100">
+                        <tr scope="col" class="bg-primary">
                             <td>LEVEL</td>
+                            <td>NETWORK</td>
                             <td>REFERRALS</td>
-                            <td>COMMISSION</td>
+                            <td>BONUS</td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>1</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 1)) ?>/2</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 1, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>2</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 2)) ?>/4</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 2, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>3</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 3)) ?>/8</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 3, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>4</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 4)) ?>/16</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 4, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>5</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 5)) ?>/32</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 5, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>6</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 6)) ?>/64</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 6, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>7</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 7)) ?>/128</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 7, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-                        <tr>
+                        <tr scope="row">
                             <td>8</td>
                             <td><?= count($Core->MyNetwork($UserInfo->accid, 8)) ?>/256</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 8, "referrer")) ?></td>
                             <td><?= $Core->Naira(0) ?></td>
                         </tr>
-
                     </table>
 
 
@@ -157,6 +165,26 @@
 
                 </div>
 
+            </div>
+        </div>
+        <!-- * Stats -->
+
+
+        <!-- Stats -->
+        <div class="section">
+            <div class="row mt-2 mb-4">
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">My Network</div>
+                        <div class="value"><?= $Core->MyTotalNetwork($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">My Referrals</div>
+                        <div class="value"><?= $Core->MyReferrals($UserInfo->accid) ?></div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- * Stats -->

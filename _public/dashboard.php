@@ -50,6 +50,10 @@ $Route->add('/dashboard/{page}', function ($page) {
         $Level8 = $Core->MyNetwork($accid,8);
         $Template->assign("Level8", $Level8);
 
+    }elseif($page=="stories"){
+        $this_user = $Core->UserInfo($accid);
+        $Stories = $Core->Stories($this_user->level);
+        $Template->assign("Stories", $Stories);
 
     }elseif($page=="tutorials"){
         $ListVideos = $Core->ListVideos();

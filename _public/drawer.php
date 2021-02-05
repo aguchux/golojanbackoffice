@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="in">
                                     My Network
-                                    <span class="badge badge-primary">0</span>
+                                    <span class="badge badge-primary"><?=$Core->MyTotalNetwork($UserInfo->accid) ?></span>
                                 </div>
                             </a>
                         </li>
