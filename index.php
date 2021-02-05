@@ -13,14 +13,18 @@ $Route->add('/', function () {
 //Home page//
 
 
-$Route->add('/network/{accid}/{level}', function ($accid, $level) {
-    $Template = new Apps\Template;
+$Route->add('/spill/{accid}', function ($accid) {
     $Core = new Apps\Core;
+    $Template = new Apps\Template;
 
-    $Network = $Core->MyNetwork($accid, $level);
-    $Template->debug(($Network));
+    $accd = $Core->getSpillover($accid);
+    $Template->debug($accd);
+
 }, 'GET');
-//Home page//
+
+
+
+
 
 require_once DOT . "/_public/authpages.php";
 require_once DOT . "/_public/dashboard.php";

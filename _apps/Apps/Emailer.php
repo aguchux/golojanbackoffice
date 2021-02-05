@@ -8,11 +8,11 @@ class Emailer
 	public $toEmail = NULL;
 	public $toName = NULL;
 
-	public $fromEmail = "OTP@golojan.com";
-	public $fromName = "OTP@Enugu";
-	public $replyEmail = "OTP@golojan.com";
-	public $replyName = "OTP@Enugu";
-	public $subject = "OTP@Enugu";
+	public $fromEmail = "OTP@" . domain;
+	public $fromName = "OTP" . domain;
+	public $replyEmail = "OTP@" . domain;
+	public $replyName = "OTP@g" . domain;
+	public $subject = "OTP@" . domain;
 
 	private $variables = array();
 
@@ -53,15 +53,15 @@ class Emailer
 			$PHPmailer->AddReplyTo($this->replyEmail, $this->replyName);
 			$PHPmailer->Subject = $this->subject;
 
-			/*
-			$PHPmailer->Sender = "notix@ebsgfinance.net";
-			$PHPmailer->DKIM_domain = 'ebsgfinance.net';
-			$PHPmailer->DKIM_private = "https://ebsgfinance.net/_dkim/private.key";
-			$PHPmailer->DKIM_selector = 'default._domainkey';
-			$PHPmailer->DKIM_passphrase = '';
-			$PHPmailer->DKIM_identity = $PHPmailer->From;
-			$PHPmailer->addCustomHeader("BIMI-Selector:v=BIMI1;s=default;");
-			*/
+			if (enable_DKIM_keys) {
+				$PHPmailer->Sender = $this->fromEmail;
+				$PHPmailer->DKIM_domain = domain;
+				$PHPmailer->DKIM_private = "https://litimus.com/_dkim/private.key";
+				$PHPmailer->DKIM_selector = 'default._domainkey';
+				$PHPmailer->DKIM_passphrase = '';
+				$PHPmailer->DKIM_identity = $this->fromEmail;
+				//$PHPmailer->addCustomHeader("BIMI-Selector:v=BIMI1;s=default;");
+			}
 
 			$PHPmailer->isHTML(true);
 			$PHPmailer->MsgHTML($html);

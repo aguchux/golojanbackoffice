@@ -29,6 +29,7 @@ $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
     $Template = new Apps\Template;
 
     $Sponsor = $Core->UserInfo($sponsorid);
+
     if ((int)$Sponsor->accid) {
         $Done['accid'] = $sponsorid;
         $Done['avatar'] = $Sponsor->avatar;
@@ -38,6 +39,9 @@ $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
         $Done['accid'] = 0;
     }
     $Done = json_encode($Done);
+
+    echo $Done;
+
 }, 'POST');
 
 
@@ -110,9 +114,9 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
         // Add the products//
         $_available = $Core->StockVolume($accid);
         $_new_volume = $_available + $Productinfo->selling;
-        if($StoreInfo->capacity >= $_new_volume){
+        if ($StoreInfo->capacity >= $_new_volume) {
             $done = (int)$Core->AddStock($product, $accid);
-        }else{
+        } else {
             $added = 0;
         }
     }
@@ -125,7 +129,7 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $StoreComputed = $Core->ComputeStockList($accid);
     //Total stocked
     $summed = $StoreComputed->sum;
-   
+
     //Qty stocked
     $CountStock = $Core->CountStock($accid);
     $finalcapacity = (float) ($store_capacity - $summed);
@@ -136,7 +140,6 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $Done['capacity'] = $Core->Naira($finalcapacity);
 
     echo json_encode($Done);
-    
 }, 'POST');
 
 
@@ -147,6 +150,9 @@ $Route->add('/ajax/settings/{param}', function ($param) {
     $Template = new Apps\Template("/auth/login");
     $accid = $Template->storage("accid");
     $User = $Core->UserInfo($accid);
+
+    $data = $Core->post($_POST);
+
     $done = 0;
     $enable_otp = 1;
     if ($param == "enable_otp") {
@@ -177,6 +183,20 @@ $Route->add('/ajax/settings/{param}', function ($param) {
         }
         $done += $Core->SetUserInfo($accid, "device_protection", $device_protection);
     }
+
+    if ($param == "domain") {
+        $domain = $data->data;
+        $done += $Core->SetStoreInfo($accid, "domain", $domain);
+    }
+
+    $enable_domain = 1;
+    if ($param == "enable_domain") {
+        if ($User->enable_domain) {
+            $enable_domain = 0;
+        }
+        $done += $Core->SetUserInfo($accid, "enable_domain", $enable_domain);
+    }
+
 
     echo $done;
 }, 'POST');

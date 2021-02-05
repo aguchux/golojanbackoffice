@@ -49,16 +49,14 @@ define("db_port",null);
 define("db_charset","utf8");
 define("db_socket",null);
 
-
-
 define("enable_otp_on_logon", true);
 define("otp_live_time", 30);
 define("otp_code_digits", 6);
 
 define("enable_sms_otp", false);
-define("enable_email_otp", true);
+define("enable_email_otp", false);
 
-define("use_express_login", false);
+define("use_express_login", true);
 define("reset_with_temp_password", true);
 
 define("smslive_owner_email", "agu.chux@yahoo.com");
@@ -67,7 +65,6 @@ define("smslive_subaccount_password", "q0DU50X8pwzSCAlttGOryk27XBxjylXCD3nDm");
 define("smslive_api_key", "acdd4023-b6af-4479-a8a7-9ee45278c319");
 
 define("smslive_callback_url", "https://ebsgfinance.net/auth/smslive247/callback");
-
 
 define("default_transaction_days",30);
 define("pre_show_transactions",false);
@@ -79,5 +76,6 @@ define("APISecret","EY-_3X-iL3OFHbQ0PKoZD121H0Y");
 define("APIEnvironmentVariable","CLOUDINARY_URL=cloudinary://981315561269929:EY-_3X-iL3OFHbQ0PKoZD121H0Y@golojan-com");
 
 
-define("initial_store_capacity", 100000);
+define("initial_store_capacity", 2000000);
 
+define("enable_DKIM_keys",true);
