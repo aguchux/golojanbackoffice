@@ -38,8 +38,6 @@ $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
         $Done['accid'] = 0;
     }
     $Done = json_encode($Done);
-
-    $Template->debug($Done);
 }, 'POST');
 
 
