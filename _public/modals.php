@@ -44,7 +44,7 @@
                                         <label class="label" for="bulkprice">Bulk Price</label>
                                         <div class="input-group mb-2">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" id="bulkpriceinput">&#x20A6;</span>
+                                                <span class="input-group-text" id="bulkpriceinput"><?= $LocationInfo->currency_code ?></span>
                                             </div>
                                             <input type="number" class="form-control form-control-lg" placeholder="Bulk">
                                         </div>
@@ -53,7 +53,7 @@
                                         <label class="label" for="retailprice">Retail Price</label>
                                         <div class="input-group mb-2">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" id="retailpriceinput">&#x20A6;</span>
+                                                <span class="input-group-text" id="retailpriceinput"><?= $LocationInfo->currency_code ?>/span>
                                             </div>
                                             <input type="number" class="form-control form-control-lg" placeholder="Retail">
                                         </div>
