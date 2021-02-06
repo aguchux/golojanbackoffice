@@ -1,6 +1,7 @@
         <!-- Wallet Card -->
         <div class="section wallet-card-section pt-1">
             <div class="wallet-card">
+               
                 <!-- Balance -->
                 <div class="balance">
                     <div class="left">
@@ -14,7 +15,6 @@
                     </div>
                 </div>
                 <!-- * Balance -->
-
 
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
@@ -59,7 +59,6 @@
             </div>
         </div>
         <!-- Wallet Card -->
-
 
         <!-- Stats -->
         <div class="section">
