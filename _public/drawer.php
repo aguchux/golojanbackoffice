@@ -70,7 +70,6 @@
 
     <?php endif; ?>
 
-
     <!-- App Sidebar -->
     <div class="modal fade panelbox panelbox-left" id="sidebarPanel" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -139,62 +138,99 @@
                     <!-- * action group -->
 
                     <!-- menu -->
-                    <div class="listview-title mt-1">Menu</div>
+                    <div class="listview-title mt-1">Switch Platforms</div>
                     <ul class="listview flush transparent no-line image-listview">
                         <li>
-                            <a href="/dashboard" class="item">
-                                <div class="icon-box bg-primary">
-                                    <ion-icon name="pie-chart-outline"></ion-icon>
-                                </div>
-                                <div class="in">Dashboard</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/dashboard/networks" class="item">
-                                <div class="icon-box bg-primary">
+                            <a href="/dashboard/network/switch" class="item">
+                                <div class="icon-box bg-<?= ($UserInfo->root == "network") ? 'success' : 'primary' ?>">
                                     <ion-icon name="apps-outline"></ion-icon>
                                 </div>
-                                <div class="in">
-                                    My Network
-                                    <span class="badge badge-primary"><?=$Core->MyTotalNetwork($UserInfo->accid) ?></span>
-                                </div>
+                                <div class="in">Network Dashboard</div>
                             </a>
                         </li>
                         <li>
-                            <a href="/dashboard/marketplace" class="item">
-                                <div class="icon-box bg-primary">
-                                    <ion-icon name="stats-chart-outline"></ion-icon>
+                            <a href="/dashboard/sales/switch" class="item">
+                                <div class="icon-box bg-<?= ($UserInfo->root == "sales") ? 'success' : 'primary' ?>">
+                                    <ion-icon name="bar-chart-outline"></ion-icon>
                                 </div>
-                                <div class="in">
-                                    Marketplaces
-                                </div>
+                                <div class="in">Sales Dashboard</div>
                             </a>
                         </li>
                         <li>
-                            <a href="/dashboard/orders" class="item">
-                                <div class="icon-box bg-primary">
-                                    <ion-icon name="fast-food-outline"></ion-icon>
+                            <a href="/dashboard/merchant/switch" class="item">
+                                <div class="icon-box bg-<?= ($UserInfo->root == "merchant") ? 'success' : 'primary' ?>">
+                                    <ion-icon name="medkit-outline"></ion-icon>
                                 </div>
-                                <div class="in">
-                                    Orders & Sales
-                                    <span class="badge badge-danger">0</span>
-                                </div>
+                                <div class="in">Merchant Dashboard</div>
                             </a>
                         </li>
-                        <li>
-                            <a href="/dashboard/transactions" class="item">
-                                <div class="icon-box bg-primary">
-                                    <ion-icon name="document-text-outline"></ion-icon>
-                                </div>
-                                <div class="in">
-                                    My Transactions
-                                </div>
-                            </a>
-                        </li>
-
 
                     </ul>
-                    <!-- * menu -->
+
+
+
+                    <?php if ($UserInfo->root == "sales") : ?>
+                        <!-- menu -->
+                        <div class="listview-title mt-1">Menu</div>
+                        <ul class="listview flush transparent no-line image-listview">
+                            <li>
+                                <a href="/dashboard/networks" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="apps-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        My Network
+                                        <span class="badge badge-primary"><?= $Core->MyTotalNetwork($UserInfo->accid) ?></span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/marketplace" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="stats-chart-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Marketplaces
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/orders" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="fast-food-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Orders & Sales
+                                        <span class="badge badge-danger">0</span>
+                                    </div>
+                                </a>
+                            </li>
+
+                        </ul>
+                        <!-- * menu -->
+                    <?php endif; ?>
+
+
+                    <?php if ($UserInfo->root == "sales") : ?>
+
+                    <?php endif; ?>
+
+
+
+                    <?php if ($UserInfo->root == "sales") : ?>
+
+                    <?php endif; ?>
+
+
+
+                    <?php if ($UserInfo->root == "sales") : ?>
+
+                    <?php endif; ?>
+
+
+
+
+
 
                     <!-- others -->
                     <div class="listview-title mt-1">Others</div>
@@ -262,7 +298,24 @@
                         </li>
                     </ul>
                     <!-- * others -->
-                    <div class="listview-title mt-1"> --- </div>
+
+                    <!-- Location -->
+                    <div class="listview-title mt-1">Switch Location</div>
+                    <ul class="listview flush transparent no-line image-listview">
+                        <li>
+                            <a href="/dashboard/locations" class="item">
+                                <div class="icon-box bg-danger">
+                                    <ion-icon name="location-outline"></ion-icon>
+                                </div>
+                                <div class="in">
+                                    Change Location
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- * Location -->
+
+                    <div class="listview-title mt-1"></div>
                 </div>
             </div>
         </div>

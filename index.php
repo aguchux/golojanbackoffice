@@ -6,6 +6,7 @@ require_once DOT . "/bootstrap.php";
 
 //Home page//
 $Route->add('/', function () {
+    $Core= new Apps\Core;
     $Template = new Apps\Template;
     $Template->assign("title", "Golojan | Back Office");
     $Template->render("home");

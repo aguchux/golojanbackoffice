@@ -14,10 +14,12 @@
                     </div>
                 </div>
                 <!-- * Balance -->
+
+
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#withdrawActionSheet">
+                        <a href="#" data-toggle="modal" data-target="#SellNewItem">
                             <div class="icon-wrapper bg-primary">
                                 <ion-icon name="add-outline"></ion-icon>
                             </div>

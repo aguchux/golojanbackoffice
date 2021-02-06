@@ -39,12 +39,20 @@ define("session_delete_timout",30);
 define("auth_session_key","logged_in");
 define("auth_url","/auth/login");
 
-define("domain", "https://litimus.com/");
+define("domain", "https://myhq.golojan.com/");
+
+//define("db_host","localhost");
+//define("db_user","meefzppr_golonet");
+//define("db_password","q0DU50X8pwzSCAlttGOryk27XBxjylXCD3nDm");
+//define("db_name","meefzppr_golonet");
+//define("db_port",null);
+//define("db_charset","utf8");
+//define("db_socket",null);
 
 define("db_host","localhost");
-define("db_user","meefzppr_golonet");
+define("db_user","golojan_mlms");
 define("db_password","q0DU50X8pwzSCAlttGOryk27XBxjylXCD3nDm");
-define("db_name","meefzppr_golonet");
+define("db_name","golojan_mlms");
 define("db_port",null);
 define("db_charset","utf8");
 define("db_socket",null);
@@ -63,7 +71,6 @@ define("smslive_owner_email", "agu.chux@yahoo.com");
 define("smslive_subaccount", "EBSGFINANCE");
 define("smslive_subaccount_password", "q0DU50X8pwzSCAlttGOryk27XBxjylXCD3nDm");
 define("smslive_api_key", "acdd4023-b6af-4479-a8a7-9ee45278c319");
-
 define("smslive_callback_url", "https://ebsgfinance.net/auth/smslive247/callback");
 
 define("default_transaction_days",30);
