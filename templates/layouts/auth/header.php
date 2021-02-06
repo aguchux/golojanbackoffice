@@ -62,7 +62,7 @@ if ($Self->auth) {
             </div>
             <div class="pageTitle text-center pt-4 pb-1">
                 
-                <h1 class="text-white text-center" style="line-height: 0.5em;"><img src="<?= $Core->LoadUserBadge($UserInfo->accid)->badge ?>" class="imaged rounded w36 mt-n2 p-0 mr-1"><?= "{$UserInfo->accid}" ?><br /><small class="text-white" style="font-size: 40%;"><?= "{$LevelInfo->name}" ?></small></h1>
+                <h1 class="text-white text-center" style="line-height: 0.5em;"><img src="<?= $Core->LocationInfo($UserInfo->accid)->flag ?>" class="imaged rounded w36 mt-n2 p-0 mr-1"><?= "{$UserInfo->accid}" ?><br /><small class="text-white" style="font-size: 40%;"><?= "{$LevelInfo->name}" ?></small></h1>
             </div>
             <div class="right">
                 <a href="/dashboard/notifications" class="headerButton">
