@@ -66,38 +66,30 @@ class Core extends Model
 	 */
 	public function ToMoney($amount)
 	{
+		$curr_code = "&#36;";
+		$sess = new Session;
+		if($sess->auth){
+			$accid = $sess->storage("accid");
+			$loc = $this->LocationInfo($this->UserInfo($accid,"location"));
+			$curr_code = $loc->currency_code;
+		}
 		$amount = number_format($amount, 2, ".", ",");
-		return "&#x20A6;" . $amount;
+		return "{$curr_code}{$amount}";
 	}
 
-	/**
-	 * @param mixed $amount 
-	 * @return string 
-	 */
-	public function Naira($amount)
+
+	public function Monify($amount)
 	{
-		$amount = number_format($amount, 2, ".", ",");
-		return "&#x20A6;" . $amount;
+		$curr_code = "&#36;";
+		$sess = new Session;
+		if($sess->auth){
+			$accid = $sess->storage("accid");
+			$loc = $this->LocationInfo($this->UserInfo($accid,"location"));
+			$curr_code = $loc->currency_code;
+		}
+		$amount = number_format($amount, 0, ".", ",");
+		return "{$curr_code}{$amount}";
 	}
-
-	/**
-	 * @param mixed $amount 
-	 * @return string 
-	 */
-	public function ToNGN($amount)
-	{
-		$amount = number_format($amount, 2, ".", ",");
-		return "NGN " . $amount;
-	}
-
-	/** @return string  */
-	public function NGN()
-	{
-		return "&#x20A6;";
-	}
-
-
-
 
 
 	/**
@@ -119,16 +111,6 @@ class Core extends Model
 		}
 	}
 
-
-	/**
-	 * @param mixed $amount 
-	 * @return string 
-	 */
-	public function Monify($amount)
-	{
-		$amount = number_format($amount, 0, ".", ",");
-		return "&#x20A6;" . $amount;
-	}
 
 	public function Comma2Dec($amount)
 	{
@@ -1388,6 +1370,13 @@ class Core extends Model
 		return $Locations;
 	}
 
+
+	public function LocationInfo($id)
+	{
+		$LocationInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_locations WHERE id='$id'");
+		$LocationInfo = mysqli_fetch_object($LocationInfo);
+		return $LocationInfo;
+	}
 
 
 

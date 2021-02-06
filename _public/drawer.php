@@ -95,7 +95,7 @@
                     <div class="sidebar-balance">
                         <div class="listview-title">Live Balance</div>
                         <div class="in">
-                            <h1 class="amount"><?= $Core->Naira($Wallet->balance) ?></h1>
+                            <h1 class="amount"><?= $Core->ToMoney($Wallet->balance) ?></h1>
                         </div>
                     </div>
                     <!-- * balance -->

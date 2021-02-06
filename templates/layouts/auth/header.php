@@ -1,10 +1,10 @@
 <?php
 if ($Self->auth) {
-
     $UserInfo = $Core->UserInfo($Self->data['accid']);
     $Wallet = $Core->Wallet($Self->data['accid']);
     $StoreInfo = $Core->StoreInfo($Self->data['accid']);
     $LevelInfo = $Core->LevelInfo($UserInfo->level);
+    $LocationInfo = $Core->LocationInfo($UserInfo->location);
 }
 ?>
 <!doctype html>
