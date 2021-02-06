@@ -1,2 +1,4 @@
 vendor/
+_store/
 composer.lock
+config.php

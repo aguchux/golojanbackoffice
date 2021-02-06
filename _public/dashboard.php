@@ -2,12 +2,38 @@
 
 
 $Route->add('/dashboard', function () {
+    $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
     $Template->addheader("layouts.auth.header");
     $Template->addfooter("layouts.auth.footer");
     $Template->assign("title", "Golojan | Back Office");
+
+    $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid,"root");
+
+
     $Template->assign("menukey", "dashboard");
-    $Template->render("dashboard.dashboard");
+    $Template->render("dashboard.{$root}.dashboard");
+
+}, 'GET');
+
+
+$Route->add('/dashboard/{root}/switch', function ($root) {
+    $Template = new Apps\Template("/auth/login");
+    $Core = new Apps\Core;
+    $accid = $Template->storage("accid");
+    $Core->SetUserInfo($accid,"root",$root);
+    $Template->redirect("/dashboard");
+}, 'GET');
+
+
+
+$Route->add('/dashboard/locations/{location}/switch', function ($location) {
+    $Template = new Apps\Template("/auth/login");
+    $Core = new Apps\Core;
+    $accid = $Template->storage("accid");
+    $Core->SetUserInfo($accid,"location",$location);
+    $Template->redirect("/dashboard");
 }, 'GET');
 
 
@@ -50,6 +76,12 @@ $Route->add('/dashboard/{page}', function ($page) {
         $Level8 = $Core->MyNetwork($accid,8);
         $Template->assign("Level8", $Level8);
 
+    }elseif($page=="locations"){
+
+        $this_user = $Core->UserInfo($accid);
+        $Locations = $Core->Locations();
+        $Template->assign("Locations", $Locations);
+
     }elseif($page=="stories"){
         $this_user = $Core->UserInfo($accid);
         $Stories = $Core->Stories($this_user->level);
@@ -67,6 +99,10 @@ $Route->add('/dashboard/{page}', function ($page) {
 
 
 
+
+
+
+
 $Route->add('/dashboard/category/{catid}/marketplace', function ($catid) {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
@@ -78,8 +114,6 @@ $Route->add('/dashboard/category/{catid}/marketplace', function ($catid) {
     $Template->assign("menukey", "marketplace");
     $Template->render("dashboard.marketplace");
 }, 'GET');
-
-
 
 $Route->add('/dasboard/tutorials/{vid}/learn', function ($vid) {
     $Core = new Apps\Core;

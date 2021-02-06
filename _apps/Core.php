@@ -1,6 +1,9 @@
 <?php
 
 //Write your custome class/methods here
+//credit: https://www.sitepoint.com/hierarchical-data-database-2/
+
+
 namespace Apps;
 
 use stdClass;
@@ -188,7 +191,7 @@ class Core extends Model
 	 */
 	public function encode($data)
 	{
-		$encode = sha1(md5($data . encrypt_salt ));
+		$encode = sha1(md5($data . encrypt_salt));
 		return $encode;
 	}
 
@@ -658,12 +661,24 @@ class Core extends Model
 	 * @param mixed $username 
 	 * @return object|null 
 	 */
-	public function UserInfo($username)
+	public function UserInfo($username, $keyname = null)
 	{
-		$UserInfo = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
-		$UserInfo = mysqli_fetch_object($UserInfo);
-		return $UserInfo;
+		if ($keyname == null) {
+			$UserInfo = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+			$UserInfo = mysqli_fetch_object($UserInfo);
+			return $UserInfo;
+		} else {
+			$UserInfo = mysqli_query($this->dbCon, "select {$keyname} from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+			$UserInfo = mysqli_fetch_object($UserInfo);
+			if (isset($UserInfo->$keyname)) {
+				return $UserInfo->$keyname;
+			}
+			return false;
+		}
 	}
+
+
+
 
 	/**
 	 * @param mixed $username 
@@ -1193,29 +1208,54 @@ class Core extends Model
 		}
 	}
 
-
-
-	public function MyTree($accid, $level = 0)
+	function MyTree($sponsor)
 	{
-
-		$TreeRootUSer = $this->UserInfo($accid);
-
-		$script = "<script type=\"text/javascript\">";
-		$script .= "var count = 1;";
-		$script .= "var root = new TreeNode(\"{$TreeRootUSer->accid}({$TreeRootUSer->fullname})\");";
-
-		# code...
-		$L1 = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE sponsor='$accid'");
-		while ($l1 = mysqli_fetch_object($L1)) {
-
-			$TreeRootUSer = $this->UserInfo($l1->accid);
-			$script .= "root.addChild({{$TreeRootUSer->accid}({$TreeRootUSer->fullname})});";
+		$children = array();
+		// retrieve all children of $parent 
+		$result = mysqli_query($this->dbCon, "SELECT accid,lleg,rleg,sponsor,(lleg+rleg) AS legs FROM golojan_accounts WHERE sponsor='$sponsor'");
+		// display each child 
+		while ($row = mysqli_fetch_object($result)) {
+			// indent and display the data of this child'
+			if ($row->legs == 0) {
+				break;
+			}
+			$children[] = $row->accid;
+			// call this function again to display this 	
+			// child's children
+			$this->MyTree($row->accid);
+			die($row->legs);
 		}
-		$script .= "var view = new TreeView(root, \"#xNetTree\");";
-
-		echo $script;
+		return $children;
 	}
 
+
+
+	public function MyTree2($sponsor)
+	{
+
+		$sponsor_lleg = $this->UserInfo($sponsor, "lleg");
+		$sponsor_rleg = $this->UserInfo($sponsor, "rleg");
+
+		$right = array();
+
+		die(0);
+
+		// retrieve all children of $parent 
+		$result = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE lleg BETWEEN $sponsor_lleg AND $sponsor_rleg");
+		// display each child 
+		while ($row = mysqli_fetch_array($result)) {
+			// only check stack if there is one  
+			if (count($right) > 0) {
+				// check if we should remove a node from the stack  
+				while ($right[count($right) - 1] < $row['rleg']) {
+					array_pop($right);
+				}
+			}
+			// display indented node title  
+			// add this node to the stack  
+			$right[] = $row['rleg'];
+		}
+	}
 
 
 	public function Stories($level = 0)
@@ -1332,6 +1372,37 @@ class Core extends Model
 		$RandomSpillover = mysqli_fetch_object($RandomSpillover);
 		return $RandomSpillover->accid;
 	}
+
+
+
+
+
+
+
+	//Locations
+
+	/** @return \mysqli_result|bool  */
+	public  function Locations()
+	{
+		$Locations = mysqli_query($this->dbCon, "SELECT * FROM golojan_locations WHERE enabled='1'");
+		return $Locations;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
