@@ -5,7 +5,7 @@
         <div class="balance">
             <div class="left">
                 <span class="title">Available Store Capacity</span>
-                <h1 class="total" id="xStoreTotal"><?= $Core->Naira($Core->AvailableStock($UserInfo->accid)) ?></h1>
+                <h1 class="total" id="xStoreTotal"><?= $Core->ToMoney($Core->AvailableStock($UserInfo->accid)) ?></h1>
             </div>
             <div class="right">
                 <a href="#" class="button" id="xStoreCount"><?= $Core->CountStock($UserInfo->accid) ?></a>
@@ -55,7 +55,7 @@
                                     <div class="item">
                                         <div class="in">
                                             <div>
-                                                <strong><?= $Core->Naira($product->selling) ?></strong>
+                                                <strong><?= $Core->ToMoney($product->selling) ?></strong>
                                                 <div class="text-muted">
                                                     <?= $Category->category ?>
                                                 </div>

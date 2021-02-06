@@ -1377,7 +1377,15 @@ class Core extends Model
 		return $LocationInfo;
 	}
 
-
+	public function Relocation($accid)
+	{
+		$template = new Template;
+		$loc = (int)$this->UserInfo($accid,"location");
+		if($loc==0){
+			$template->redirect("/locations/setup");
+		}
+		return false;
+	}
 
 
 

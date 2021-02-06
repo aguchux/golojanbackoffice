@@ -1,6 +1,4 @@
 
- <!-- App Capsule -->
- <div id="appCapsule">
      <div class="section mt-2 px-4">
          <div class="row">
              <?php while ($location = mysqli_fetch_object($Locations)) : ?>
@@ -15,6 +13,3 @@
              <?php endwhile; ?>
          </div>
      </div>
-
- </div>
- <!-- * App Capsule -->
