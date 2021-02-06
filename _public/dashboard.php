@@ -1,6 +1,7 @@
 <?php
 
 
+
 $Route->add('/dashboard', function () {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
@@ -10,19 +11,40 @@ $Route->add('/dashboard', function () {
 
     $accid = $Template->storage("accid");
     $root = $Core->UserInfo($accid,"root");
-
+    
+    $Core->Relocation($accid);
 
     $Template->assign("menukey", "dashboard");
     $Template->render("dashboard.{$root}.dashboard");
 
 }, 'GET');
 
+$Route->add('/locations/setup', function () {
+    $Core = new Apps\Core;
+    $Template = new Apps\Template("/auth/login");
+    $Template->assign("title", "Golojan | Back Office");
+
+    $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid,"root");
+
+    $Locations = $Core->Locations();
+    $Template->assign("Locations", $Locations);
+
+    $Template->assign("menukey", "locations");
+    $Template->render("dashboard.setlocation");
+
+}, 'GET');
+
+
+
 
 $Route->add('/dashboard/{root}/switch', function ($root) {
     $Template = new Apps\Template("/auth/login");
     $Core = new Apps\Core;
+
     $accid = $Template->storage("accid");
     $Core->SetUserInfo($accid,"root",$root);
+
     $Template->redirect("/dashboard");
 }, 'GET');
 
@@ -31,7 +53,10 @@ $Route->add('/dashboard/{root}/switch', function ($root) {
 $Route->add('/dashboard/locations/{location}/switch', function ($location) {
     $Template = new Apps\Template("/auth/login");
     $Core = new Apps\Core;
+
     $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid,"root");
+
     $Core->SetUserInfo($accid,"location",$location);
     $Template->redirect("/dashboard");
 }, 'GET');
@@ -45,7 +70,10 @@ $Route->add('/dashboard/{page}', function ($page) {
     $Template->addfooter("layouts.auth.footer");
     $Template->assign("title", "Golojan | Back Office");
     $Template->assign("menukey", "{$page}");
+
     $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid,"root");
+
     if($page=="support"){
         $ListFAQs = $Core->ListFAQs();
         $Template->assign("ListFAQs", $ListFAQs);
@@ -109,6 +137,10 @@ $Route->add('/dashboard/category/{catid}/marketplace', function ($catid) {
     $Template->addheader("layouts.auth.header");
     $Template->addfooter("layouts.auth.footer");
     $Template->assign("title", "Golojan | Back Office");
+
+    $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid,"root");
+
     $Template->assign("category", $catid); 
     $Template->assign("Products", $Core->CategoryProducts($catid)); 
     $Template->assign("menukey", "marketplace");
@@ -121,6 +153,10 @@ $Route->add('/dasboard/tutorials/{vid}/learn', function ($vid) {
     $Template->addheader("layouts.auth.header");
     $Template->addfooter("layouts.auth.footer");
     $Template->assign("title", "Golojan | Back Office");
+
+    $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid,"root");
+
     $Template->assign("VideoInfo", $Core->VideoInfo($vid));
     $Template->assign("menukey", "tutorials");
     $Template->render("dashboard.tutorials_learn");

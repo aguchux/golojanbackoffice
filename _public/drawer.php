@@ -27,24 +27,22 @@
     <?php else : ?>
 
 
-        <!-- App Bottom Menu -->
-        <div class="appBottomMenu">
 
+
+        <!-- App Bottom Menu Sales -->
+        <div class="appBottomMenu">
             <a href="/dashboard/networks" class="item <?= ($menukey == 'networks') ? 'active' : '' ?>">
                 <div class="col">
                     <ion-icon name="apps-outline"></ion-icon>
                     <strong>Networks</strong>
                 </div>
             </a>
-
             <a href="/dashboard/marketplace" class="item <?= ($menukey == 'marketplace') ? 'active' : '' ?>">
                 <div class="col">
                     <ion-icon name="stats-chart-outline"></ion-icon>
                     <strong>Marketplace</strong>
                 </div>
             </a>
-
-
             <a href="/dashboard" class="item">
                 <div class="col">
                     <div class="action-button large">
@@ -58,7 +56,6 @@
                     <strong>Orders & Sales</strong>
                 </div>
             </a>
-
             <a href="/dashboard/settings" class="item <?= ($menukey == 'settings') ? 'active' : '' ?>">
                 <div class="col">
                     <ion-icon name="settings-outline"></ion-icon>
@@ -66,7 +63,11 @@
                 </div>
             </a>
         </div>
-        <!-- * App Bottom Menu -->
+        <!-- * App Bottom Menu Sales -->
+
+
+
+
 
     <?php endif; ?>
 

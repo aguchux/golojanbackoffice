@@ -1,6 +1,8 @@
         <!-- Wallet Card -->
         <div class="section wallet-card-section pt-1">
             <div class="wallet-card">
+
+                
                 <!-- Balance -->
                 <div class="balance">
                     <div class="left">
@@ -56,6 +58,8 @@
 
                 </div>
                 <!-- * Wallet Footer -->
+
+
             </div>
         </div>
         <!-- Wallet Card -->
@@ -67,13 +71,13 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Open Balance</div>
-                        <div class="value text-success"><?= $Core->Naira($Wallet->open) ?></div>
+                        <div class="value text-success"><?= $Core->ToMoney($Wallet->open) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Closed Balance</div>
-                        <div class="value text-danger"><?= $Core->Naira($Wallet->closed) ?></div>
+                        <div class="value text-danger"><?= $Core->ToMoney($Wallet->closed) ?></div>
                     </div>
                 </div>
             </div>
@@ -83,13 +87,13 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Store Capacity</div>
-                        <div class="value"><?= $Core->Naira($StoreInfo->capacity) ?></div>
+                        <div class="value"><?= $Core->ToMoney($StoreInfo->capacity) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Volume Stocked</div>
-                        <div class="value"><?= $Core->Naira($Core->StockVolume($UserInfo->accid)) ?></div>
+                        <div class="value"><?= $Core->ToMoney($Core->StockVolume($UserInfo->accid)) ?></div>
                     </div>
                 </div>
             </div>

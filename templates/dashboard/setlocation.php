@@ -1,11 +1,9 @@
 <?php
-
 $UserInfo = $Core->UserInfo($Self->data['accid']);
 $Wallet = $Core->Wallet($Self->data['accid']);
 $StoreInfo = $Core->StoreInfo($Self->data['accid']);
 $LevelInfo = $Core->LevelInfo($UserInfo->level);
 $LocationInfo = $Core->LocationInfo($UserInfo->location);
-
 ?>
 
 <!doctype html>
@@ -53,57 +51,67 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
         <img src="<?= $assets ?>img/logo-icon.png" alt="Golojan.com" class="loading-icon">
     </div>
     <!-- * loader -->
-    <?php if ($menukey == "dashboard") : ?>
-        <!-- App Header -->
-        <div class="appHeader bg-primary text-light">
-            <div class="left">
-                <a href="#" class="headerButton" data-toggle="modal" data-target="#sidebarPanel">
-                    <ion-icon name="menu-outline"></ion-icon>
-                </a>
-            </div>
-            <div class="pageTitle text-center pt-4 pb-1">
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> d6980fa9d2429c560dafbe9864ada3de0742aee3
-                <h1 class="text-white text-center" style="line-height: 0.5em;"><img src="./_store/flags/<?= "{$LocationInfo->flag}.png" ?>" class="imaged rounded w36 mt-n2 p-0 mr-1"><?= "{$UserInfo->accid}" ?><br /><small class="text-white" style="font-size: 40%;"><?= "{$LevelInfo->name}" ?></small></h1>
-            </div>
-            <div class="right">
-                <a href="/dashboard/notifications" class="headerButton">
-                    <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                    <span class="badge badge-danger">0</span>
-                </a>
-                <a href="/dashboard/profile" class="headerButton">
-                    <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
-                </a>
-            </div>
-        </div>
-        <!-- * App Header -->
-    <?php else : ?>
-        <!-- App Header -->
-        <div class="appHeader">
-            <div class="left">
-                <a href="#goBack" class="headerButton goBack">
-                    <ion-icon name="chevron-back-outline"></ion-icon>
-                </a>
-            </div>
-            <div class="pageTitle">
-                <?= isset($heading) ? $heading : strtoupper($menukey) ?>
-            </div>
-            <div class="right">
-                <a href="#" class="headerButton">
-                    <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                    <span class="badge badge-danger">1</span>
-                </a>
-                <a href="#" class="headerButton">
-                    <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
-                </a>
-            </div>
-        </div>
-        <!-- * App Header -->
-    <?php endif; ?>
 
 
     <!-- App Capsule -->
     <div id="appCapsule">
+
+        <div class="section mt-2 px-4">
+            <div class="row">
+                <?php while ($location = mysqli_fetch_object($Locations)) : ?>
+                    <div class="card col-12 col-sm-6 col-lg-3 col-md-3 col-xs-12 text-center m-2">
+                        <div class="card">
+                            <div class="card-body pt-3 pb-3">
+                                <img src="./_store/flags/<?= "{$location->flag}.png" ?>" alt="<?= $location->location ?>" class="img-responsive img-rounded w-100">
+                            </div>
+                            <h4 class="card-footer h2"><a class="btn btn-primary btn-block btn-md" href="/dashboard/locations/<?= $location->id ?>/switch"> Switch to <?= $location->location ?></a></h4>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+
+    </div>
+    <!-- * App Capsule -->
+
+
+    <!-- app footer -->
+    <div class="appFooter d-none">
+        <div class="footer-title">
+            Copyright © Ebonyi State Government, 2020. All Rights Reserved.
+        </div>
+        Developed by <a href="#">Golojan</a>.
+    </div>
+    <!-- * app footer -->
+
+    </div>
+    <!-- * App Capsule -->
+
+
+    <!-- ///////////// Js Files ////////////////////  -->
+    <!-- Jquery -->
+    <script src="<?= $assets ?>js/lib/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap-->
+    <script src="<?= $assets ?>js/lib/popper.min.js"></script>
+    <script src="<?= $assets ?>js/lib/bootstrap.min.js"></script>
+    <!-- Ionicons -->
+    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    <!-- Owl Carousel -->
+    <script src="<?= $assets ?>js/plugins/owl-carousel/owl.carousel.min.js"></script>
+    <!-- Offline Js File -->
+    <script src="<?= $assets ?>js/jquery.mask.js"></script>
+    <script src="<?= $assets ?>js/lib/offline.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
+    <!-- Base Js File -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="<?= $assets ?>js/bootstrap-select.min.js"></script>
+    <script src="<?= $assets ?>js/daterangepicker.js"></script>
+    <script src="<?= $assets ?>js/base.js"></script>
+
+</body>
+
+</html>
