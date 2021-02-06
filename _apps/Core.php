@@ -8,7 +8,6 @@ namespace Apps;
 
 use stdClass;
 use \Apps\Model;
-use \Apps\Session;
 use \Apps\MysqliDb;
 
 use \Apps\EmailTemplate;
@@ -67,9 +66,9 @@ class Core extends Model
 	public function ToMoney($amount)
 	{
 		$curr_code = "&#36;";
-		$sess = new Session;
-		if($sess->auth){
-			$accid = $sess->storage("accid");
+		$template = new Template;
+		if($template->auth) {
+			$accid = $template->storage("accid");
 			$loc = $this->LocationInfo($this->UserInfo($accid,"location"));
 			$curr_code = $loc->currency_code;
 		}
