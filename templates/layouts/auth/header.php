@@ -62,11 +62,6 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
                 </a>
             </div>
             <div class="pageTitle text-center pt-4 pb-1">
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> d6980fa9d2429c560dafbe9864ada3de0742aee3
                 <h1 class="text-white text-center" style="line-height: 0.5em;"><img src="./_store/flags/<?= "{$LocationInfo->flag}.png" ?>" class="imaged rounded w36 mt-n2 p-0 mr-1"><?= "{$UserInfo->accid}" ?><br /><small class="text-white" style="font-size: 40%;"><?= "{$LevelInfo->name}" ?></small></h1>
             </div>
             <div class="right">
