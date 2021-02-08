@@ -18,6 +18,39 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+#ajaxover {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  background: #958d9e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: .2;
+}
+
+#ajaxover .loading-icon {
+  width: 42px;
+  height: auto;
+  animation: loadingAnimation 1s infinite;
+}
+
+
+.EBSG_device_status{
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.EBSG_device_status img{
+  height: 14px;
+  float: left;
+  margin-right: 4px;
+}
+
 a {
   transition: .2s all;
   color: #6236FF;
@@ -35,7 +68,7 @@ a:hover, a:active, a:focus {
 }
 
 .appHeader {
-  height: 56px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1009,7 +1042,12 @@ blockquote.blockquote .blockquote-footer {
 .imaged.w32 {
   width: 32px !important;
 }
-
+.imaged.w35 {
+  width: 35px !important;
+}
+.imaged.w34 {
+  width: 34px !important;
+}
 .imaged.w36 {
   width: 36px !important;
 }
@@ -1427,7 +1465,7 @@ a.badge-dark {
 }
 
 .listview.no-line > li:after,
-.listview.no-line .item :after {
+.listview.no-line .item :after {
   display: none;
 }
 
@@ -3190,7 +3228,7 @@ textarea,
   text-align: center;
   border-radius: 10px !important;
   border: 1px solid #DCDCE9 !important;
-  width: 180px !important;
+  width: 250px !important;
   padding: 0 10px !important;
   margin: auto;
   min-height: 70px !important;
@@ -4523,6 +4561,26 @@ textarea,
   color: #fff;
 }
 
+@keyframes glowing {
+  0% {
+    background-color: #2ba805;
+    box-shadow: 0 0 5px #2ba805;
+  }
+  50% {
+    background-color: #49e819;
+    box-shadow: 0 0 20px #49e819;
+  }
+  100% {
+    background-color: #2ba805;
+    box-shadow: 0 0 5px #2ba805;
+  }
+}
+.flashbutton {
+  animation: glowing 1300ms infinite;
+}
+
+
+
 .wallet-card .balance .title {
   color: #27173E;
   font-weight: 500;
@@ -4596,7 +4654,7 @@ textarea,
 }
 
 .stat-box .value {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1em;
@@ -4955,234 +5013,3 @@ textarea,
   margin-top: 7px;
   font-size: 24px;
 }
-
-.transfer-verification {
-  padding: 0 10px;
-}
-
-.transfer-verification .from-to-block {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  position: relative;
-}
-
-.transfer-verification .from-to-block .item {
-  position: relative;
-  z-index: 2;
-}
-
-.transfer-verification .from-to-block .item strong {
-  line-height: 1.3em;
-  margin-top: 8px;
-  display: block;
-  color: #958d9e;
-  font-weight: 500;
-  font-size: 11px;
-}
-
-.transfer-verification .from-to-block .arrow {
-  position: absolute;
-  left: 72px;
-  right: 72px;
-  top: 24px;
-  z-index: 1;
-  background: #DCDCE9;
-  height: 2px;
-}
-
-.transfer-verification .from-to-block .arrow:after {
-  content: '';
-  border: solid #DCDCE9;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 6px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  position: absolute;
-  top: -6px;
-  right: 0;
-}
-
-.transfer-verification .transfer-amount {
-  margin-bottom: -16px;
-}
-
-.transfer-verification .transfer-amount .caption {
-  font-size: 11px;
-  color: #27173E;
-  line-height: 1.2em;
-}
-
-
-
-@keyframes level_0 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-
-
-@keyframes level_1 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-
-
-@keyframes level_2 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-@keyframes level_3 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-
-@keyframes level_4 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-@keyframes level_5 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-@keyframes level_6 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-@keyframes level_7 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-@keyframes level_8 {
-  0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-  50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
-  }
-  100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
-  }
-}
-
-.flashbutton_level_0 {
-  animation: level_0 1300ms infinite;
-}
-
-.flashbutton_level_1 {
-  animation: level_1 1300ms infinite;
-}
-
-.flashbutton_level_2 {
-  animation: level_4 1300ms infinite;
-}
-
-.flashbutton_level_3 {
-  animation: level_3 1300ms infinite;
-}
-
-.flashbutton_level_4 {
-  animation: level_4 1300ms infinite;
-}
-
-.flashbutton_level_5 {
-  animation: level_5 1300ms infinite;
-}
-
-.flashbutton_level_6 {
-  animation: level_6 1300ms infinite;
-}
-
-.flashbutton_level_7 {
-  animation: level_7 1300ms infinite;
-}
-
-.flashbutton_level_8 {
-  animation: level_8 1300ms infinite;
-}
-
-
-

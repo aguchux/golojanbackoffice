@@ -6,11 +6,11 @@
                 <!-- Balance -->
                 <div class="balance">
                     <div class="left">
-                        <span class="title">Total Unclaimed Balance</span>
+                        <span class="title">Unclaimed Balance</span>
                         <h1 class="total"><?= $Core->ToMoney($Wallet->balance) ?></h1>
                     </div>
                     <div class="right">
-                        <a href="#" class="button flashbutton" data-toggle="modal" data-target="#depositActionSheet">
+                        <a href="#" class="button flashbutton_level_<?= $UserInfo->level ?>" data-toggle="modal" data-target="#depositActionSheet">
                             <ion-icon name="arrow-up-circle-outline"></ion-icon>
                         </a>
                     </div>

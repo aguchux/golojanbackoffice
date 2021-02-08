@@ -224,6 +224,7 @@ $(function () {
                 if (doneInt) {
                     $("#UserInfoAvatar").attr("src", doneUrl);
                     $("#UserInfoAvatarTop").attr("src", doneUrl);
+                    Dialog("Your profile photo has been updated successfully.", 1);
                 }
                 $("#MagicUploaderBtn").html("<ion-icon name='camera-outline'></ion-icon>");
             },
@@ -264,9 +265,15 @@ $(function () {
                 processData: false,
                 async: true,
                 success: function (data, status, xhr) {
-
+                    let intData = parseInt(data);
+                    if (intData) {
+                        Dialog("Settings information saved successfully.", 1);
+                    } else {
+                        Dialog("Settings update failed, try again much later.", 0);
+                    }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
+                    Dialog("Settings update failed, try again much later.", 0);
                 }
             });
         })
@@ -275,7 +282,20 @@ $(function () {
 
 
 
+
+function Dialog(msg, status = '1') {
+    if (status == '1') {
+        $('#DialogSuccessMessage').html(msg);
+        $('#ModalSuccessDialog').modal('show');
+    } else if (status == '0') {
+        $('#DialogFailedMessage').html(msg);
+        $('#ModalFailedDialog').modal('show');
+    }
+}
+
+
 $(function () {
+
     $('.xNotix').each(function (i, el) {
         var el = $(this);
         $(this).attr("tabindex", i);
@@ -289,8 +309,15 @@ $(function () {
                 processData: false,
                 async: true,
                 success: function (data, status, xhr) {
+                    let intData = parseInt(data);
+                    if (intData) {
+                        Dialog("Settings was successfully saved.", 1);
+                    } else {
+                        Dialog("Settings update failed, try again much later.", 0);
+                    }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
+                    Dialog("Settings update failed, try again much later.", 0);
                 }
             });
         })
@@ -316,6 +343,7 @@ $(function () {
                     if (parseInt(fData.done)) {
                         $("#xStoreTotal").html(fData.capacity);
                         $("#xStoreCount").html(fData.count);
+                        Dialog("Product has been added to your online shop.", 1);
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {

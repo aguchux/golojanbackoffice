@@ -21,7 +21,7 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
 
     <link rel="stylesheet" href="<?= $assets ?>css/daterangepicker.css">
-    <link rel="stylesheet" href="<?= $assets ?>css/style.css">
+    <link rel="stylesheet" href="<?= $assets ?>css/style.css?ref=<?= time() ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
 
@@ -50,8 +50,10 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
 
     <!-- loader -->
     <div id="loader">
-        <img src="<?= $assets ?>img/logo-icon.png" alt="Golojan.com" class="loading-icon">
+        <div class="spinner-grow text-white" role="status"></div>
     </div>
+
+
     <!-- * loader -->
     <?php if ($menukey == "dashboard") : ?>
         <!-- App Header -->
@@ -80,7 +82,7 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
         <!-- App Header -->
         <div class="appHeader">
             <div class="left">
-                <a href="#goBack" class="headerButton goBack">
+                <a href="#" class="headerButton goBack">
                     <ion-icon name="chevron-back-outline"></ion-icon>
                 </a>
             </div>
@@ -88,10 +90,6 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
                 <?= isset($heading) ? $heading : strtoupper($menukey) ?>
             </div>
             <div class="right">
-                <a href="#" class="headerButton">
-                    <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                    <span class="badge badge-danger">1</span>
-                </a>
                 <a href="#" class="headerButton">
                     <img src="<?= $UserInfo->avatar ?>" class="imaged w32" id="UserInfoAvatarTop">
                 </a>

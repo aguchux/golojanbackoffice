@@ -3,6 +3,9 @@
 
 $Route->add('/auth/register', function () {
     $Template = new Apps\Template();
+    if ($Template->auth) {
+        $Template->redirect("/dashboard");
+    }
     $Template->addheader("layouts.header");
     $Template->addfooter("layouts.footer");
     $Template->assign("title", "Secure Register");
@@ -14,6 +17,9 @@ $Route->add('/auth/register', function () {
 
 $Route->add('/auth/login', function () {
     $Template = new Apps\Template();
+    if ($Template->auth) {
+        $Template->redirect("/dashboard");
+    }
     $Template->addheader("layouts.header");
     $Template->addfooter("layouts.footer");
     $Template->assign("title", "Secure Login");
@@ -24,6 +30,9 @@ $Route->add('/auth/login', function () {
 
 $Route->add('/auth/reset', function () {
     $Template = new Apps\Template();
+    if ($Template->auth) {
+        $Template->redirect("/dashboard");
+    }
     $Template->addheader("layouts.header");
     $Template->addfooter("layouts.footer");
     $Template->assign("title", "Reset Account ");
@@ -72,7 +81,7 @@ $Route->add('/auth/forms/{action}', function ($action) {
         if ($accid) {
 
             if ($sponsor_char) {
-                $Sponsor = $Core->UserInfo($sponsor);                
+                $Sponsor = $Core->UserInfo($sponsor);
                 if (isset($Sponsor->accid)) {
                     //Ensure only two legs are filled//
                     $Core->setSponsor($accid, $sponsor);
@@ -138,6 +147,7 @@ $Route->add('/auth/forms/{action}', function ($action) {
         $password = $data->password;
 
         $Login = $Core->UserLogin($username, $password);
+
         if ((int)$Login->accid) {
 
             if (use_express_login) {
@@ -199,9 +209,9 @@ $Route->add('/auth/forms/{action}', function ($action) {
                         $Template->authorize($Login->accid);
                         $Template->redirect("/dashboard");
                     }
-                }else{
+                } else {
                     $Template->authorize($Login->accid);
-                    $Template->redirect("/dashboard");    
+                    $Template->redirect("/dashboard");
                 }
             }
         } else {
@@ -218,11 +228,11 @@ $Route->add('/auth/forms/{action}', function ($action) {
 
         if ($UserInfo->accid) {
             $password = $Core->GenPassword(5);
-            $Core->SetUserInfo($UserInfo->accid, "password", $password);
+            $Core->SetUserInfo($UserInfo->accid, "password", $Core->Passwordify($password));
 
             $message = "Your temporary password to login is {$password}. Enquiry? Call: 08068573376";
-            $sent = $SMSLive->send($UserInfo->mobile, $message);
-
+            //$sent = $SMSLive->send($UserInfo->mobile, $message);
+            die($password);
             $subject = "New Password Reset";
 
             //Email Notix//
@@ -271,14 +281,16 @@ $Route->add('/auth/forms/{action}', function ($action) {
         $fullname = $data->fullname;
         $Core->SetUserInfo($accid, "fullname", $fullname);
 
-        if (isset($data->password) && isset($data->re_password)) {
+        if (!empty($data->password) && !empty($data->re_password)) {
             $match = (int)($data->password == $data->re_password);
-
             if ($match) {
                 $paswodified = $Core->Passwordify($data->re_password);
                 $Core->SetUserInfo($accid, "password", $paswodified);
             }
         }
+            
+        //$Toast = new Apps\Toast;
+        //$Toast->toast('/dashboard/profile','Welcome','Your profile was updated','success');
 
         $Template->redirect("/dashboard/profile");
     } else {

@@ -603,8 +603,11 @@ class Core extends Model
 		$pass_word = $this->Passwordify($password);
 		$UserLogin = mysqli_query($this->dbCon, "select * from golojan_accounts where (email='$username' OR mobile='$username') AND password='$pass_word'");
 		$UserLogin = mysqli_fetch_object($UserLogin);
-		$this->SetUserInfo($UserLogin->accid, "lastseen", date("Y-m-d g:i:s"));
-		return $UserLogin;
+		if(isset($UserLogin->accid)){
+			$this->SetUserInfo($UserLogin->accid, "lastseen", date("Y-m-d g:i:s"));
+			return $UserLogin;	
+		}
+		return false;
 	}
 
 
@@ -684,7 +687,9 @@ class Core extends Model
 		$sponsor = $getSponsor->sponsor;
 		if (isset($sponsor)) {
 			$MySponsor = $this->UserInfo($sponsor);
-			return "{$MySponsor->fullname}({$MySponsor->accid})";
+			if(isset($MySponsor->accid)){
+				return "{$MySponsor->fullname}({$MySponsor->accid})";
+			}
 		}
 		return "---";
 	}
@@ -696,7 +701,9 @@ class Core extends Model
 		$referrer = $getReferrer->referrer;
 		if (isset($referrer)) {
 			$MyReferrer = $this->UserInfo($referrer);
-			return "{$MyReferrer->fullname}({$getReferrer->accid})";
+			if(isset($MyReferrer->accid)){
+				return "{$MyReferrer->fullname}({$MyReferrer->accid})";
+			}			
 		}
 		return "---";
 	}

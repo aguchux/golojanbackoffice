@@ -8,11 +8,11 @@ class Emailer
 	public $toEmail = NULL;
 	public $toName = NULL;
 
-	public $fromEmail = "OTP@" . domain;
-	public $fromName = "OTP" . domain;
-	public $replyEmail = "OTP@" . domain;
-	public $replyName = "OTP@g" . domain;
-	public $subject = "OTP@" . domain;
+	public $fromEmail = "info@golojan";
+	public $fromName = "Golojan";
+	public $replyEmail = "info@golojan";
+	public $replyName = "Golojan";
+	public $subject = "Golojan";
 
 	private $variables = array();
 
@@ -54,12 +54,12 @@ class Emailer
 			$PHPmailer->Subject = $this->subject;
 
 			if (enable_DKIM_keys) {
-				$PHPmailer->Sender = $this->fromEmail;
-				$PHPmailer->DKIM_domain = domain;
-				$PHPmailer->DKIM_private = "https://litimus.com/_dkim/private.key";
-				$PHPmailer->DKIM_selector = 'default._domainkey';
-				$PHPmailer->DKIM_passphrase = '';
-				$PHPmailer->DKIM_identity = $this->fromEmail;
+				//$PHPmailer->Sender = $this->fromEmail;
+				//$PHPmailer->DKIM_domain = domain;
+				//$PHPmailer->DKIM_private = "https://golojan.com/_dkim/private.key";
+				//$PHPmailer->DKIM_selector = 'default._domainkey';
+				//$PHPmailer->DKIM_passphrase = '';
+				//$PHPmailer->DKIM_identity = $this->fromEmail;
 				//$PHPmailer->addCustomHeader("BIMI-Selector:v=BIMI1;s=default;");
 			}
 

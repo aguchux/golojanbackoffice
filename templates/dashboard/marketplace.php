@@ -1,5 +1,5 @@
 <!-- Wallet Card -->
-<div class="section wallet-card-section pt-1">
+<div class="section wallet-card-section mt-5">
     <div class="wallet-card">
         <!-- Balance -->
         <div class="balance">
