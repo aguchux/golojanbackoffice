@@ -23,17 +23,17 @@
                     <div class="item">
                         <a href="#" data-toggle="modal" data-target="#SellNewItem">
                             <div class="icon-wrapper bg-primary">
-                                <ion-icon name="add-outline"></ion-icon>
+                                <ion-icon name="people-outline"></ion-icon>
                             </div>
-                            <strong>Sell Item</strong>
+                            <strong>Geneology</strong>
                         </a>
                     </div>
                     <div class="item">
                         <a href="#" data-toggle="modal" data-target="#sendActionSheet">
                             <div class="icon-wrapper bg-success">
-                                <ion-icon name="arrow-down-outline"></ion-icon>
+                                <ion-icon name="apps-outline"></ion-icon>
                             </div>
-                            <strong>Withdraw</strong>
+                            <strong>Network</strong>
                         </a>
                     </div>
                     <div class="item">
@@ -44,18 +44,6 @@
                             <strong>Transfer</strong>
                         </a>
                     </div>
-                    
-                    <div class="item">
-                        <a href="#">
-                            <div class="icon-wrapper bg-success">
-                                <ion-icon name="card-outline"></ion-icon>
-                            </div>
-                            <strong>My Shop</strong>
-                        </a>
-                    </div>
-
-
-
                 </div>
                 <!-- * Wallet Footer -->
 
@@ -104,8 +92,11 @@
         <!-- * Stats -->
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cf79ffd1ad1d54fcecc10c734aba92ee0dbc3a3f
         <!-- Stats -->
         <div class="section">
             <div class="row mt-2 mb-4">

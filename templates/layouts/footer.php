@@ -1,7 +1,7 @@
         <!-- app footer -->
         <div class="appFooter d-none">
             <div class="footer-title">
-                Copyright © Ebonyi State Government, 2020. All Rights Reserved.
+                Copyright © Golojan Technologies, 2020. All Rights Reserved.
             </div>
             Developed by <a href="#">Golojan</a>.
         </div>

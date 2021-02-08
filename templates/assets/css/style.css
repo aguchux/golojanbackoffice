@@ -4596,7 +4596,11 @@ textarea,
 }
 
 .stat-box .value {
+<<<<<<< HEAD
   font-size: 24px;
+=======
+  font-size: 15px;
+>>>>>>> cf79ffd1ad1d54fcecc10c734aba92ee0dbc3a3f
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1em;
