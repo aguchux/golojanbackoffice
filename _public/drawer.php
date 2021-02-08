@@ -27,14 +27,13 @@
 <?php else : ?>
 
 
-
-
+    <?php if ($UserInfo->root == "sales") :?>
 <!-- App Bottom Menu Sales -->
 <div class="appBottomMenu">
-    <a href="/dashboard/networks" class="item <?= ($menukey == 'networks') ? 'active' : '' ?>">
+    <a href="/dashboard/fund" class="item <?= ($menukey == 'fund') ? 'active' : '' ?>">
         <div class="col">
-            <ion-icon name="apps-outline"></ion-icon>
-            <strong>Networks</strong>
+            <ion-icon name="arrow-down-outline"></ion-icon>
+            <strong>Fund</strong>
         </div>
     </a>
     <a href="/dashboard/marketplace" class="item <?= ($menukey == 'marketplace') ? 'active' : '' ?>">
@@ -64,6 +63,125 @@
     </a>
 </div>
 <!-- * App Bottom Menu Sales -->
+
+<?php endif;  ?>
+
+<?php if ($UserInfo->root == "logistics") :?>
+<!-- App Bottom Menu Sales -->
+<div class="appBottomMenu">
+    <a href="/dashboard/#" class="item <?= ($menukey == 'pick-up') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="basket-outline"></ion-icon>
+            <strong>Pick up</strong>
+        </div>
+    </a>
+    <a href="/dashboard/#" class="item <?= ($menukey == 'deliver') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="stats-chart-outline"></ion-icon>
+            <strong>Deliver</strong>
+        </div>
+    </a>
+    <a href="/dashboard" class="item">
+        <div class="col">
+            <div class="action-button large">
+                <ion-icon name="speedometer-outline" size="large"></ion-icon>
+            </div>
+        </div>
+    </a>
+    <a href="/dashboard/orders" class="item <?= ($menukey == 'orders') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="fast-food-outline"></ion-icon>
+            <strong>Orders</strong>
+        </div>
+    </a>
+    <a href="/dashboard/settings" class="item <?= ($menukey == 'settings') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="settings-outline"></ion-icon>
+            <strong>Settings</strong>
+        </div>
+    </a>
+</div>
+<!-- * App Bottom Menu Sales -->
+
+<?php endif;  ?>
+
+<?php if ($UserInfo->root == "merchant") :?>
+<!-- App Bottom Menu Merchant -->
+    <div class="appBottomMenu">
+      <a href="/dashboard/add" class="item <?= ($menukey == 'add') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="add-outline"></ion-icon>
+            <strong>Add</strong>
+        </div>
+        </a>
+     <a href="/dashboard/statistics" class="item <?= ($menukey == 'statistics') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="stats-chart-outline"></ion-icon>
+            <strong>Statistics</strong>
+        </div>
+        </a>
+     <a href="/dashboard" class="item">
+        <div class="col">
+            <div class="action-button large">
+                <ion-icon name="speedometer-outline" size="large"></ion-icon>
+            </div>
+        </div>
+     </a>
+      <a href="/dashboard/orders" class="item <?= ($menukey == 'orders') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="fast-food-outline"></ion-icon>
+            <strong>Orders & Sales</strong>
+        </div>
+      </a>
+      <a href="/dashboard/settings" class="item <?= ($menukey == 'settings') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="settings-outline"></ion-icon>
+            <strong>Settings</strong>
+        </div>
+        </a>
+    </div>
+<!-- * App Bottom Menu Merchant -->
+<?php endif;  ?>
+
+<?php if ($UserInfo->root == "networks") :?>
+<!-- App Bottom Menu Networks -->
+    <div class="appBottomMenu">
+    <a href="/dashboard/networks" class="item <?= ($menukey == 'networks') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="apps-outline"></ion-icon>
+            <strong>Networks</strong>
+        </div>
+    </a>
+    <a href="/dashboard/#" class="item <?= ($menukey == 'geneology') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="people-outline"></ion-icon>
+            <strong>Geneology</strong>
+        </div>
+    </a>
+    <a href="/dashboard" class="item">
+        <div class="col">
+            <div class="action-button large">
+                <ion-icon name="speedometer-outline" size="large"></ion-icon>
+            </div>
+        </div>
+    </a>
+    <a href="/dashboard/#" class="item <?= ($menukey == '') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="fast-food-outline"></ion-icon>
+            <strong>Levels</strong>
+        </div>
+    </a>
+    <a href="/dashboard/settings" class="item <?= ($menukey == 'settings') ? 'active' : '' ?>">
+        <div class="col">
+            <ion-icon name="settings-outline"></ion-icon>
+            <strong>Settings</strong>
+        </div>
+    </a>
+    </div>
+<!-- * App Bottom Menu Networks -->
+<?php endif;  ?>
+
+
 
 
 

@@ -23,17 +23,17 @@
                     <div class="item">
                         <a href="#" data-toggle="modal" data-target="#SellNewItem">
                             <div class="icon-wrapper bg-primary">
-                                <ion-icon name="add-outline"></ion-icon>
+                                <ion-icon name="people-outline"></ion-icon>
                             </div>
-                            <strong>Sell Item</strong>
+                            <strong>Geneology</strong>
                         </a>
                     </div>
                     <div class="item">
                         <a href="#" data-toggle="modal" data-target="#sendActionSheet">
                             <div class="icon-wrapper bg-success">
-                                <ion-icon name="arrow-down-outline"></ion-icon>
+                                <ion-icon name="apps-outline"></ion-icon>
                             </div>
-                            <strong>Withdraw</strong>
+                            <strong>Network</strong>
                         </a>
                     </div>
                     <div class="item">
@@ -44,18 +44,6 @@
                             <strong>Transfer</strong>
                         </a>
                     </div>
-                    
-                    <div class="item">
-                        <a href="#">
-                            <div class="icon-wrapper bg-success">
-                                <ion-icon name="card-outline"></ion-icon>
-                            </div>
-                            <strong>My Shop</strong>
-                        </a>
-                    </div>
-
-
-
                 </div>
                 <!-- * Wallet Footer -->
 
@@ -104,7 +92,6 @@
         <!-- * Stats -->
 
 
-
         <!-- Stats -->
         <div class="section">
             <div class="row mt-2 mb-4">
@@ -118,6 +105,101 @@
                     <div class="stat-box">
                         <div class="title">Sponsored By</div>
                         <div class="value"><?= $Core->getSponsor($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- * Stats -->
+
+
+
+        <!-- Stats -->
+        <div class="section">
+            <div class="row mt-2">
+                <div class="col-12 table-responsive">
+
+                    <table class="table table-stripped rounded table-bordered w-100">
+                        <tr scope="col" class="bg-primary">
+                            <td>LEVEL</td>
+                            <td>NETWORK</td>
+                            <td>REFERRALS</td>
+                            <td>BONUS</td>
+                        </tr>
+                        <tr scope="row">
+                            <td>1</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 1)) ?>/2</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 1, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>2</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 2)) ?>/4</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 2, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>3</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 3)) ?>/8</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 3, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>4</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 4)) ?>/16</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 4, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>5</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 5)) ?>/32</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 5, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>6</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 6)) ?>/64</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 6, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>7</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 7)) ?>/128</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 7, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                        <tr scope="row">
+                            <td>8</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 8)) ?>/256</td>
+                            <td><?= count($Core->MyNetwork($UserInfo->accid, 8, "referrer")) ?></td>
+                            <td><?= $Core->ToMoney(0) ?></td>
+                        </tr>
+                    </table>
+
+
+                </div>
+
+                <div class="col-12 ">
+
+                </div>
+
+            </div>
+        </div>
+        <!-- * Stats -->
+
+
+        <!-- Stats -->
+        <div class="section">
+            <div class="row mt-2 mb-4">
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">My Network</div>
+                        <div class="value"><?= $Core->MyTotalNetwork($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">My Referrals</div>
+                        <div class="value"><?= $Core->MyReferrals($UserInfo->accid) ?></div>
                     </div>
                 </div>
             </div>

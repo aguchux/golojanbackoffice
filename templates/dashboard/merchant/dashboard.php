@@ -48,9 +48,9 @@
                     <div class="item">
                         <a href="#">
                             <div class="icon-wrapper bg-success">
-                                <ion-icon name="card-outline"></ion-icon>
+                                <ion-icon name="file-tray-stacked-outline"></ion-icon>
                             </div>
-                            <strong>My Shop</strong>
+                            <strong>My Products</strong>
                         </a>
                     </div>
 
@@ -94,30 +94,6 @@
                     <div class="stat-box">
                         <div class="title">Volume Stocked</div>
                         <div class="value"><?= $Core->ToMoney($Core->StockVolume($UserInfo->accid)) ?></div>
-                    </div>
-                </div>
-            </div>
-
-
-
-        </div>
-        <!-- * Stats -->
-
-
-
-        <!-- Stats -->
-        <div class="section">
-            <div class="row mt-2 mb-4">
-                <div class="col-6">
-                    <div class="stat-box">
-                        <div class="title">Referred By</div>
-                        <div class="value"><?= $Core->getReferrer($UserInfo->accid) ?></div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="stat-box">
-                        <div class="title">Sponsored By</div>
-                        <div class="value"><?= $Core->getSponsor($UserInfo->accid) ?></div>
                     </div>
                 </div>
             </div>
