@@ -67,9 +67,9 @@ class Core extends Model
 	{
 		$curr_code = "&#36;";
 		$template = new Template;
-		if($template->auth) {
+		if ($template->auth) {
 			$accid = $template->storage("accid");
-			$loc = $this->LocationInfo($this->UserInfo($accid,"location"));
+			$loc = $this->LocationInfo($this->UserInfo($accid, "location"));
 			$curr_code = $loc->currency_code;
 		}
 		$amount = number_format($amount, 2, ".", ",");
@@ -81,9 +81,9 @@ class Core extends Model
 	{
 		$curr_code = "&#36;";
 		$sess = new Session;
-		if($sess->auth){
+		if ($sess->auth) {
 			$accid = $sess->storage("accid");
-			$loc = $this->LocationInfo($this->UserInfo($accid,"location"));
+			$loc = $this->LocationInfo($this->UserInfo($accid, "location"));
 			$curr_code = $loc->currency_code;
 		}
 		$amount = number_format($amount, 0, ".", ",");
@@ -603,9 +603,9 @@ class Core extends Model
 		$pass_word = $this->Passwordify($password);
 		$UserLogin = mysqli_query($this->dbCon, "select * from golojan_accounts where (email='$username' OR mobile='$username') AND password='$pass_word'");
 		$UserLogin = mysqli_fetch_object($UserLogin);
-		if(isset($UserLogin->accid)){
+		if (isset($UserLogin->accid)) {
 			$this->SetUserInfo($UserLogin->accid, "lastseen", date("Y-m-d g:i:s"));
-			return $UserLogin;	
+			return $UserLogin;
 		}
 		return false;
 	}
@@ -687,7 +687,7 @@ class Core extends Model
 		$sponsor = $getSponsor->sponsor;
 		if (isset($sponsor)) {
 			$MySponsor = $this->UserInfo($sponsor);
-			if(isset($MySponsor->accid)){
+			if (isset($MySponsor->accid)) {
 				return "{$MySponsor->fullname}({$MySponsor->accid})";
 			}
 		}
@@ -701,9 +701,9 @@ class Core extends Model
 		$referrer = $getReferrer->referrer;
 		if (isset($referrer)) {
 			$MyReferrer = $this->UserInfo($referrer);
-			if(isset($MyReferrer->accid)){
+			if (isset($MyReferrer->accid)) {
 				return "{$MyReferrer->fullname}({$MyReferrer->accid})";
-			}			
+			}
 		}
 		return "---";
 	}
@@ -1001,6 +1001,75 @@ class Core extends Model
 		$nsum += count($this->MyNetwork($accid, 8));
 		return (int)$nsum;
 	}
+
+
+
+
+	public function GetUpliner($accid, $level = 0)
+	{
+		$upliner = root_accid;
+
+		$User = $this->UserInfo($accid, "sponsor");
+		$l1_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l1_sponsor, "sponsor");
+		$l2_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l2_sponsor, "sponsor");
+		$l3_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l3_sponsor, "sponsor");
+		$l4_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l4_sponsor, "sponsor");
+		$l5_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l5_sponsor, "sponsor");
+		$l6_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l6_sponsor, "sponsor");
+		$l7_sponsor = $User->sponsor;
+
+		$User = $this->UserInfo($l7_sponsor, "sponsor");
+		$l8_sponsor = $User->sponsor;
+
+		switch ($level) {
+			case 1:
+				return $l1_sponsor;
+				break;
+			case 2:
+				return $l2_sponsor;
+				break;
+
+			case 3:
+				return $l3_sponsor;
+				break;
+
+			case 4:
+				return $l4_sponsor;
+				break;
+
+			case 5:
+				return $l5_sponsor;
+				break;
+
+			case 6:
+				return $l6_sponsor;
+				break;
+
+			case 7:
+				return $l7_sponsor;
+				break;
+
+			case 8:
+				return $l8_sponsor;
+				break;
+			default:
+				return $upliner;
+				break;
+		}
+	}
+
 
 
 	//NETWORKING//
@@ -1364,6 +1433,26 @@ class Core extends Model
 
 
 
+	//Payments & Transactions//
+
+	public function genTransid($accid)
+	{
+		$prefix = "GT-F";
+		$genTransid = mysqli_query($this->dbCon, "SELECT MAX(id) AS  maxid from golojan_fundings");
+		$genTransid = mysqli_fetch_object($genTransid);
+		$maxid = $genTransid->maxid;
+		$maxid = $maxid + 1;
+		$maxid = str_pad($maxid, 6, '0', STR_PAD_LEFT);
+		return "{$prefix}{$maxid}";
+	}
+
+
+	public function StartFunding($accid,$transid,$amount,$method,$to_accid)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_fundings(accid,transid,amount,method,to_accid) VALUES('$accid','$transid','$amount','$method','$to_accid')");
+		return (int)$this->getLastId();
+	}
+
 
 
 
@@ -1387,8 +1476,8 @@ class Core extends Model
 	public function Relocation($accid)
 	{
 		$template = new Template;
-		$loc = (int)$this->UserInfo($accid,"location");
-		if($loc==0){
+		$loc = (int)$this->UserInfo($accid, "location");
+		if ($loc == 0) {
 			$template->redirect("/locations/setup");
 		}
 		return false;

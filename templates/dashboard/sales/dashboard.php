@@ -21,23 +21,23 @@
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#SellNewItem">
-                            <div class="icon-wrapper bg-primary">
+                        <a href="#" data-toggle="modal" data-target="#AddFund">
+                            <div class="icon-wrapper bg-danger">
                                 <ion-icon name="add-outline"></ion-icon>
                             </div>
-                            <strong>Sell Item</strong>
+                            <strong>Add Fund</strong>
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#sendActionSheet">
+                        <a href="#" data-toggle="modal" data-target="#WithdrawFund">
                             <div class="icon-wrapper bg-success">
                                 <ion-icon name="arrow-down-outline"></ion-icon>
                             </div>
-                            <strong>Withdraw</strong>
+                            <strong>Withdraw Fund</strong>
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#exchangeActionSheet">
+                        <a href="#" data-toggle="modal" data-target="#TransferFund">
                             <div class="icon-wrapper bg-warning">
                                 <ion-icon name="swap-vertical"></ion-icon>
                             </div>
@@ -46,8 +46,8 @@
                     </div>
                     
                     <div class="item">
-                        <a href="#">
-                            <div class="icon-wrapper bg-success">
+                        <a href="<?= basedomain . "{$UserInfo->accid}" ?>" target="_blank">
+                            <div class="icon-wrapper bg-dark">
                                 <ion-icon name="card-outline"></ion-icon>
                             </div>
                             <strong>My Shop</strong>
@@ -123,3 +123,13 @@
             </div>
         </div>
         <!-- * Stats -->
+
+
+
+
+
+
+
+
+
+        

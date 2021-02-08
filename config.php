@@ -39,6 +39,7 @@ define("session_delete_timout",30);
 define("auth_session_key","logged_in");
 define("auth_url","/auth/login");
 
+define("basedomain", "https://golojan.com/");
 define("domain", "https://myhq.golojan.com/");
 
 //define("db_host","localhost");
@@ -73,6 +74,11 @@ define("smslive_subaccount_password", "q0DU50X8pwzSCAlttGOryk27XBxjylXCD3nDm");
 define("smslive_api_key", "acdd4023-b6af-4479-a8a7-9ee45278c319");
 define("smslive_callback_url", "https://ebsgfinance.net/auth/smslive247/callback");
 
+
+
+//pk_live_b34184b6f8b477550ab86ff7b1637e84d351dfcd
+
+
 define("default_transaction_days",30);
 define("pre_show_transactions",false);
 
@@ -86,4 +92,4 @@ define("APIEnvironmentVariable","CLOUDINARY_URL=cloudinary://981315561269929:EY-
 define("initial_store_capacity", 2000000);
 define("enable_DKIM_keys",true);
 
-define("root_accid",0);
+define("root_accid",12000);

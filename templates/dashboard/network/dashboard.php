@@ -92,11 +92,6 @@
         <!-- * Stats -->
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> cf79ffd1ad1d54fcecc10c734aba92ee0dbc3a3f
         <!-- Stats -->
         <div class="section">
             <div class="row mt-2 mb-4">
