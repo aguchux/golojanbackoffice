@@ -81,7 +81,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="amount"><?= $LocationInfo->currency_code ?></span>
                                             </div>
-                                            <input type="text" class="form-control form-control-lg" placeholder="0" name="amount" id="amount" autocomplete="off"  required aria-required="true">
+                                            <input type="number" min="<?= min_funding_amount ?>" class="form-control form-control-lg" placeholder="0" name="amount" id="amount" autocomplete="off" required aria-required="true">
                                         </div>
                                     </div>
 
@@ -95,17 +95,9 @@
                                     </div>
 
                                     <div class="form-group basic">
-                                        <div class="input-wrapper">
-                                            <label class="label" for="account">Account to fund</label>
-                                            <input type="email" required aria-required="true" class="form-control form-control-lg" readonly aria-readonly="true" id="account" name="account" placeholder="Enter Account ID" value="<?= $UserInfo->accid ?>" autocomplete="off">
-                                            <i class="clear-input">
-                                                <ion-icon name="close-circle"></ion-icon>
-                                            </i>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group basic">
-                                        <button type="submit" class="btn btn-primary btn-block btn-lg">Add Fund</button>
+                                        <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                            <ion-icon name="card-outline"></ion-icon> Add Fund
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -121,25 +113,26 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-success">
-                            <h5 class="modal-title text-white">Withdraw</h5>
+                            <h5 class="modal-title text-white">Withdraw Money</h5>
                         </div>
                         <div class="modal-body">
                             <div class="action-sheet-content">
                                 <form>
+
+
                                     <div class="form-group basic">
-                                        <div class="input-wrapper">
-                                            <label class="label" for="account2d">From</label>
-                                            <select class="form-control custom-select" id="account2d">
-                                                <option value="0">Savings (*** 5019)</option>
-                                                <option value="1">Investment (*** 6212)</option>
-                                                <option value="2">Mortgage (*** 5021)</option>
-                                            </select>
+                                        <label class="label" for="amount">Enter Amount</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="amount"><?= $LocationInfo->currency_code ?></span>
+                                            </div>
+                                            <input style="font-size:200%;" type="number" min="<?= min_withdrawal_amount ?>" class="form-control form-control-lg" placeholder="0" name="amount" id="amount" autocomplete="off" required aria-required="true">
                                         </div>
                                     </div>
 
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label" for="text11d">To</label>
+                                            <label class="label" for="text11d">Bank Account</label>
                                             <input type="email" class="form-control" id="text11d" placeholder="Enter IBAN">
                                             <i class="clear-input">
                                                 <ion-icon name="close-circle"></ion-icon>
@@ -147,15 +140,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group basic">
-                                        <label class="label">Enter Amount</label>
-                                        <div class="input-group mb-2">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="input14d">$</span>
-                                            </div>
-                                            <input type="text" class="form-control form-control-lg" placeholder="0">
-                                        </div>
-                                    </div>
 
                                     <div class="form-group basic">
                                         <button type="button" class="btn btn-primary btn-block btn-lg" data-dismiss="modal">Send</button>
@@ -178,48 +162,33 @@
                         </div>
                         <div class="modal-body">
                             <div class="action-sheet-content">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group basic">
-                                                <div class="input-wrapper">
-                                                    <label class="label" for="currency1">From</label>
-                                                    <select class="form-control custom-select" id="currency1">
-                                                        <option value="1">EUR</option>
-                                                        <option value="2">USD</option>
-                                                        <option value="3">AUD</option>
-                                                        <option value="4">CAD</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-group basic">
-                                                <div class="input-wrapper">
-                                                    <label class="label" for="currency2">To</label>
-                                                    <select class="form-control custom-select" id="currency2">
-                                                        <option value="1">USD</option>
-                                                        <option value="1">EUR</option>
-                                                        <option value="2">AUD</option>
-                                                        <option value="3">CAD</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <form action="/payments/transfer" method="POST" enctype="multipart/form-data" autocomplete="off">
+                                    <?= $Self->tokenize() ?>
 
+                                    <div class="form-group basic">
+                                        <label class="label" for="receipient_id">Receipient Account</label>
+                                        <input type="text" style="font-size:200%;" class="form-control form-control-lg" pattern="\d*" id="receipient_id" name="receipient" placeholder="Reciepient's ID">
+                                        <i class="clear-input">
+                                            <ion-icon name="person-outline"></ion-icon>
+                                        </i>
+
+                                        <div class="listview image-listview media inset mb-2 m-0 p-0 ">
+                                            <li id="ReceipientInfo" class="d-none"></li>
+                                        </div>
+
+                                    </div>
                                     <div class="form-group basic">
                                         <label class="label">Enter Amount</label>
                                         <div class="input-group mb-2">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" id="input1">$</span>
+                                                <span class="input-group-text" id="amount_on_transfer"><?= $LocationInfo->currency_code ?></span>
                                             </div>
-                                            <input type="text" class="form-control form-control-lg" value="100">
+                                            <input type="number" min="<?= min_transfer_amount ?>" style="font-size:200%;" class="form-control form-control-lg" name="amount" id="amount_on_transfer" placeholder="0" required aria-required="true">
                                         </div>
                                     </div>
 
                                     <div class="form-group basic">
-                                        <button type="button" class="btn btn-primary btn-block btn-lg" data-dismiss="modal">Deposit</button>
+                                        <button type="submit" id="TransferBtn" class="btn btn-primary btn-block btn-lg" disabled>Transfer Fund</button>
                                     </div>
 
                                 </form>
@@ -381,7 +350,7 @@
                     </div>
                     <!-- * balance -->
 
-
+                    <!-- Action Menu Buttons -->
                     <?php if ($UserInfo->root == "logistics") : ?>
                         <!-- action group -->
                         <div class="action-group">
@@ -506,9 +475,11 @@
                         </div>
                         <!-- * action group -->
                     <?php endif; ?>
+                    <!-- Action Menu Buttons -->
 
 
 
+                    <!-- Platform Main Menus -->
                     <?php if ($UserInfo->root == "sales") : ?>
                         <!-- menu -->
                         <div class="listview-title mt-1">Menu</div>
@@ -538,7 +509,6 @@
                         </ul>
                         <!-- * menu -->
                     <?php endif; ?>
-
 
                     <?php if ($UserInfo->root == "merchant") : ?>
                         <!-- menu -->
@@ -582,8 +552,6 @@
                         <!-- * menu -->
                     <?php endif; ?>
 
-
-
                     <?php if ($UserInfo->root == "network") : ?>
                         <!-- menu -->
                         <div class="listview-title mt-1">Menu</div>
@@ -602,8 +570,6 @@
                         </ul>
                         <!-- * menu -->
                     <?php endif; ?>
-
-
 
                     <?php if ($UserInfo->root == "logistics") : ?>
                         <!-- menu -->
@@ -634,18 +600,29 @@
                         </ul>
                         <!-- * menu -->
                     <?php endif; ?>
+                    <!-- Platform Main Menus -->
 
 
                     <!-- others -->
                     <div class="listview-title mt-1">Others</div>
                     <ul class="listview flush transparent no-line image-listview">
-                        <li>
+                    <li>
                             <a href="/dashboard/profile" class="item">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="person-circle-outline"></ion-icon>
                                 </div>
                                 <div class="in">
                                     My Profile
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/dashboard/accounts" class="item">
+                                <div class="icon-box bg-primary">
+                                    <ion-icon name="wallet-outline"></ion-icon>
+                                </div>
+                                <div class="in">
+                                    Bank Account
                                 </div>
                             </a>
                         </li>

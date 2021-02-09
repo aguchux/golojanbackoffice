@@ -75,7 +75,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
         <script src="<?= $assets ?>js/bootstrap-select.min.js"></script>
         <script src="<?= $assets ?>js/daterangepicker.js"></script>
-        <script src="<?= $assets ?>js/base.js"></script>
+        <script src="<?= $assets ?>js/base.js?var=<?= time() ?>"></script>
 
         <?php if (isset($Self->data['toast'])) : 
             $Toast = $Self->getToast();

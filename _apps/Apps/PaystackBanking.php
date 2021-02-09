@@ -14,21 +14,52 @@ class PaystackBanking
         $this->secrete_key = $secrete_key;
         $this->headers = array(
             "Authorization: Bearer {$secrete_key}",
-            "content-type: application/json",
-            "Cache-Control: no-cache",
-            "user-agent: Paystack-Developers-Hub"
+            "Cache-Control: no-cache"
         );
     }
 
     public function getBanks()
     {
         $url = "https://api.paystack.co/bank";
+      
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+       
         $result = curl_exec($ch);
         return $result;
+
+
+    }
+
+
+    
+    public function getBank($bankcode=null)
+    {
+
+        $array_banks = array();
+
+        $Paystack = new Apps\PaystackBanking(paystack_secrete);
+        $Bnk = $Paystack->getBank('058');
+        foreach ($Bnk as $key => $value) {
+            $Core->addToBank();
+            $bankline = $value;
+            $code = $bankline->code;
+            $name = $bankline->name;
+            $array_banks[$code] = $name;
+        }
+        
+        die($array_banks[$bankcode]);
+    
+        return $Bankers;
+
     }
 
 
@@ -47,9 +78,16 @@ class PaystackBanking
     {
         $url = "https://api.paystack.co/bank/resolve?account_number={$account_number}&bank_code={$bank_code}";
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+
         $result = curl_exec($ch);
         return $result;
     }
@@ -139,26 +177,6 @@ class PaystackBanking
         $result = curl_exec($ch);
         return $result;
     }
-
-
-    public function verifyMobile($mobile)
-    {
-        $url = "https://api.paystack.co/verifications";
-        $data = array(
-            "phone" => $mobile,
-            "callback_url" => "https://golojan.com/verify/truecaller",
-            "verification_type" => "truecaller"
-        );
-        $data = json_encode($data);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $result = curl_exec($ch);
-        return $result;
-    }
-
 
 
     

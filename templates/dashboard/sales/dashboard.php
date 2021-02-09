@@ -71,13 +71,13 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Open Balance</div>
-                        <div class="value text-success"><?= $Core->ToMoney($Wallet->open) ?></div>
+                        <div class="smallvalue text-success"><?= $Core->ToMoney($Wallet->open) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Closed Balance</div>
-                        <div class="value text-danger"><?= $Core->ToMoney($Wallet->closed) ?></div>
+                        <div class="smallvalue text-danger"><?= $Core->ToMoney($Wallet->closed) ?></div>
                     </div>
                 </div>
             </div>
@@ -87,13 +87,13 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Store Capacity</div>
-                        <div class="value"><?= $Core->ToMoney($StoreInfo->capacity) ?></div>
+                        <div class="smallvalue"><?= $Core->ToMoney($StoreInfo->capacity) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Volume Stocked</div>
-                        <div class="value"><?= $Core->ToMoney($Core->StockVolume($UserInfo->accid)) ?></div>
+                        <div class="smallvalue"><?= $Core->ToMoney($Core->StockVolume($UserInfo->accid)) ?></div>
                     </div>
                 </div>
             </div>

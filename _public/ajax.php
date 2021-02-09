@@ -1,5 +1,30 @@
 <?php
 
+$Route->add('/ajax/bankers/getinfo', function () {
+    $Done = array();
+    $Done['done'] = 0;
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+
+    $data = $Core->post($_POST);
+   
+    $accountnumber = $data->accountnumber;
+    $bankcode = $data->bankcode;
+    
+    $PaystackBanking = new Apps\PaystackBanking(paystack_secrete_live);
+    $AccountInfo = json_decode($PaystackBanking->verifyBank($accountnumber,$bankcode));
+    $status = $AccountInfo->status;
+    if($status==true){
+        $Done['done'] = 1;
+        $AccountData = $AccountInfo->data;
+        $Done['account_number'] = $AccountData->account_number;
+        $Done['account_name'] = $AccountData->account_name;
+    }
+
+    echo json_encode($Done);
+
+}, 'POST');
 
 $Route->add('/ajax/exists/{param}', function ($param) {
     $result = 0;
@@ -23,6 +48,37 @@ $Route->add('/ajax/exists/{param}', function ($param) {
 }, 'POST');
 
 
+
+$Route->add('/ajax/profile/{receipientid}/receipient', function ($receipientid) {
+
+    $Done = array();
+    $Done['accid'] = 0;
+    $Done['sameperson'] = 0;
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+    $accid = $Template->storage("accid");
+
+    $Receipient = $Core->UserInfo($receipientid);
+
+    if (isset($Receipient->accid)) {
+        $Done['sameperson'] = 0;
+        if ($accid == $receipientid) {
+            $Done['sameperson'] = 1;
+        }
+        $Done['accid'] = $receipientid;
+        $Done['avatar'] = $Receipient->avatar;
+        $Done['name'] = $Receipient->fullname;
+        $Done['created'] = date("jS M Y", strtotime($Receipient->created));
+    }
+
+    $Done = json_encode($Done);
+
+    echo $Done;
+}, 'POST');
+
+
+
 $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
     $Done = array();
     $Core = new Apps\Core();
@@ -41,7 +97,6 @@ $Route->add('/ajax/profile/{sponsorid}/sponsor', function ($sponsorid) {
     $Done = json_encode($Done);
 
     echo $Done;
-
 }, 'POST');
 
 
@@ -137,7 +192,7 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $Done['done'] = $done;
     $Done['added'] = $added;
     $Done['count'] = $CountStock;
-    $Done['capacity'] = $Core->Naira($finalcapacity);
+    $Done['capacity'] = $Core->ToMoney($finalcapacity);
 
     echo json_encode($Done);
 }, 'POST');

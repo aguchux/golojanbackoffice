@@ -75,11 +75,17 @@ define("smslive_api_key", "acdd4023-b6af-4479-a8a7-9ee45278c319");
 define("smslive_callback_url", "https://ebsgfinance.net/auth/smslive247/callback");
 
 
+define("paystack_secrete", "sk_test_2cb2fbb56d2c87a9a6991ddaad401e3bdfb7ddc7");
+define("paystack_public", "pk_test_da9c282c5eadae2c502f50ac8c0057c84f737a7c");
 
-//pk_live_b34184b6f8b477550ab86ff7b1637e84d351dfcd
 
+
+define("paystack_secrete_live", "sk_live_37f8df71edc6cabe84e0392ef0825d03f730d93f");
+define("paystack_public_live", "pk_live_b34184b6f8b477550ab86ff7b1637e84d351dfcd");
 
 define("default_transaction_days",30);
+
+
 define("pre_show_transactions",false);
 
 //Cloudinary.Developers.API//
@@ -93,3 +99,8 @@ define("initial_store_capacity", 2000000);
 define("enable_DKIM_keys",true);
 
 define("root_accid",12000);
+
+define("min_transfer_amount",500);
+define("min_funding_amount",500);
+define("min_withdrawal_amount",500);
+

@@ -47,85 +47,47 @@ $(function () {
 
 $(function () {
 
-    /*
-        $('#xSearchTransactions').on("input", function (e) {
-    
-            var val_in = this.value;
-            var key_in = e.which;
-    
-            if (val_in == '') {
-                e.preventDefault();
-                return false;
-            }
-            if (key_in == 13) {
-                e.preventDefault();
-                return false;
-            }
-    
-            // Declare variables
-            var input, filter, transactions, item, detail, i, txtValue;
-            input = val_in;
-            filter = input.toUpperCase();
-    
-            transactions = document.getElementById("transactions");
-            item = transactions.getElementsByClassName('item');
-    
-            // Loop through all list items, and hide those who don't match the search query
-            for (i = 0; i < item.length; i++) {
-                detail = item[i].getElementsByClassName("detail")[0];
-                txtValue = detail.textContent || detail.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    item[i].style.display = "";
-                } else {
-                    item[i].style.display = "none";
-                }
-            }
-    
-        });
-    
-        */
-
     $('#accountnumber').on("input", function (e) {
         var txt = $(this).val();
-        if (txt == "") {
-            $("#ShowAccountNumber").html("enter account number above");
-            return false;
+        if (txt.length == 10) {
+            $('#xLoadAccountName').trigger("change");
+        }else{
+            $("#xAccountAddButton").prop('disabled', true).addClass("disabled");
+            $("#saved_account_number").val("0");
         }
-        $("#ShowAccountNumber").html(txt);
+        
     });
 
-
-
-    $('.xAjaxCheckBank').on("change", function (e) {
-
+    $('#xLoadAccountName').on("change", function (e) {
         e.preventDefault();
-
         var accountnumber = $("#accountnumber").val();
         var bankcode = $(this).val();
-
         var fd = new FormData;
-
         fd.append('accountnumber', accountnumber);
         fd.append('bankcode', bankcode);
-
-        var _fom = $(this).closest("form");
-        var _url = _fom.attr('action');
-        $.ajax("/bakers/getinfo", {
+        $.ajax("/ajax/bankers/getinfo", {
             type: 'post',
             data: fd,
             contentType: false,
             processData: false,
             async: true,
+            beforeSend: function () {
+                $("#xLoadingInAccount").removeClass('d-none');
+            },
             success: function (data, status, xhr) {
                 var jData = JSON.parse(data);
-                //alert (jData.data.account_number);
-                if (parseInt(jData.status)) {
-                    $("#ShowAccountNumber").html(jData.data.account_number);
-                    $("#ShowAccountName").html(jData.data.account_name);
-                } else {
-                    $("#ShowAccountNumber").html("enter account number above");
-                    $("#ShowAccountName").html("no matching account");
+                if(jData.done){
+                    $("#xAccountNameDiv").removeClass('d-none');
+                    $("#xAccountName").val(jData.account_name);
+                    $("#xAccountAddButton").prop('disabled', false).removeClass("disabled");
+                    $("#saved_account_number").val(jData.account_number);
+                }else{
+                    $("#xAccountNameDiv").addClass('d-none');
+                    $("#xAccountName").val(jData.account_name);
+                    $("#xAccountAddButton").prop('disabled', true).addClass("disabled");
+                    $("#saved_account_number").val("0");
                 }
+                $("#xLoadingInAccount").addClass('d-none');
             },
             error: function (jqXhr, textStatus, errorMessage) {
                 //alert(errorMessage);
@@ -165,10 +127,12 @@ $(function () {
         let sponsorid = $(this).val();
         let key_in = event.which;
         if (sponsorid == '') {
+            $("#SponsorInfo").html('').addClass('d-none');
             event.preventDefault();
             return false;
         }
         if (sponsorid.length <= 4) {
+            $("#SponsorInfo").html('').addClass('d-none');
             event.preventDefault();
             return false;
         }
@@ -176,6 +140,8 @@ $(function () {
             event.preventDefault();
             return false;
         }
+
+
 
         $.ajax("/ajax/profile/" + sponsorid + "/sponsor", {
             type: 'post',
@@ -201,6 +167,85 @@ $(function () {
         });
     });
 });
+
+
+$(function () {
+    $('#amount_on_transfer').keyup(function (event) {
+        let El = $(this);
+        let amount = $(this).val();
+        amount = parseFloat(amount);
+
+        let key_in = event.which;
+        if (key_in == 13) {
+            event.preventDefault();
+            return false;
+
+        }
+
+    });
+});
+
+
+$(function () {
+    $('#receipient_id').keyup(function (event) {
+        let El = $(this);
+        let sponsorid = $(this).val();
+        let key_in = event.which;
+        if (sponsorid == '') {
+            $("#TransferBtn").prop('disabled', true);
+            $("#ReceipientInfo").html('').addClass('d-none');
+            event.preventDefault();
+            return false;
+        }
+        if (sponsorid.length <= 4) {
+            $("#TransferBtn").prop('disabled', true);
+            $("#ReceipientInfo").html('').addClass('d-none');
+            event.preventDefault();
+            return false;
+        }
+        if (key_in == 13) {
+            event.preventDefault();
+            return false;
+        }
+
+        $.ajax("/ajax/profile/" + sponsorid + "/receipient", {
+            type: 'post',
+            data: null,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $("#ReceipientInfo").html('').addClass('d-none');
+            },
+            success: function (data, status, xhr) {
+                let jDATA = JSON.parse(data);
+                let accid = parseInt(jDATA.accid);
+                let sameperson = parseInt(jDATA.sameperson);
+                if (accid) {
+                    if (sameperson) {
+                        let info = '<a href="javacript:;" class="text-danger" style="color:red;">You cannot make transfer to yourself.</a>';
+                        $("#ReceipientInfo").html(info).removeClass('d-none');
+                        $("#TransferBtn").addClass('disabled');
+                        $("#TransferBtn").prop('disabled', true);
+                    } else {
+                        let info = '<a href="javacript:;" class="item"><div class="imageWrapper"><img src="' + jDATA.avatar + '" class="imaged w64"></div><div class="in"><div>' + jDATA.name + '<div class="text-muted">Joined : <strong>' + jDATA.created + '</strong></div></div></div></a>';
+                        $("#ReceipientInfo").html(info).removeClass('d-none');
+                        $("#TransferBtn").removeClass('disabled');
+                        $("#TransferBtn").prop('disabled', false);
+                    }
+                } else {
+                    $("#ReceipientInfo").html('').addClass('d-none');
+                    $("#TransferBtn").addClass('disabled');
+                    $("#TransferBtn").prop('disabled', true);
+                }
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+            }
+        });
+    });
+});
+
 
 
 $(function () {

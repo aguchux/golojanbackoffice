@@ -1446,18 +1446,97 @@ class Core extends Model
 		return "{$prefix}{$maxid}";
 	}
 
-
-	public function StartFunding($accid,$transid,$amount,$method,$to_accid)
+	public function StartTransfer($accid, $transid, $amount, $receipient)
 	{
-		mysqli_query($this->dbCon, "INSERT INTO golojan_fundings(accid,transid,amount,method,to_accid) VALUES('$accid','$transid','$amount','$method','$to_accid')");
+		mysqli_query($this->dbCon, "INSERT INTO golojan_transfers(accid_from,transid,amount,accid_to) VALUES('$accid','$transid','$amount','$receipient')");
 		return (int)$this->getLastId();
+	}
+
+	public function TransferInfo($id)
+	{
+		$TransferInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_transfers WHERE id='$id' OR transid='$id'");
+		$TransferInfo = mysqli_fetch_object($TransferInfo);
+		return $TransferInfo;
+	}
+
+	public function SetTransferInfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_transfers SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+
+	public function TransferFund($accid_from, $accid_to, $amount = 0)
+	{
+		$Wallet_from = $this->Wallet($accid_from);
+		$bal = $Wallet_from->open;
+		if ($bal >= $amount) {
+			if ($this->DebitWallet($accid_from, $amount)) {
+				if ($this->CreditWallet($accid_to, $amount)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+
+	public function genTransferId($accid)
+	{
+		$prefix = "GT-T";
+		$genTransferId = mysqli_query($this->dbCon, "SELECT MAX(id) AS  maxid from golojan_transfers");
+		$genTransferId = mysqli_fetch_object($genTransferId);
+		$maxid = $genTransferId->maxid;
+		$maxid = $maxid + 1;
+		$maxid = str_pad($maxid, 6, '0', STR_PAD_LEFT);
+		return "{$prefix}{$maxid}";
+	}
+
+
+	public function StartFunding($accid, $transid, $amount, $method, $to_accid)
+	{
+		$reference = md5($accid . $transid . $amount . $method . $to_accid . time());
+		mysqli_query($this->dbCon, "INSERT INTO golojan_fundings(accid,transid,amount,method,to_accid,reference) VALUES('$accid','$transid','$amount','$method','$to_accid','$reference')");
+		return (int)$this->getLastId();
+	}
+
+	public function SetFundingInfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_fundings SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+
+	public function FundingInfo($id)
+	{
+		$FundingInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_fundings WHERE id='$id' OR reference='$id'");
+		$FundingInfo = mysqli_fetch_object($FundingInfo);
+		return $FundingInfo;
+	}
+
+	public function CreditWallet($accid, $amount)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_wallets SET open_balance = (open_balance + '{$amount}') where accid='$accid'");
+		return (int)mysqli_affected_rows($this->dbCon);
+	}
+
+
+	public function DebitWallet($accid, $amount)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_wallets SET open_balance = (open_balance - '{$amount}') where accid='$accid'");
+		return (int)mysqli_affected_rows($this->dbCon);
+	}
+
+	public function LogFunding($accid, $amount, $type = "credit")
+	{
+		return true;
 	}
 
 
 
 
 	//Locations
-
 	/** @return \mysqli_result|bool  */
 	public  function Locations()
 	{
@@ -1485,6 +1564,38 @@ class Core extends Model
 
 
 
+	//Bank Accounts
+
+
+	public  function Bankers()
+	{
+		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers");
+		return $Bankers;
+	}
+	
+	public function AddNewBanker($accid, $bankcode, $account_number, $account_name)
+	{
+		$Paystack = new PaystackBanking(paystack_secrete);
+		$Bank = json_decode($Paystack->verifyBank($account_number,$bankcode));
+		$Bank = 
+
+		mysqli_query($this->dbCon, "UPDATE golojan_bankers(accid,bank_name,bank_code,account_number,account_name) VALUES('$accid','$bankcode','$account_number','$account_name')");
+
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+
+	public function BankInfo($id)
+	{
+		$BankInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE id='$id'");
+		$BankInfo = mysqli_fetch_object($BankInfo);
+		return $BankInfo;
+	}
+	public function SetBankerInfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_bankers SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
 
 
 
