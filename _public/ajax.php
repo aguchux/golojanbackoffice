@@ -161,16 +161,17 @@ $Route->add('/ajax/products/photos/upload', function () {
     $handle = new \Verot\Upload\Upload($_FILES['imagefile']);
     $hashkey = sha1($_FILES['imagefile']['name'] .  $accid . $handle->file_src_name_body  . time());
     if ($handle->uploaded) {
-
+        $handle->allowed = array('image/*');
         $handle->file_new_name_body = $hashkey;
         $handle->dir_auto_create = true;
-        $handle->image_resize    = true;
-        $handle->image_ratio_crop = true;
-        $handle->image_y    =  1200;
-        $handle->image_x    =  1200;
-
+        $handle->dir_auto_chmod = true;
         $handle->file_overwrite = true;
         $handle->dir_chmod = 0777;
+        $handle->image_resize    = true;
+        $handle->image_ratio_crop = true;
+        $handle->image_y    =  500;
+        $handle->image_x    =  500;
+        $handle->image_convert = 'jpg';
         $handle->image_ratio = true;
 
         $file_src_name_ext = $handle->file_src_name_ext;

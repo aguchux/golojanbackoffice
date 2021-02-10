@@ -337,6 +337,7 @@ $(function () {
                         $("#custom-file-upload-" + tabindex).css({ "background-image": "url('" + doneUrl + "')", "background-size": "cover" });
                     }
                     $("#xActivityLoader-" + tabindex).html("<ion-icon name=\"arrow-up-circle-outline\"></ion-icon>");
+                    $("#xActivityLoader-" + tabindex).addClass("text-success");
                 },
                 error: function (jqXhr, textStatus, errorMessage) { }
             });
