@@ -1536,6 +1536,51 @@ class Core extends Model
 
 
 
+	// Withdrawals//
+
+	public function genWithdrawalId($accid)
+	{
+		$prefix = "GT-W";
+		$genWithdrawalId = mysqli_query($this->dbCon, "SELECT MAX(id) AS  maxid from golojan_withdrawals");
+		$genWithdrawalId = mysqli_fetch_object($genWithdrawalId);
+		$maxid = $genWithdrawalId->maxid;
+		$maxid = $maxid + 1;
+		$maxid = str_pad($maxid, 6, '0', STR_PAD_LEFT);
+		return "{$prefix}{$maxid}";
+	}
+
+	public function StartWithdrawal($accid, $transid, $recipient_code, $integration_id, $recipient_id, $amount, $description, $bankerid)
+	{
+		$reference = strtolower($transid);
+		mysqli_query($this->dbCon, "INSERT INTO golojan_withdrawals(accid,transid,reference,recipient_code,integration_id,recipient_id,amount,description,bankerid) VALUES('$accid','$transid','$reference','$recipient_code','$integration_id','$recipient_id','$amount','$description','$bankerid')");
+		return (int)$this->getLastId();
+	}
+
+
+	public function SetWithdrawalInfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_withdrawals SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+	public function WithdrawalInfo($id)
+	{
+		$WithdrawalInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_withdrawals WHERE id='$id' OR reference='$id'");
+		$WithdrawalInfo = mysqli_fetch_object($WithdrawalInfo);
+		return $WithdrawalInfo;
+	}
+
+	// Withdrawals//
+
+
+
+
+
+
+
+
+
+
 	//Locations
 	/** @return \mysqli_result|bool  */
 	public  function Locations()
@@ -1567,30 +1612,83 @@ class Core extends Model
 	//Bank Accounts
 
 
-	public  function Bankers()
+	public  function Bankers($accid)
 	{
-		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers");
+		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid'");
 		return $Bankers;
 	}
-	
-	public function AddNewBanker($accid, $bankcode, $account_number, $account_name)
+
+
+	public  function LoadAccountsToSelect($accid)
 	{
-		$Paystack = new PaystackBanking(paystack_secrete);
-		$Bank = json_decode($Paystack->verifyBank($account_number,$bankcode));
-		$Bank = 
+		$html = "";
+		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid'");
+		while ($bnk = mysqli_fetch_object($Bankers)) {
+			$html .= "<option value=\"{$bnk->id}\">{$bnk->bank_name}({$bnk->account_name})</option>";
+		}
+		return $html;
+	}
 
-		mysqli_query($this->dbCon, "UPDATE golojan_bankers(accid,bank_name,bank_code,account_number,account_name) VALUES('$accid','$bankcode','$account_number','$account_name')");
+	public function AddNewBanker($accid, $bankcode, $account_number, $account_name, $bank_name)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_bankers(accid,bank_name,bank_code,account_number,account_name) VALUES('$accid','$bank_name','$bankcode','$account_number','$account_name')");
+		return (int)mysqli_affected_rows($this->dbCon);
+	}
 
-		return mysqli_affected_rows($this->dbCon);
+	public function AddBankToDb($code, $slug, $name)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_banks(code,slug,name) VALUES('$code','$slug','$name')");
+		return (int)$this->getLastId();
 	}
 
 
-	public function BankInfo($id)
+
+	/**
+	 * @param mixed $id 
+	 * @param mixed|null $keyname 
+	 * @return mixed 
+	 */
+	public function BankInfo($id, $keyname = null)
 	{
-		$BankInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE id='$id'");
-		$BankInfo = mysqli_fetch_object($BankInfo);
-		return $BankInfo;
+		if ($keyname == null) {
+			$BankInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE id='$id'");
+			$BankInfo = mysqli_fetch_object($BankInfo);
+			return $BankInfo;
+		} else {
+			$BankInfo = mysqli_query($this->dbCon, "select {$keyname} from golojan_bankers where id='$id'");
+			$BankInfo = mysqli_fetch_object($BankInfo);
+			if (isset($BankInfo->$keyname)) {
+				return $BankInfo->$keyname;
+			}
+			return false;
+		}
 	}
+
+
+	public function DeleteBanker($id)
+	{
+		mysqli_query($this->dbCon, "DELETE golojan_bankers.* FROM golojan_bankers WHERE id='$id'");
+		return (int)$this->countAffected();
+	}
+
+
+	public function BankerInfo($id, $keyname = null)
+	{
+		if ($keyname == null) {
+			$BankerInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_banks WHERE id='$id' OR code='$id'");
+			$BankerInfo = mysqli_fetch_object($BankerInfo);
+			return $BankerInfo;
+		} else {
+			$BankerInfo = mysqli_query($this->dbCon, "SELECT {$keyname} FROM golojan_banks WHERE id='$id' OR code='$id'");
+			$BankerInfo = mysqli_fetch_object($BankerInfo);
+			if (isset($BankerInfo->$keyname)) {
+				return $BankerInfo->$keyname;
+			}
+			return false;
+		}
+	}
+
+
 	public function SetBankerInfo($id, $key, $val)
 	{
 		mysqli_query($this->dbCon, "UPDATE golojan_bankers SET $key='$val' where id='$id'");
@@ -1600,6 +1698,29 @@ class Core extends Model
 
 
 
+	// Sales & Orders//
+	public  function UserOrders($accid, $limit = 50)
+	{
+		$UserOrders = mysqli_query($this->dbCon, "SELECT * FROM golojan_orders WHERE buyer='$accid' OR seller='$accid'");
+		return $UserOrders;
+	}
+	// Sales & Orders//
+
+
+
+
+	
+
+	// Files & Uplads//
+
+	public  function AddUpload($hashkey,$mime,$extension, $filename,$filesize)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_uploads(hashkey,mime,extension,filename,filesize) VALUES('$hashkey','$mime','$extension','$filename','$filesize')");
+		return (int)$this->getLastId();
+	}
+
+
+	// Sales & Orders//
 
 
 

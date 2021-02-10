@@ -5,16 +5,12 @@
 $Route->add('/dashboard', function () {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
-
     $Template->addheader("layouts.auth.header");
     $Template->addfooter("layouts.auth.footer");
     $Template->assign("title", "Golojan | Back Office");
-
     $accid = $Template->storage("accid");
     $root = $Core->UserInfo($accid, "root");
-
     $Core->Relocation($accid);
-
     $Template->assign("menukey", "dashboard");
     $Template->render("dashboard.{$root}.dashboard");
 }, 'GET');
@@ -109,8 +105,9 @@ $Route->add('/dashboard/{page}', function ($page) {
         $ListBankers = $ListBankers->data;
         $Template->assign("ListBankers", $ListBankers);
 
-        $Bankers = $Core->Bankers();
+        $Bankers = $Core->Bankers($accid);
         $Template->assign("Bankers", $Bankers);
+        
     } elseif ($page == "locations") {
 
         $this_user = $Core->UserInfo($accid);

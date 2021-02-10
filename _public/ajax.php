@@ -8,14 +8,14 @@ $Route->add('/ajax/bankers/getinfo', function () {
     $Template = new Apps\Template;
 
     $data = $Core->post($_POST);
-   
+
     $accountnumber = $data->accountnumber;
     $bankcode = $data->bankcode;
-    
+
     $PaystackBanking = new Apps\PaystackBanking(paystack_secrete_live);
-    $AccountInfo = json_decode($PaystackBanking->verifyBank($accountnumber,$bankcode));
+    $AccountInfo = json_decode($PaystackBanking->verifyBank($accountnumber, $bankcode));
     $status = $AccountInfo->status;
-    if($status==true){
+    if ($status == true) {
         $Done['done'] = 1;
         $AccountData = $AccountInfo->data;
         $Done['account_number'] = $AccountData->account_number;
@@ -23,7 +23,6 @@ $Route->add('/ajax/bankers/getinfo', function () {
     }
 
     echo json_encode($Done);
-
 }, 'POST');
 
 $Route->add('/ajax/exists/{param}', function ($param) {
@@ -45,6 +44,19 @@ $Route->add('/ajax/exists/{param}', function ($param) {
         }
     }
     $Template->debug($result);
+}, 'POST');
+
+
+$Route->add('/ajax/bankers/{bankerid}/delete', function ($bankerid) {
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+    $data = $Core->post($_POST);
+
+    $bankid = $data->bankid;
+    $deleted = $Core->DeleteBanker($bankid);
+
+    $Template->debug($deleted);
 }, 'POST');
 
 
@@ -137,6 +149,49 @@ $Route->add('/ajax/profile/upload', function () {
         echo json_encode($result);
     }
 }, 'POST');
+
+
+$Route->add('/ajax/products/photos/upload', function () {
+    $Core = new Apps\Core();
+    $Template = new Apps\Template("/auth/login");
+    $result = array();
+    $result['done'] = 0;
+    $accid = $Template->storage("accid");
+    $FileDir = "./_store/products/{$accid}/uploads";
+    $handle = new \Verot\Upload\Upload($_FILES['imagefile']);
+    $hashkey = sha1($_FILES['imagefile']['name'] .  $accid . $handle->file_src_name_body  . time());
+    if ($handle->uploaded) {
+
+        $handle->file_new_name_body = $hashkey;
+        $handle->dir_auto_create = true;
+        $handle->image_resize    = true;
+        $handle->image_ratio_crop = true;
+        $handle->image_y    =  1200;
+        $handle->image_x    =  1200;
+
+        $handle->file_overwrite = true;
+        $handle->dir_chmod = 0777;
+        $handle->image_ratio = true;
+
+        $file_src_name_ext = $handle->file_src_name_ext;
+        $file_src_mime = $handle->file_src_mime;
+        $file_src_size = $handle->file_src_size;
+
+        $handle->process($FileDir);
+        if ($handle->processed) {
+            $img_url =  $handle->file_dst_pathname;
+            $added = $Core->AddUpload($hashkey,$file_src_mime,$file_src_name_ext,$hashkey,$file_src_size);
+            if($added){
+                $result['done'] = 1;
+                $result['added'] = $added;
+                $result['image'] = $img_url;    
+            }
+            $handle->clean();
+        } 
+        echo json_encode($result);
+    }
+}, 'POST');
+
 
 
 $Route->add('/ajax/stores/{product}/addproduct', function ($product) {

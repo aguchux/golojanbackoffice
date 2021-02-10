@@ -3,15 +3,17 @@
 $Route->add('/payments/addaccount', function ($fundid) {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
-
+    $accid = $Template->storage("accid");
     $data = $Core->post($_POST);
 
     $saved_account_number = $data->saved_account_number;
     $banker = $data->banker;
     $account_name = $data->account_name;
+    $Banker = $Core->BankerInfo($banker);
+    $bank_name = $Banker->name;
 
-    $Template->debug($data);
-    
+    $added = $Core->AddNewBanker($accid, $banker, $saved_account_number, $account_name, $bank_name);
+    $Template->redirect("/dashboard/accounts");
 }, 'POST');
 
 
@@ -36,12 +38,124 @@ $Route->add('/payments/transfer', function () {
     }
 
     $Template->token($token, "/dashboard");
+}, 'POST');
+
+
+
+
+
+$Route->add('/payments/withdrawal/{withid}/finalize', function ($withid) {
+    $Template = new Apps\Template("/auth/login");
+    $Core = new Apps\Core;
+
+    $data = $Core->post($_POST);
+    $OTP = $data->otp;
+
+    $accid = $Template->storage("accid");
+
+    //Securing script//
+    $token = $Template->storage("token");
+    $Template->token($token, "/dashboard");
+
+    $WithdrawalInfo = $Core->WithdrawalInfo($withid);
+    $PaystackBanking = new Apps\PaystackBanking(paystack_secrete);
+    
+    // Finalize Transfer //
+    $FinalizeTransfer = $PaystackBanking->FinalizeTransfer($WithdrawalInfo->pay_transfer_code, $OTP);
+    $FinalizeTransfer = json_decode($FinalizeTransfer);
+    $status = (int)$FinalizeTransfer->status;
+    $Template->debug($status);
+
+    if($status=="true"){
+        $Template->debug($FinalizeTransfer);
+       // $Template->redirect("/payments/withdrawal/{$withid}/completed");
+    }else{
+        $Template->redirect("/payments/withdrawal/{$withid}/otp");
+    }
 
 }, 'POST');
 
 
 
+$Route->add('/payments/withdrawfund', function () {
+    $Template = new Apps\Template("/auth/login");
+    $Core = new Apps\Core;
+    $data = $Core->post($_POST);
+
+    $accid = $Template->storage("accid");
+
+    //Securing script//
+    $token = $Template->storage("token");
+    $Template->token($token, "/dashboard");
+
+    $amount = (float)$data->amount;
+    $account = $data->account;
+
+    $ThisBanker = $Core->BankInfo($account);
+
+    $bank_code = $ThisBanker->bank_code;
+    $account_number = $ThisBanker->account_number;
+    $account_name = $ThisBanker->account_name;
+
+    $transid = $Core->genWithdrawalId($accid);
+    $description = "Withdrawal request by {$account_name} - Transaction Number: {$transid}";
+
+    $PaystackBanking = new Apps\PaystackBanking(paystack_secrete);
+    // Setup Transfer Receipient//
+    $PayData = $PaystackBanking->AddReceipient($bank_code, $account_number, $account_name, $description);
+    $PayData = json_decode($PayData);
+    $status = $PayData->status;
+    if ($status == true) {
+        $PayData = $PayData->data;
+        $recipient_code = $PayData->recipient_code;
+        $withid = $Core->StartWithdrawal($accid, $transid, $PayData->recipient_code, $PayData->integration, $PayData->id, $amount, $description, $account);
+        if ($withid) {
+            // Setup Transfer Proper//
+            $Transfer =  $PaystackBanking->Transfer($amount, $recipient_code, $description);
+            $TransferData = json_decode($Transfer);
+            $status = $TransferData->status;
+            if ($status == true) {
+
+
+                $TransferData = $TransferData->data;
+
+                $reference = $TransferData->reference;
+                $Core->SetWithdrawalInfo($withid, "pay_reference", $reference);
+
+                $pay_status = $TransferData->status;
+                $Core->SetWithdrawalInfo($withid, "pay_status", $pay_status);
+                $Core->SetWithdrawalInfo($withid, "status", $pay_status);
+
+                $transfer_code = $TransferData->transfer_code;
+                $Core->SetWithdrawalInfo($withid, "pay_transfer_code", $transfer_code);
+
+                //Send OTP//
+                $PaystackBanking->sendOTP($transfer_code);
+                //Send OTP//
+
+                $pay_id = $TransferData->id;
+                $Core->SetWithdrawalInfo($withid, "pay_id", $pay_id);
+
+                $Template->redirect("/payments/withdrawal/{$withid}/otp");
+            }
+
+            $Template->redirect("/dashboard");
+
+            // Setup Transfer Proper//
+        }
+    }
+
+    $Template->redirect($token, "/dashboard");
+
+}, 'POST');
+
+
+
+
+
+
 $Route->add('/payments/addfund', function () {
+
     $Template = new Apps\Template("/auth/login");
     $Core = new Apps\Core;
     $data = $Core->post($_POST);
@@ -64,7 +178,7 @@ $Route->add('/payments/addfund', function () {
         $amount = floatval($amount * 100);
         $Paystack = new Yabacon\Paystack(paystack_secrete);
         $reference = md5($start . $accid . $accid . $accid . time());
-        
+
         try {
 
             $tranx = $Paystack->transaction->initialize([
@@ -89,7 +203,7 @@ $Route->add('/payments/addfund', function () {
             $Core->debug($e);
         }
     }
-    $Template->token($token, "/dashboard");
+    $Template->redirect("/dashboard");
 }, 'POST');
 
 
@@ -119,13 +233,13 @@ $Route->add('/payments/{transferid}/transfernow', function ($transferid) {
 
     $data = $Core->post($_POST);
     if (isset($data->cancel)) {
-        $Core->SetTransferInfo($transferid,"status","cancelled");
+        $Core->SetTransferInfo($transferid, "status", "cancelled");
     } elseif (isset($data->confirm)) {
-        $transfer = (int)$Core->TransferFund($accid_from,$accid_to,$amount);
-        if($transfer){
-            $Core->SetTransferInfo($transferid,"status","completed");
-        }else{
-            $Core->SetTransferInfo($transferid,"status","failed");
+        $transfer = (int)$Core->TransferFund($accid_from, $accid_to, $amount);
+        if ($transfer) {
+            $Core->SetTransferInfo($transferid, "status", "completed");
+        } else {
+            $Core->SetTransferInfo($transferid, "status", "failed");
         }
     }
     $Template->redirect("/payments/transfer/{$transferid}/completed");
@@ -149,8 +263,31 @@ $Route->add('/payments/transfer/{transferid}/completed', function ($transferid) 
 
     $Template->assign("menukey", "transfer fund");
     $Template->render("dashboard.transfered");
-
 }, 'GET');
+
+
+$Route->add('/payments/withdrawal/{withid}/otp', function ($withid) {
+
+    $Core = new Apps\Core;
+    $Template = new Apps\Template("/auth/login");
+    $Template->assign("title", "Golojan | Back Office");
+
+    $Template->addheader("layouts.auth.header");
+    $Template->addfooter("layouts.auth.footer");
+
+    $accid = $Template->storage("accid");
+
+    $WithdrawalInfo = $Core->WithdrawalInfo($withid);
+    $Template->assign("WithdrawalInfo", $WithdrawalInfo);
+
+    $BankInfo = $Core->BankInfo($WithdrawalInfo->bankerid);
+    $Template->assign("BankInfo", $BankInfo);
+
+
+    $Template->assign("menukey", "confirm otp");
+    $Template->render("dashboard.withdrawalotp");
+}, 'GET');
+
 
 
 

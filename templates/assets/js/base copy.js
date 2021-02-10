@@ -313,30 +313,33 @@ $(function () {
 $(function () {
 
     $('.xProductPhotoUploader').each(function (i, el) {
-        var el = $(this);
-        let tabindex = el.attr("tabindex");
+        let el = $(this);
+        let index = $(this).attr("tabindex");
         el.on('change', function (e) {
             var file_data = el.prop("files")[0];
             var frmData = new FormData();
             frmData.append("imagefile", file_data);
             $.ajax("/ajax/products/photos/upload", {
                 type: 'post',
+                async: true,
                 data: frmData,
                 cache: false,
                 contentType: false,
                 processData: false,
                 beforeSend: function () {
-                    $("#xActivityLoader-" + tabindex).html("<div class=\"spinner-grow text-primary\" role=\"status\"></div>");
+                    $('#xActivityLoader_' + index).html("<div class=\"spinner-grow text-primary\" role=\"status\"></div>");
                 },
                 success: function (data, status, xhr) {
+                    alert(data);
                     let jDATA = JSON.parse(data);
-                    let addedInt = parseInt(jDATA.added);
+                    let uploadedInt = parseInt(jDATA.added);
                     let doneInt = parseInt(jDATA.done);
-                    let doneUrl = (jDATA.image).toString(); 
+                    let doneUrl = (jDATA.image).toString();
                     if (doneInt) {
-                        $("#custom-file-upload-" + tabindex).css({ "background-image": "url('" + doneUrl + "')", "background-size": "cover" });
+                        //$("#UserInfoAvatar").attr("src", doneUrl);
+                        //$("#UserInfoAvatarTop").attr("src", doneUrl);
                     }
-                    $("#xActivityLoader-" + tabindex).html("<ion-icon name=\"arrow-up-circle-outline\"></ion-icon>");
+                    $('#xActivityLoader_' + index).html("<ion-icon name=\"arrow-up-circle-outline\"></ion-icon>");
                 },
                 error: function (jqXhr, textStatus, errorMessage) { }
             });

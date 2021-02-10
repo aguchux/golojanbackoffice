@@ -12,19 +12,23 @@
 
 
 <?php while ($banker = mysqli_fetch_object($Bankers)) : ?>
-    <ul class="listview image-listview text inset my-3">
+    <ul class="listview image-listview text inset my-3" id="BankerBox_<?= $banker->id ?>">
         <li>
             <div class="item">
                 <div class="in">
-                    <div>
+                    <div class="left">
                         <?= $banker->bank_name ?>
                         <div class="text-muted">
+                    <img class="imaged w48 left ml-0 mr-0" src="./_store/banks/<?= $Core->BankerInfo($banker->bank_code, "slug") ?>.png" alt=".">
                             <?= $banker->account_number ?>
                         </div>
                     </div>
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="banker" value="<?= $banker->id ?>" class="custom-control-input DefultBankers" id="banker_<?= $banker->id ?>" />
+                    <div class="custom-control custom-switch disabled" id="xCustomCheckBox_<?= $banker->id ?>">
+                        <input type="checkbox" disabled='true' name="banker" value="<?= $banker->id ?>" class="custom-control-input DefultBankers disabled" id="banker_<?= $banker->id ?>" />
                         <label class="custom-control-label" for="banker_<?= $banker->id ?>"></label>
+                    </div>
+                    <div class="custom-control custom-switch d-none" id="xCustomCheckLoader_<?= $banker->id ?>">
+                        <div class="spinner-border text-danger" role="status"></div>
                     </div>
                 </div>
             </div>

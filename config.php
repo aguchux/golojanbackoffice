@@ -61,6 +61,8 @@ define("db_socket",null);
 define("enable_otp_on_logon", true);
 define("otp_live_time", 30);
 define("otp_code_digits", 6);
+define("withdrawal_otp_code_digits", 6);
+
 
 define("enable_sms_otp", false);
 define("enable_email_otp", false);

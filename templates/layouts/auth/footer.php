@@ -13,46 +13,6 @@
         <?php require_once DOT . "/_public/drawer.php"; ?>
         <?php require_once DOT . "/_public/modals.php"; ?>
 
-        <!-- DialogIconedSuccess -->
-        <div class="modal fade dialogbox" id="ModalSuccessDialog" data-backdrop="static" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-icon text-success">
-                        <ion-icon name="checkmark-circle"></ion-icon>
-                    </div>
-                    <div class="modal-header">
-                        <h5 class="modal-title">Success</h5>
-                    </div>
-                    <div class="modal-body" id="DialogSuccessMessage">Your payment has been sent.</div>
-                    <div class="modal-footer">
-                        <div class="btn-inline">
-                            <a href="#" class="btn" data-dismiss="modal">CLOSE</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade dialogbox" id="ModalFailedDialog" data-backdrop="static" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-icon text-danger">
-                        <ion-icon name="close-circle"></ion-icon>
-                    </div>
-                    <div class="modal-header">
-                        <h5 class="modal-title">Error</h5>
-                    </div>
-                    <div class="modal-body" id="DialogFailedMessage">There is something wrong.</div>
-                    <div class="modal-footer">
-                        <div class="btn-inline">
-                            <a href="#" class="btn" data-dismiss="modal">CLOSE</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- * DialogIconedSuccess -->
-
-
         <!-- ///////////// Js Files ////////////////////  -->
         <!-- Jquery -->
         <script src="<?= $assets ?>js/lib/jquery-3.4.1.min.js"></script>
@@ -77,24 +37,6 @@
         <script src="<?= $assets ?>js/daterangepicker.js"></script>
         <script src="<?= $assets ?>js/base.js?var=<?= time() ?>"></script>
 
-        <?php if (isset($Self->data['toast'])) : 
-            $Toast = $Self->getToast();
-            ?>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    let status = "<?= $Toast->error ?>";
-                    if (status == 'success') {
-                        $('#DialogSuccessMessage').html("<?= $Toast->toast ?>");
-                        $('#ModalSuccessDialog').modal('show');
-                    } else if (status == 'danger') {
-                        $('#DialogFailedMessage').html("<?= $Toast->toast ?>");
-                        $('#ModalFailedDialog').modal('show');
-                    }
-                });
-            </script>
-        <?php
-            $Self->removedata("toast");
-        endif; ?>
         </body>
 
         </html>
