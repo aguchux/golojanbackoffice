@@ -311,7 +311,8 @@ $(function () {
 
 
 $(function () {
-
+    let array_of_uploaded_photos = [];
+    array_of_uploaded_photos.splice(0, array_of_uploaded_photos.length)
     $('.xProductPhotoUploader').each(function (i, el) {
         var el = $(this);
         let tabindex = el.attr("tabindex");
@@ -325,19 +326,20 @@ $(function () {
                 cache: false,
                 contentType: false,
                 processData: false,
+                async: true,
                 beforeSend: function () {
                     $("#xActivityLoader-" + tabindex).html("<div class=\"spinner-grow text-primary\" role=\"status\"></div>");
                 },
                 success: function (data, status, xhr) {
                     let jDATA = JSON.parse(data);
-                    let addedInt = parseInt(jDATA.added);
                     let doneInt = parseInt(jDATA.done);
-                    let doneUrl = (jDATA.image).toString(); 
+                    let doneUrl = (jDATA.image).toString();
                     if (doneInt) {
+                        array_of_uploaded_photos[tabindex] = doneUrl;
+                        $("#array_of_uploaded_photos").val(array_of_uploaded_photos);
                         $("#custom-file-upload-" + tabindex).css({ "background-image": "url('" + doneUrl + "')", "background-size": "cover" });
                     }
                     $("#xActivityLoader-" + tabindex).html("<ion-icon name=\"arrow-up-circle-outline\"></ion-icon>");
-                    $("#xActivityLoader-" + tabindex).addClass("text-success");
                 },
                 error: function (jqXhr, textStatus, errorMessage) { }
             });
@@ -360,6 +362,38 @@ $(function () {
         }
     });
 });
+
+
+
+
+$(function () {
+    $('#maincategoryloader').on("change", function (e) {
+        var el = $(this);
+        var elVal = el.val();
+        if (elVal.length == 0) {
+            e.preventDefault();
+            return false;
+        }
+        $.ajax("/ajax/categories/sub/" + elVal + "/load", {
+            type: 'post',
+            data: {},
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function () {
+                $("#sub_category_box_loader").html("<div class=\"spinner-grow text-secondary\" role=\"status\"></div>").removeClass("d-none");
+            },
+            success: function (data, status, xhr) {
+                $("#subcategory_select_input").html(data);
+                $("#sub_category_box_loader").html("").addClass("d-none");
+            },
+            error: function (jqXhr, textStatus, errorMessage) { }
+        });
+
+    });
+});
+
 
 
 $(function () {

@@ -140,28 +140,38 @@
             </div>
             <div class="modal-body">
                 <div class="action-sheet-content">
-                    <form>
-
-                        <div class="form-group basic">
+                    <form action="/merchants/sellitem" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <?= $Self->tokenize() ?>
+                        <input type="hidden" name="array_of_uploaded_photos" id="array_of_uploaded_photos" value="">
+                        <div class="form-group basic" id="main_category_box">
                             <div class="input-wrapper">
-                                <label class="label" for="category">Select Category</label>
-                                <select class="form-control custom-select form-control-lg" id="category">
-                                    <?= $Core->LoadCategories() ?>
+                                <label class="label" for="maincategoryloader">Select Category</label>
+                                <select class="form-control custom-select" id="maincategoryloader" name="main_category">
+                                    <?= $Core->LoadMainCategories() ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group basic d-none" id="sub_category_box_loader"></div>
+                        <div class="form-group basic" id="sub_category_box">
+                            <div class="input-wrapper">
+                                <label class="label" for="subcategory_select_input">Select Sub Category</label>
+                                <select class="form-control custom-select" id="subcategory_select_input" name="sub_category">
+                                    <option value="">Choose Sub Category</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="form-group basic">
+                        <div class="form-group basic mt-3">
                             <label class="label" for="title">Product Title/Name (120 chars)</label>
                             <div class="input-group mb-2">
-                                <input class="form-control form-control-lg" type="text" name="title" id="title" placeholder="Product Title/Name">
+                                <input class="form-control" type="text" name="title" id="title" placeholder="Product Title/Name">
                             </div>
                         </div>
 
                         <div class="form-group basic">
                             <label class="label" for="description">Product Description(160 chars)</label>
                             <div class="input-group mb-2">
-                                <textarea class="form-control form-control-lg" name="description" id="description" placeholder="Product Description"></textarea>
+                                <textarea class="form-control" name="description" id="description" placeholder="Product Description"></textarea>
                             </div>
                         </div>
 
@@ -174,7 +184,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="bulkpriceinput"><?= $LocationInfo->currency_code ?></span>
                                         </div>
-                                        <input type="number" class="form-control form-control-lg" placeholder="Bulk">
+                                        <input type="number" class="form-control form-control-lg" name="bulkprice" placeholder="0">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
@@ -183,7 +193,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="retailpriceinput"><?= $LocationInfo->currency_code ?></span>
                                         </div>
-                                        <input type="number" class="form-control form-control-lg" placeholder="Retail">
+                                        <input type="number" class="form-control form-control-lg" name="retailprice" placeholder="0">
                                     </div>
                                 </div>
                             </div>
@@ -197,11 +207,11 @@
 
                                 <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 mb-2">
                                     <div class="custom-file-upload" id="custom-file-upload-1">
-                                        <input type="file" name="productphotos[]" id="productphotos1" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="1">
+                                        <input type="file" name="productphotos[]" id="productphotos1" required aria-required="true" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="1">
                                         <label for="productphotos1">
                                             <span>
                                                 <strong>
-                                                    <div id="xActivityLoader-1">
+                                                    <div id="xActivityLoader-1" class="text-primary">
                                                         <ion-icon name="arrow-up-circle-outline"></ion-icon>
                                                     </div>
                                                     <i>Upload a Picture</i>
@@ -212,7 +222,7 @@
                                 </div>
                                 <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 mb-2">
                                     <div class="custom-file-upload" id="custom-file-upload-2">
-                                        <input type="file" name="productphotos[]" id="productphotos2" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="2">
+                                        <input type="file" name="productphotos[]" id="productphotos2" required aria-required="true" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="2">
                                         <label for="productphotos2">
                                             <span>
                                                 <strong>
@@ -260,6 +270,26 @@
 
                         </div>
 
+
+                        <ul class="listview image-listview text mb-2 m-0">
+
+                            <li>
+                                <div class="item">
+                                    <div class="in">
+                                        <div>
+                                            Add to Point of Sale (POS).
+                                            <div class="text-muted">
+                                                Your team can sell this item locally over our POS business platform.</strong>
+                                            </div>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" name="enable_pos_sales" class="custom-control-input" value="1" id="enable_pos_sales" />
+                                            <label class="custom-control-label" for="enable_pos_sales"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
 
                         <div class="form-group basic mb-5">
                             <button type="submit" class="btn btn-primary btn-block btn-lg">Submit Product</button>

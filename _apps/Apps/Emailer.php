@@ -8,9 +8,9 @@ class Emailer
 	public $toEmail = NULL;
 	public $toName = NULL;
 
-	public $fromEmail = "info@golojan";
+	public $fromEmail = "info@golojan.com";
 	public $fromName = "Golojan";
-	public $replyEmail = "info@golojan";
+	public $replyEmail = "info@golojan.com";
 	public $replyName = "Golojan";
 	public $subject = "Golojan";
 
@@ -67,11 +67,10 @@ class Emailer
 			$PHPmailer->MsgHTML($html);
 			$PHPmailer->Encoding = "base64";
 
-			$sent = $PHPmailer->Send();
-			return $sent;
+			return $PHPmailer->Send();
 		} catch (\Exception $e) {
 			$PHPmailer->ClearAllRecipients();
-			return $sent;
+			return 0;
 		}
 	}
 }

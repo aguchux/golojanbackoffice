@@ -45,7 +45,7 @@ if ($Self->auth) {
 
     <!-- loader -->
     <div id="loader">
-        <img src="<?= $assets ?>img/logo-icon.png" alt="Golojan.com" class="loading-icon">
+    <div class="spinner-grow text-white" role="status"></div>
     </div>
     <!-- * loader -->
 

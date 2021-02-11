@@ -58,22 +58,77 @@ $Route->add('/payments/withdrawal/{withid}/finalize', function ($withid) {
     $Template->token($token, "/dashboard");
 
     $WithdrawalInfo = $Core->WithdrawalInfo($withid);
-    $PaystackBanking = new Apps\PaystackBanking(paystack_secrete);
-    
-    // Finalize Transfer //
-    $FinalizeTransfer = $PaystackBanking->FinalizeTransfer($WithdrawalInfo->pay_transfer_code, $OTP);
-    $FinalizeTransfer = json_decode($FinalizeTransfer);
-    $status = (int)$FinalizeTransfer->status;
-    $Template->debug($status);
+    $amount = $WithdrawalInfo->amount;
 
-    if($status=="true"){
-        $Template->debug($FinalizeTransfer);
-       // $Template->redirect("/payments/withdrawal/{$withid}/completed");
-    }else{
-        $Template->redirect("/payments/withdrawal/{$withid}/otp");
+    $withdrawal_otp = $WithdrawalInfo->otp;
+    if ($OTP == $withdrawal_otp) {
+        //There is OTP MAtch//
+
+        // Setup Transfer Proper//
+        $PaystackBanking = new Apps\PaystackBanking(paystack_secrete_live);
+        $Transfer =  $PaystackBanking->Transfer($amount, $WithdrawalInfo->recipient_code, $WithdrawalInfo->description);
+        $TransferData = json_decode($Transfer);
+        $status = $TransferData->status;
+        if ($status == true) {
+
+            if ($Core->DebitWallet($accid, $amount)) {
+
+                $TransferData = $TransferData->data;
+
+                $reference = $TransferData->reference;
+                $Core->SetWithdrawalInfo($withid, "pay_reference", $reference);
+
+                $pay_status = $TransferData->status;
+                $Core->SetWithdrawalInfo($withid, "pay_status", $pay_status);
+                $Core->SetWithdrawalInfo($withid, "status", $pay_status);
+
+                $transfer_code = $TransferData->transfer_code;
+                $Core->SetWithdrawalInfo($withid, "pay_transfer_code", $transfer_code);
+
+                $pay_id = $TransferData->id;
+                $Core->SetWithdrawalInfo($withid, "pay_id", $pay_id);
+            } else {
+                $Core->SetWithdrawalInfo($withid, "pay_status", "failed");
+                $Core->SetWithdrawalInfo($withid, "status", "failed");
+            }
+        }else{
+            $Core->SetWithdrawalInfo($withid, "pay_status", "failed");
+            $Core->SetWithdrawalInfo($withid, "status", "failed");
+        }
+        //There is OTP MAtch//
     }
-
+    $Template->redirect("/payments/withdrawal/{$withid}/completed");
 }, 'POST');
+
+
+$Route->add('/payments/withdrawal/{withid}/completed', function ($withid) {
+
+    $Core = new Apps\Core;
+    $Template = new Apps\Template("/auth/login");
+    $Template->assign("title", "Golojan | Back Office");
+
+    $Template->addheader("layouts.auth.header");
+    $Template->addfooter("layouts.auth.footer");
+
+    $accid = $Template->storage("accid");
+
+    $WithdrawalInfo = $Core->WithdrawalInfo($withid);
+    $Template->assign("WithdrawalInfo", $WithdrawalInfo);
+
+    $BankInfo = $Core->BankInfo($WithdrawalInfo->bankerid);
+    $Template->assign("BankInfo", $BankInfo);
+
+    $BankerInfo = $Core->BankerInfo($BankInfo->bank_code);
+    $Template->assign("BankerInfo", $BankerInfo);
+
+
+    $Template->assign("status", "completed");
+
+    $Template->assign("menukey", "withdrawal");
+    $Template->render("dashboard.withdrawn");
+}, 'GET');
+
+
 
 
 
@@ -83,6 +138,7 @@ $Route->add('/payments/withdrawfund', function () {
     $data = $Core->post($_POST);
 
     $accid = $Template->storage("accid");
+    $UserInfo = $Core->UserInfo($accid);
 
     //Securing script//
     $token = $Template->storage("token");
@@ -100,53 +156,42 @@ $Route->add('/payments/withdrawfund', function () {
     $transid = $Core->genWithdrawalId($accid);
     $description = "Withdrawal request by {$account_name} - Transaction Number: {$transid}";
 
-    $PaystackBanking = new Apps\PaystackBanking(paystack_secrete);
+    $PaystackBanking = new Apps\PaystackBanking(paystack_secrete_live);
     // Setup Transfer Receipient//
     $PayData = $PaystackBanking->AddReceipient($bank_code, $account_number, $account_name, $description);
     $PayData = json_decode($PayData);
     $status = $PayData->status;
     if ($status == true) {
         $PayData = $PayData->data;
-        $recipient_code = $PayData->recipient_code;
         $withid = $Core->StartWithdrawal($accid, $transid, $PayData->recipient_code, $PayData->integration, $PayData->id, $amount, $description, $account);
         if ($withid) {
-            // Setup Transfer Proper//
-            $Transfer =  $PaystackBanking->Transfer($amount, $recipient_code, $description);
-            $TransferData = json_decode($Transfer);
-            $status = $TransferData->status;
-            if ($status == true) {
 
+            $otp = $Core->GenOTP(6);
 
-                $TransferData = $TransferData->data;
+            $Core->SetWithdrawalInfo($withid, "otp", strtoupper($otp));
+            $Core->SetWithdrawalInfo($withid, "otp_time", date("Y-m-d g:i:S"));
 
-                $reference = $TransferData->reference;
-                $Core->SetWithdrawalInfo($withid, "pay_reference", $reference);
+            $message = "NEVER DISCLOSE YOUR OTP TO ANYONE. Your OTP to transfer is <strong>{$otp}</strong>.";
+            $subject = "Your OTP to Transfer is {$otp}";
 
-                $pay_status = $TransferData->status;
-                $Core->SetWithdrawalInfo($withid, "pay_status", $pay_status);
-                $Core->SetWithdrawalInfo($withid, "status", $pay_status);
+            //Email Notix//
+            $Mailer = new Apps\Emailer();
+            $EmailTemplate = new Apps\EmailTemplate('mails.otp');
+            $EmailTemplate->subject = $subject;
+            $EmailTemplate->otp = $otp;
+            $EmailTemplate->fullname = $UserInfo->fullname;
+            $EmailTemplate->mailbody = $message;
+            $Mailer->subject = $subject;
+            $Mailer->SetTemplate($EmailTemplate);
+            $Mailer->toEmail = $UserInfo->email;
+            $Mailer->send();
+            //Email Notix//
 
-                $transfer_code = $TransferData->transfer_code;
-                $Core->SetWithdrawalInfo($withid, "pay_transfer_code", $transfer_code);
-
-                //Send OTP//
-                $PaystackBanking->sendOTP($transfer_code);
-                //Send OTP//
-
-                $pay_id = $TransferData->id;
-                $Core->SetWithdrawalInfo($withid, "pay_id", $pay_id);
-
-                $Template->redirect("/payments/withdrawal/{$withid}/otp");
-            }
-
-            $Template->redirect("/dashboard");
-
-            // Setup Transfer Proper//
+            $Template->redirect("/payments/withdrawal/{$withid}/otp");
         }
     }
 
     $Template->redirect($token, "/dashboard");
-
 }, 'POST');
 
 
@@ -176,7 +221,7 @@ $Route->add('/payments/addfund', function () {
     if ($start) {
 
         $amount = floatval($amount * 100);
-        $Paystack = new Yabacon\Paystack(paystack_secrete);
+        $Paystack = new Yabacon\Paystack(paystack_secrete_live);
         $reference = md5($start . $accid . $accid . $accid . time());
 
         try {
@@ -283,10 +328,14 @@ $Route->add('/payments/withdrawal/{withid}/otp', function ($withid) {
     $BankInfo = $Core->BankInfo($WithdrawalInfo->bankerid);
     $Template->assign("BankInfo", $BankInfo);
 
+    $BankerInfo = $Core->BankerInfo($BankInfo->bank_code);
+    $Template->assign("BankerInfo", $BankerInfo);
 
     $Template->assign("menukey", "confirm otp");
     $Template->render("dashboard.withdrawalotp");
 }, 'GET');
+
+
 
 
 
@@ -361,7 +410,7 @@ $Route->add('/payments/callback', function () {
     $reference = $data->reference;
     $PaymentInfo = $Core->FundingInfo($reference);
     $PayID = $PaymentInfo->id;
-    $Paystack = new Yabacon\Paystack(paystack_secrete);
+    $Paystack = new Yabacon\Paystack(paystack_secrete_live);
     try {
         $tranx = $Paystack->transaction->verify([
             'reference' => $reference,

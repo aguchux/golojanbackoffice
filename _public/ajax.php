@@ -25,6 +25,8 @@ $Route->add('/ajax/bankers/getinfo', function () {
     echo json_encode($Done);
 }, 'POST');
 
+
+
 $Route->add('/ajax/exists/{param}', function ($param) {
     $result = 0;
     $Core = new Apps\Core();
@@ -60,6 +62,13 @@ $Route->add('/ajax/bankers/{bankerid}/delete', function ($bankerid) {
 }, 'POST');
 
 
+$Route->add('/ajax/categories/sub/{maincat}/load', function ($maincat) {
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+    $LoadSubCategories = $Core->LoadSubCategories($maincat);
+    $Template->debug($LoadSubCategories);
+}, 'POST');
 
 $Route->add('/ajax/profile/{receipientid}/receipient', function ($receipientid) {
 
@@ -161,6 +170,7 @@ $Route->add('/ajax/products/photos/upload', function () {
     $handle = new \Verot\Upload\Upload($_FILES['imagefile']);
     $hashkey = sha1($_FILES['imagefile']['name'] .  $accid . $handle->file_src_name_body  . time());
     if ($handle->uploaded) {
+
         $handle->allowed = array('image/*');
         $handle->file_new_name_body = $hashkey;
         $handle->dir_auto_create = true;
@@ -174,21 +184,13 @@ $Route->add('/ajax/products/photos/upload', function () {
         $handle->image_convert = 'jpg';
         $handle->image_ratio = true;
 
-        $file_src_name_ext = $handle->file_src_name_ext;
-        $file_src_mime = $handle->file_src_mime;
-        $file_src_size = $handle->file_src_size;
-
         $handle->process($FileDir);
         if ($handle->processed) {
             $img_url =  $handle->file_dst_pathname;
-            $added = $Core->AddUpload($hashkey,$file_src_mime,$file_src_name_ext,$hashkey,$file_src_size);
-            if($added){
-                $result['done'] = 1;
-                $result['added'] = $added;
-                $result['image'] = $img_url;    
-            }
+            $result['done'] = 1;
+            $result['image'] = $img_url;
             $handle->clean();
-        } 
+        }
         echo json_encode($result);
     }
 }, 'POST');

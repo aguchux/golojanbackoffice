@@ -795,6 +795,40 @@ class Core extends Model
 	}
 
 
+	public function LoadMyCategories($accid,$catid=0)
+	{
+		$html = "<option value=\"\">SELECT Category</option>";
+		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE accid='$accid' AND enabled='1' ");
+		while ($cat = mysqli_fetch_object($Categories)) {
+			$selected = ($catid == $cat->id) ? "selected" : "";
+			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
+		}
+		return $html;
+	}
+	
+
+	public function LoadMainCategories($catid = 0)
+	{
+		$html = "<option value=\"\">Choose Main Category</option>";
+		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='0' AND enabled='1' ");
+		while ($cat = mysqli_fetch_object($Categories)) {
+			$selected = ($catid == $cat->id) ? "selected" : "";
+			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
+		}
+		return $html;
+	}
+
+
+	public function LoadSubCategories($catid = 0)
+	{
+		$html = "<option value=\"\">Choose Sub Category</option>";
+		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='$catid' AND enabled='1' ");
+		while ($cat = mysqli_fetch_object($Categories)) {
+			$html .= "<option value=\"{$cat->id}\">{$cat->category}</option>";
+		}
+		return $html;
+	}
+
 	/**
 	 * @param mixed $catid 
 	 * @return object|null 
@@ -1576,7 +1610,21 @@ class Core extends Model
 
 
 
+	// Merchants & Products//
+	public function MerchantAddProduct($accid,$title,$description,$main_category,$sub_category,$bulkprice,$retailprice,$photo,$photos,$enable_pos_sales)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,category,bulkprice,retailprice,photo,photos,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$bulkprice','$retailprice','$photo','$photos','$enable_pos_sales')");
+		return (int)$this->getLastId();
+	}
 
+	public function MyProducts($accid)
+	{
+		$MyProducts = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE accid='$accid'");
+		return $MyProducts;
+	}	
+
+
+	// Merchants & Products//
 
 
 
@@ -1709,11 +1757,11 @@ class Core extends Model
 
 
 
-	
+
 
 	// Files & Uplads//
 
-	public  function AddUpload($hashkey,$mime,$extension, $filename,$filesize)
+	public  function AddUpload($hashkey, $mime, $extension, $filename, $filesize)
 	{
 		mysqli_query($this->dbCon, "INSERT INTO golojan_uploads(hashkey,mime,extension,filename,filesize) VALUES('$hashkey','$mime','$extension','$filename','$filesize')");
 		return (int)$this->getLastId();

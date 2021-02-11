@@ -17,7 +17,7 @@
                         <strong><?= $Core->UserInfo($WithdrawalInfo->accid, "fullname") ?> (<?= $WithdrawalInfo->accid ?>)</strong>
                     </div>
                     <div class="item text-right">
-                        <img src="./_store/imgs/bank.png" class="imaged w48">
+                        <img src="./_store/banks/<?= $BankerInfo->slug?>.png" class="imaged w48">
                         <strong><?= $BankInfo->bank_name ?> (<?= $BankInfo->account_number ?>)</strong>
                     </div>
                     <div class="arrow"></div>
@@ -25,7 +25,7 @@
             </div>
             <h2 class="mb-2 mt-2">Verify this Withdrawal</h2>
             <p>
-                We sent OTP to your Mobile to confirm you are the one withdrawing <strong class="text-primary"><?= $Core->ToMoney($WithdrawalInfo->amount) ?></strong> to your bank account.
+                We sent OTP to your registered email address. To confirm you are the one withdrawing <strong class="text-primary"><?= $Core->ToMoney($WithdrawalInfo->amount) ?></strong> to your bank account, enter the OTP in the box below.
             </p>
         </div>
 
@@ -33,7 +33,7 @@
         <div class="card bg-transparent">
             <div class="card-body pb-1 text-center">
                 <div class="form-group basic">
-                    <input type="number" required aria-required="true" class="form-control verification-input" id="otp" name="otp" placeholder="••••••"  maxlength="<?= withdrawal_otp_code_digits ?>" autocomplete="off">
+                    <input type="text" required aria-required="true" class="form-control verification-input" id="otp" name="otp" placeholder="••••••" maxlength="6" autocomplete="off">
                 </div>
                 <a href="javascript:;" class="btn-link text-muted" id="xResendWithDrawalOTP" data-withid="<?= $WithdrawalInfo->id ?>">Click to Resend OTP</a>
             </div>

@@ -97,6 +97,7 @@ $Route->add('/dashboard/{page}', function ($page) {
 
         $Level8 = $Core->MyNetwork($accid, 8);
         $Template->assign("Level8", $Level8);
+        
     } elseif ($page == "accounts") {
 
         $PaystackBanking = new Apps\PaystackBanking(paystack_secrete_live);
@@ -108,6 +109,12 @@ $Route->add('/dashboard/{page}', function ($page) {
         $Bankers = $Core->Bankers($accid);
         $Template->assign("Bankers", $Bankers);
         
+    } elseif ($page == "marketplace") {
+
+        $Template->assign("category", 0);
+        $Template->assign("Products", $Core->CategoryProducts(0));
+        $Template->render("dashboard.{$page}");
+
     } elseif ($page == "locations") {
 
         $this_user = $Core->UserInfo($accid);
@@ -122,9 +129,6 @@ $Route->add('/dashboard/{page}', function ($page) {
         $Template->assign("ListVideos", $ListVideos);
     }
 
-    $Template->assign("category", 0);
-    $Template->assign("Products", $Core->CategoryProducts(0));
-    $Template->render("dashboard.{$page}");
 }, 'GET');
 
 
