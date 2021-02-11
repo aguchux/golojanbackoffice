@@ -259,7 +259,7 @@
                             </li>
 
                             <li>
-                                <a href="#" class="item">
+                                <a href="/dashboard/merchant/orders" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </div>
@@ -271,7 +271,7 @@
                             </li>
 
                             <li>
-                                <a href="#" class="item">
+                                <a href="/dashboard/merchant/warehousing" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </div>
@@ -282,7 +282,7 @@
                             </li>
 
                             <li>
-                                <a href="#" class="item">
+                                <a href="/dashboard/merchant/transactions" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </div>
@@ -293,7 +293,7 @@
                             </li>
 
                             <li>
-                                <a href="#" class="item">
+                                <a href="/dashboard/merchant/reviews" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </div>
@@ -305,7 +305,7 @@
 
 
                             <li>
-                                <a href="#" class="item">
+                                <a href="/dashboard/merchant/store" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </div>
