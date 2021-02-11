@@ -29,7 +29,7 @@
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#sendActionSheet">
+                        <a href="/dashboard/networks/network" data-toggle="modal" data-target="#sendActionSheet">
                             <div class="icon-wrapper bg-success">
                                 <ion-icon name="apps-outline"></ion-icon>
                             </div>

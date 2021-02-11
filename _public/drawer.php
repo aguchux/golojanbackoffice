@@ -164,7 +164,7 @@
                                     Withdraw
                                 </div>
                             </a>
-                            <a href="/dashboard/networks" class="action-button">
+                            <a href="/dashboard/network/networks" class="action-button">
                                 <div class="in">
                                     <div class="iconbox">
                                         <ion-icon name="apps-outline"></ion-icon>
@@ -324,7 +324,7 @@
                         <!-- menu -->
                         <ul class="listview flush transparent no-line image-listview">
                             <li>
-                                <a href="/dashboard/networks" class="item">
+                                <a href="/dashboard/network/networks" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="apps-outline"></ion-icon>
                                     </div>
