@@ -795,17 +795,21 @@ class Core extends Model
 	}
 
 
-	public function LoadMyCategories($accid,$catid=0)
+	public function LoadMyCategories($accid, $catid = 0)
 	{
 		$html = "<option value=\"\">SELECT Category</option>";
-		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE accid='$accid' AND enabled='1' ");
+		$Categories = mysqli_query($this->dbCon, "SELECT category FROM golojan_products WHERE accid='$accid' AND enabled='1' GROUP by category");
 		while ($cat = mysqli_fetch_object($Categories)) {
-			$selected = ($catid == $cat->id) ? "selected" : "";
-			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
+			$Scat = $this->CategoryInfo($cat->category);
+			$Mcat = $this->CategoryInfo($Scat->parentid);
+			$selected = ($catid == $Scat->id) ? "selected" : "";
+			$html .= "<option {$selected} value=\"{$Scat->id}\">{$Mcat->category}>>{$Scat->category}</option>";
 		}
 		return $html;
 	}
-	
+
+
+
 
 	public function LoadMainCategories($catid = 0)
 	{
@@ -1611,7 +1615,7 @@ class Core extends Model
 
 
 	// Merchants & Products//
-	public function MerchantAddProduct($accid,$title,$description,$main_category,$sub_category,$bulkprice,$retailprice,$photo,$photos,$enable_pos_sales)
+	public function MerchantAddProduct($accid, $title, $description, $main_category, $sub_category, $bulkprice, $retailprice, $photo, $photos, $enable_pos_sales)
 	{
 		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,category,bulkprice,retailprice,photo,photos,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$bulkprice','$retailprice','$photo','$photos','$enable_pos_sales')");
 		return (int)$this->getLastId();
@@ -1621,7 +1625,7 @@ class Core extends Model
 	{
 		$MyProducts = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE accid='$accid'");
 		return $MyProducts;
-	}	
+	}
 
 
 	// Merchants & Products//
