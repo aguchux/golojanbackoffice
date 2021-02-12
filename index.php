@@ -16,6 +16,7 @@ require_once DOT . "/_public/authpages.php";
 require_once DOT . "/_public/dashboard.php";
 require_once DOT . "/_public/payments.php";
 require_once DOT . "/_public/merchant.php";
+require_once DOT . "/_public/network.php";
 require_once DOT . "/_public/ajax.php";
 
 $Route->add('/device/connection', function () {

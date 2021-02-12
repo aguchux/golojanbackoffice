@@ -222,7 +222,9 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
 
     if ($in_stock) {
         // Remove Product//
-        $done = (int)$Core->RemoveStock($product, $accid);
+        if ($Core->RemoveStock($product, $accid)) {
+            $done = 0;
+        }
     } else {
         // Add the products//
         $_available = $Core->StockVolume($accid);
@@ -253,6 +255,72 @@ $Route->add('/ajax/stores/{product}/addproduct', function ($product) {
     $Done['capacity'] = $Core->ToMoney($finalcapacity);
 
     echo json_encode($Done);
+}, 'POST');
+
+
+
+
+
+$Route->add('/ajax/stores/{product}/addtowarehouse', function ($product) {
+
+
+    $Done = array();
+
+    $done = 0;
+    $added = 1;
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template("/auth/login");
+    $accid = $Template->storage("accid");
+
+    //create store if not exists
+    $Core->HasStore($accid);
+
+    //Read product info//
+    $Productinfo = $Core->Productinfo($product);
+
+    //Read store info//
+    $StoreInfo = $Core->StoreInfo($accid);
+
+    //Is product in stock om user//
+    $in_stock = (int)$Core->inWarehouseStock($product, $accid);
+
+    if ($in_stock) {
+        // Remove Product//
+        if ($Core->RemoveWarehouseStock($product, $accid)) {
+            $done = 0;
+        }
+    } else {
+        // Add the products//
+        $_available = $Core->WarehouseVolume($accid);
+        $_new_volume = $_available + $Productinfo->selling;
+        if ($StoreInfo->warehouse_capacity >= $_new_volume) {
+            $done = (int)$Core->AddWarehouseStock($product, $accid);
+        } else {
+            $added = 0;
+        }
+    }
+
+    //Get store capacity//
+    $store_capacity = (float)$StoreInfo->warehouse_capacity;
+
+    //Get store total and aty socked//
+    //Recompute Store Details//
+    $StoreComputed = $Core->ComputeWarehouseList($accid);
+    //Total stocked
+    $summed = $StoreComputed->sum;
+
+    //Qty stocked
+    $CountStock = $Core->CountWarehouseStock($accid);
+    $finalcapacity = (float) ($store_capacity - $summed);
+
+    $Done['done'] = $done;
+    $Done['added'] = $added;
+    $Done['count'] = $CountStock;
+    $Done['capacity'] = $Core->ToMoney($finalcapacity);
+
+    echo json_encode($Done);
+    
 }, 'POST');
 
 

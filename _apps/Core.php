@@ -80,7 +80,7 @@ class Core extends Model
 	public function Monify($amount)
 	{
 		$curr_code = "&#36;";
-		$sess = new Session;
+		$sess = new Template;
 		if ($sess->auth) {
 			$accid = $sess->storage("accid");
 			$loc = $this->LocationInfo($this->UserInfo($accid, "location"));
@@ -850,6 +850,13 @@ class Core extends Model
 		return $Products;
 	}
 
+
+	public function SetProductinfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_products SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
 	public function Productinfo($id)
 	{
 		$Productinfo = mysqli_query($this->dbCon, "select * from golojan_products where id='$id'");
@@ -863,6 +870,17 @@ class Core extends Model
 			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE enabled='1'");
 		} else {
 			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE category='$catid' AND enabled='1'");
+		}
+		return $Products;
+	}
+
+
+	public function MyCategoryProducts($accid, $catid = 0)
+	{
+		if ($catid == 0) {
+			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE accid='$accid' AND enabled='1'");
+		} else {
+			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE (category='$catid' AND accid='$accid')  AND enabled='1'");
 		}
 		return $Products;
 	}
@@ -923,9 +941,29 @@ class Core extends Model
 		return " ";
 	}
 
+	public function RunWarehouseSwitch($product, $accid)
+	{
+		$inStock = mysqli_query($this->dbCon, "SELECT id FROM golojan_warehouse_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_fetch_object($inStock);
+		if (isset($inStock->id)) {
+			return " checked";
+		}
+		return " ";
+	}
+
 	public function inStock($product, $accid)
 	{
 		$inStock = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_fetch_object($inStock);
+		if (isset($inStock->id)) {
+			return $inStock->id;
+		}
+		return false;
+	}
+
+	public function inWarehouseStock($product, $accid)
+	{
+		$inStock = mysqli_query($this->dbCon, "SELECT * FROM golojan_warehouse_list WHERE product='$product' AND accid='$accid'");
 		$inStock = mysqli_fetch_object($inStock);
 		if (isset($inStock->id)) {
 			return $inStock->id;
@@ -941,7 +979,27 @@ class Core extends Model
 		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid'");
 		while ($stock = mysqli_fetch_object($ComputeStockList)) {
 			$ThisProduct = $this->Productinfo($stock->product);
-			$sum += $ThisProduct->selling;
+			if (isset($ThisProduct->id)) {
+				$sum += $ThisProduct->selling;
+			}
+		}
+		$Computed->sum = $sum;
+		$Computed->count = $count;
+		return $Computed;
+	}
+
+
+	public function ComputeWarehouseList($accid)
+	{
+		$Computed = new stdClass;
+		$count = $this->CountWarehouseStock($accid);
+		$sum = 0;
+		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_warehouse_list WHERE accid='$accid'");
+		while ($stock = mysqli_fetch_object($ComputeStockList)) {
+			$ThisProduct = $this->Productinfo($stock->product);
+			if (isset($ThisProduct->id)) {
+				$sum += $ThisProduct->selling;
+			}
 		}
 		$Computed->sum = $sum;
 		$Computed->count = $count;
@@ -964,9 +1022,31 @@ class Core extends Model
 		return $available;
 	}
 
+	public function WarehouseCapacity($accid)
+	{
+		$sum = 0;
+		$AvailableStoreCapacity = mysqli_query($this->dbCon, "SELECT product FROM golojan_warehouse_list WHERE accid='$accid'");
+		while ($stock = mysqli_fetch_object($AvailableStoreCapacity)) {
+			$ThisProduct = $this->Productinfo($stock->product);
+			$sum += $ThisProduct->selling;
+		}
+		$Store = $this->StoreInfo($accid);
+		$capacity = $Store->warehouse_capacity;
+		$available = $capacity - $sum;
+		return $available;
+	}
+
+
 	public function StockVolume($accid)
 	{
 		$ComputeStockList = $this->ComputeStockList($accid);
+		$StockVolume = $ComputeStockList->sum;
+		return $StockVolume;
+	}
+
+	public function WarehouseVolume($accid)
+	{
+		$ComputeStockList = $this->ComputeWarehouseList($accid);
 		$StockVolume = $ComputeStockList->sum;
 		return $StockVolume;
 	}
@@ -982,11 +1062,30 @@ class Core extends Model
 	}
 
 
+
+	public function AvailableWareHouseStock($accid)
+	{
+		$ComputeStockList = $this->ComputeWarehouseList($accid);
+		$StockVolume = $ComputeStockList->sum;
+		$ThisStore = $this->StoreInfo($accid);
+		$AvailableStock = $ThisStore->warehouse_capacity - $StockVolume;
+		return (float)$AvailableStock;
+	}
+
+
 	public function CountStock($accid)
 	{
 		$CountStock = mysqli_query($this->dbCon, "SELECT COUNT(id) AS stocked FROM golojan_stock_list WHERE accid='$accid'");
 		$CountStock = mysqli_fetch_object($CountStock);
 		return $CountStock->stocked;
+	}
+
+
+	public function CountWarehouseStock($accid)
+	{
+		$CountWarehouseStock = mysqli_query($this->dbCon, "SELECT COUNT(id) AS stocked FROM golojan_warehouse_list WHERE accid='$accid'");
+		$CountWarehouseStock = mysqli_fetch_object($CountWarehouseStock);
+		return $CountWarehouseStock->stocked;
 	}
 
 	public function Stocklist($accid)
@@ -996,11 +1095,41 @@ class Core extends Model
 		return $StockInfo;
 	}
 
+	public function WarehouseStocklist($accid)
+	{
+		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_warehouse_list WHERE accid='$accid'");
+		$StockInfo = mysqli_fetch_object($StockInfo);
+		return $StockInfo;
+	}
+
 	public function StockInfo($ID)
 	{
 		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE id='$ID'");
 		$StockInfo = mysqli_fetch_object($StockInfo);
 		return $StockInfo;
+	}
+
+	public function WarehouseStockInfo($ID)
+	{
+		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_warehouse_list WHERE id='$ID'");
+		$StockInfo = mysqli_fetch_object($StockInfo);
+		return $StockInfo;
+	}
+
+
+	public function AddWarehouseStock($product, $accid)
+	{
+		if (!$this->inStock($product, $accid)) {
+			mysqli_query($this->dbCon, "INSERT INTO golojan_warehouse_list(accid,product) VALUES('$accid','$product')");
+			return true;
+		}
+		return false;
+	}
+
+	public function RemoveWarehouseStock($product, $accid)
+	{
+		mysqli_query($this->dbCon, "DELETE golojan_warehouse_list.* FROM golojan_warehouse_list  WHERE product='$product' AND accid='$accid'");
+		return $this->countAffected();
 	}
 
 
@@ -1019,6 +1148,14 @@ class Core extends Model
 		return $this->countAffected();
 	}
 
+
+
+
+
+
+
+
+	//Referrals//
 
 	public function MyReferrals($accid)
 	{
@@ -1047,29 +1184,29 @@ class Core extends Model
 	{
 		$upliner = root_accid;
 
-		$User = $this->UserInfo($accid, "sponsor");
-		$l1_sponsor = $User->sponsor;
+		$User = $this->UserInfo($accid);
+		$l1_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l1_sponsor, "sponsor");
-		$l2_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l1_sponsor);
+		$l2_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l2_sponsor, "sponsor");
-		$l3_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l2_sponsor);
+		$l3_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l3_sponsor, "sponsor");
-		$l4_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l3_sponsor);
+		$l4_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l4_sponsor, "sponsor");
-		$l5_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l4_sponsor);
+		$l5_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l5_sponsor, "sponsor");
-		$l6_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l5_sponsor);
+		$l6_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l6_sponsor, "sponsor");
-		$l7_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l6_sponsor);
+		$l7_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
-		$User = $this->UserInfo($l7_sponsor, "sponsor");
-		$l8_sponsor = $User->sponsor;
+		$User = $this->UserInfo($l7_sponsor);
+		$l8_sponsor = isset($User->sponsor) ? $User->sponsor : 0;
 
 		switch ($level) {
 			case 1:
@@ -1111,6 +1248,12 @@ class Core extends Model
 
 
 	//NETWORKING//
+	/**
+	 * @param mixed $accid 
+	 * @param int $level 
+	 * @param string $category (sponsor or referrer)
+	 * @return array|void 
+	 */
 	public function MyNetwork($accid, $level = 0, $category = "sponsor")
 	{
 
@@ -1164,11 +1307,11 @@ class Core extends Model
 							$l2_referr_array[] = $l2->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l2_accids_array;
-					} elseif ($category == "referrer") {
-						return $l2_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l2_accids_array;
+				} elseif ($category == "referrer") {
+					return $l2_referr_array;
 				}
 				break;
 			case '3':
@@ -1184,11 +1327,11 @@ class Core extends Model
 							$l3_referr_array[] = $l3->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l3_accids_array;
-					} elseif ($category == "referrer") {
-						return $l3_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l3_accids_array;
+				} elseif ($category == "referrer") {
+					return $l3_referr_array;
 				}
 				break;
 			case '4':
@@ -1204,11 +1347,11 @@ class Core extends Model
 							$l4_referr_array[] = $l4->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l4_accids_array;
-					} elseif ($category == "referrer") {
-						return $l4_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l4_accids_array;
+				} elseif ($category == "referrer") {
+					return $l4_referr_array;
 				}
 				break;
 			case '5':
@@ -1224,11 +1367,11 @@ class Core extends Model
 							$l5_referr_array[] = $l5->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l5_accids_array;
-					} elseif ($category == "referrer") {
-						return $l5_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l5_accids_array;
+				} elseif ($category == "referrer") {
+					return $l5_referr_array;
 				}
 				break;
 			case '6':
@@ -1244,11 +1387,11 @@ class Core extends Model
 							$l6_referr_array[] = $l6->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l6_accids_array;
-					} elseif ($category == "referrer") {
-						return $l6_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l6_accids_array;
+				} elseif ($category == "referrer") {
+					return $l6_referr_array;
 				}
 				break;
 			case '7':
@@ -1264,11 +1407,11 @@ class Core extends Model
 							$l7_referr_array[] = $l7->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l7_accids_array;
-					} elseif ($category == "referrer") {
-						return $l7_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l7_accids_array;
+				} elseif ($category == "referrer") {
+					return $l7_referr_array;
 				}
 				break;
 
@@ -1285,13 +1428,18 @@ class Core extends Model
 							$l8_referr_array[] = $l8->accid;
 						}
 					}
-					if ($category == "sponsor") {
-						return $l8_accids_array;
-					} elseif ($category == "referrer") {
-						return $l8_referr_array;
-					}
+				}
+				if ($category == "sponsor") {
+					return $l8_accids_array;
+				} elseif ($category == "referrer") {
+					return $l8_referr_array;
 				}
 				break;
+
+				// cases 9 - 100 eminent//
+
+				// cases 9 - 100 eminent//
+
 			default:
 				# code...
 				if ($category == "sponsor") {
@@ -1374,7 +1522,7 @@ class Core extends Model
 		$netCT1 = count($netSP1);
 		if ($netCT1 < 2) {
 			if ($this->FillLegs($sponsor, $accid)) {
-				$h = $this->SetUserInfo($accid, "sponsor", $sponsor);
+				$this->SetUserInfo($accid, "sponsor", $sponsor);
 			}
 			return true;
 		} else {
@@ -1395,21 +1543,21 @@ class Core extends Model
 		$USER = $this->UserInfo($sponsor);
 		$lleg = $USER->lleg;
 		$rleg = $USER->rleg;
+
+
 		if ($lleg == 0) {
 			$this->SetUserInfo($sponsor, "lleg", $accid);
 			return true;
-		} else {
-			if ($rleg == 0) {
-				$this->SetUserInfo($sponsor, "rleg", $accid);
-				return true;
-			}
+		} elseif ($rleg == 0) {
+			$this->SetUserInfo($sponsor, "rleg", $accid);
+			return true;
 		}
 		return false;
 	}
 
 
 
-	public function getSpillover($accid, $sponsor = 0)
+	public function getSpillover($sponsor = 0)
 	{
 		if ($sponsor) {
 
@@ -1448,10 +1596,55 @@ class Core extends Model
 					}
 				}
 			}
+
+			$netSP5 = $this->MyNetwork($sponsor, 5);
+			$netCT5 = count($netSP5);
+			if ($netCT5 < 32) {
+				foreach ($netSP4 as $netsp4) {
+					$sub_net = $this->MyNetwork($netsp4, 1);
+					if (count($sub_net) < 2) {
+						return $netsp4;
+					}
+				}
+			}
+
+			$netSP6 = $this->MyNetwork($sponsor, 6);
+			$netCT6 = count($netSP6);
+			if ($netCT6 < 64) {
+				foreach ($netSP5 as $netsp5) {
+					$sub_net = $this->MyNetwork($netsp5, 1);
+					if (count($sub_net) < 2) {
+						return $netsp5;
+					}
+				}
+			}
+
+			$netSP7 = $this->MyNetwork($sponsor, 7);
+			$netCT7 = count($netSP7);
+			if ($netCT7 < 128) {
+				foreach ($netSP6 as $netsp6) {
+					$sub_net = $this->MyNetwork($netsp6, 1);
+					if (count($sub_net) < 2) {
+						return $netsp6;
+					}
+				}
+			}
+
+
+			$netSP8 = $this->MyNetwork($sponsor, 8);
+			$netCT8 = count($netSP8);
+			if ($netCT8 < 256) {
+				foreach ($netSP7 as $netsp7) {
+					$sub_net = $this->MyNetwork($netsp7, 1);
+					if (count($sub_net) < 2) {
+						return $netsp7;
+					}
+				}
+			}
 		} else {
 
 			//Randomely Get Spillover//
-			$new_sponsor = $this->RandomSpillover($accid);
+			$new_sponsor = $this->RandomSpillover($sponsor);
 			//$this->debug($new_sponsor);
 
 			return $new_sponsor;
@@ -1461,14 +1654,54 @@ class Core extends Model
 	}
 
 
+	//create rep as spill over
+	public function getSpill($sponsor)
+	{
+		$notFound = true;
+		while ($notFound) {
+
+			$cRepSpill = mysqli_query($this->dbCon, "SELECT accid , sponsor, COUNT(accid) AS cntx FROM golojan_accounts WHERE (lleg='0' OR rleg='0') AND sponsor='$sponsor' ");
+			$cRepSpillObj = mysqli_fetch_object($cRepSpill);
+			$rows = (int)$cRepSpill->cntx;
+
+			$this->debug($rows);
+
+			if ($rows == 2) {
+				$sponsor = $cRepSpill->accid;
+				$notFound = false;
+			} elseif ($rows == 1) {
+				$sponsor = $cRepSpill->accid;
+				if ($cRepSpill->lleg) {
+					$notFound = false;
+				} elseif ($cRepSpill->rleg) {
+					$notFound = false;
+				}
+			} elseif ($rows == 0) {
+				$sponsor = $cRepSpill->accid;
+				if ($cRepSpill->lleg) {
+					$notFound = false;
+				} elseif ($cRepSpill->rleg) {
+					$notFound = false;
+				}
+			} else {
+				$notFound = false;
+			}
+		}
+		$sponsor = $this->getSpill($sponsor, 0);
+		return $sponsor;
+	}
+
+
+
+
+
+
 	public function RandomSpillover($accid, $params = array())
 	{
 		$RandomSpillover = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE (rleg='0' OR lleg='0') AND accid!='$accid' ORDER BY created ASC LIMIT 1");
 		$RandomSpillover = mysqli_fetch_object($RandomSpillover);
 		return $RandomSpillover->accid;
 	}
-
-
 
 
 	//Payments & Transactions//
@@ -1617,7 +1850,7 @@ class Core extends Model
 	// Merchants & Products//
 	public function MerchantAddProduct($accid, $title, $description, $main_category, $sub_category, $bulkprice, $retailprice, $photo, $photos, $enable_pos_sales)
 	{
-		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,category,bulkprice,retailprice,photo,photos,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$bulkprice','$retailprice','$photo','$photos','$enable_pos_sales')");
+		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,category,bulkprice,retailprice,selling,photo,photos,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$bulkprice','$retailprice','$retailprice','$photo','$photos','$enable_pos_sales')");
 		return (int)$this->getLastId();
 	}
 

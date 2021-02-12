@@ -1,7 +1,7 @@
 <?php
 
 
-$Route->add('/dashboard/{root}/{page}', function ($root, $page) {
+$Route->add('/dashboard/merchant/{page}', function ($root, $page) {
 
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
@@ -15,12 +15,32 @@ $Route->add('/dashboard/{root}/{page}', function ($root, $page) {
     $Template->assign("MyProducts", $Core->MyProducts($accid));
 
     $Template->assign("menukey", "{$page}");
+    
     $Template->render("dashboard.{$root}.{$page}");
 }, 'GET');
 
 
 
+$Route->add('/dashboard/merchant/{catid}/warehousing', function ($catid) {
 
+    $Core = new Apps\Core;
+    $Template = new Apps\Template("/auth/login");
+    $Template->addheader("layouts.auth.header");
+    $Template->addfooter("layouts.auth.footer");
+    $Template->assign("title", "Golojan | Back Office");
+
+    $accid = $Template->storage("accid");
+    $root = $Core->UserInfo($accid, "root");
+
+    $Template->assign("category", $catid);
+    $Template->assign("Products", $Core->MyCategoryProducts($accid, $catid));
+
+    $Template->assign("MyProducts", $Core->MyProducts($accid));
+    $Template->assign("MyProducts", $Core->MyProducts($accid));
+
+    $Template->assign("menukey", "warehousing");
+    $Template->render("dashboard.{$root}.warehousing");
+}, 'GET');
 
 
 
@@ -29,13 +49,9 @@ $Route->add('/dashboard/{root}/{page}', function ($root, $page) {
 $Route->add('/merchants/sellitem', function () {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
-
     $accid = $Template->storage("accid");
-
     $data = $Core->post($_POST);
-
     $array_of_uploaded_photos = $data->array_of_uploaded_photos;
-
     $photos = trim($array_of_uploaded_photos, ",");
     $photos = explode(",", $photos);
     $photo = $photos[array_rand($photos)];

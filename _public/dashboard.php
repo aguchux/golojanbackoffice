@@ -15,6 +15,20 @@ $Route->add('/dashboard', function () {
     $Template->render("dashboard.{$root}.dashboard");
 }, 'GET');
 
+
+$Route->add('/spill', function () {
+    $Core = new Apps\Core;
+    $Template = new Apps\Template("/auth/login");
+
+
+    $spill = $Core->getSpillover(12000);
+    $Template->debug($spill);
+
+
+}, 'GET');
+
+
+
 $Route->add('/locations/setup', function () {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");

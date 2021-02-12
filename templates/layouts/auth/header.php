@@ -52,9 +52,9 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
     <div id="loader">
         <div class="spinner-grow text-white" role="status"></div>
     </div>
-
-
     <!-- * loader -->
+
+    
     <?php if ($menukey == "dashboard") : ?>
         <!-- App Header -->
         <div class="appHeader bg-primary text-light">

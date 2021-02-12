@@ -45,7 +45,7 @@ if ($Self->auth) {
 
     <!-- loader -->
     <div id="loader">
-    <div class="spinner-grow text-white" role="status"></div>
+        <div class="spinner-grow text-white" role="status"></div>
     </div>
     <!-- * loader -->
 

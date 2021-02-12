@@ -132,6 +132,81 @@ $(function () {
 
 
 $(function () {
+    $('.FlashGlow').each(function (i, el) {
+        var el = $(this);
+        $(this).attr("tabindex", i);
+        el.on('mouseenter', function (e) {
+            let id = el.attr("id");
+            let sponsor = el.data("sponsor");
+
+            el.addClass("border-primary");
+            $('img[data-sponsor="' + id + '"]').addClass("border-success");
+
+            let up1 = el.data("up1");
+            $("#" + up1).addClass("border-success");
+
+            let up2 = el.data("up2");
+            $("#" + up2).addClass("border-success");
+
+            let up3 = el.data("up3");
+            $("#" + up3).addClass("border-success");
+
+            let up4 = el.data("up4");
+            $("#" + up4).addClass("border-success");
+
+            let up5 = el.data("up5");
+            $("#" + up5).addClass("border-success");
+
+            let up6 = el.data("up6");
+            $("#" + up6).addClass("border-success");
+
+            let up7 = el.data("up7");
+            $("#" + up7).addClass("border-success");
+
+            let up8 = el.data("up8");
+            $("#" + up8).addClass("border-success");
+
+
+        })
+
+        el.on('mouseleave', function (e) {
+            let id = el.attr("id");
+            let sponsor = el.data("sponsor");
+            el.removeClass("border-primary");
+            $('img[data-sponsor="' + id + '"]').removeClass("border-success");
+
+
+            let up1 = el.data("up1");
+            $("#" + up1).removeClass("border-success");
+
+            let up2 = el.data("up2");
+            $("#" + up2).removeClass("border-success");
+
+            let up3 = el.data("up3");
+            $("#" + up3).removeClass("border-success");
+
+            let up4 = el.data("up4");
+            $("#" + up4).removeClass("border-success");
+
+            let up5 = el.data("up5");
+            $("#" + up5).removeClass("border-success");
+
+            let up6 = el.data("up6");
+            $("#" + up6).removeClass("border-success");
+
+            let up7 = el.data("up7");
+            $("#" + up7).removeClass("border-success");
+
+            let up8 = el.data("up8");
+            $("#" + up8).removeClass("border-success");
+
+
+        })
+    });
+});
+
+
+$(function () {
     $('.DoSettings').each(function (i, el) {
         var el = $(this);
         $(this).attr("tabindex", i);
@@ -365,6 +440,20 @@ $(function () {
 
 
 
+$(function () {
+    $('#LoadWarehouseCategories').on("change", function (e) {
+        var el = $(this);
+        var elVal = el.val();
+        if (elVal == 0) {
+            window.location.href = "/dashboard/merchant/warehousing";
+        }
+        if (elVal >= 1) {
+            window.location.href = "/dashboard/merchant/" + elVal + "/warehousing";
+        }
+    });
+});
+
+
 
 $(function () {
     $('#maincategoryloader').on("change", function (e) {
@@ -533,6 +622,43 @@ $(function () {
                         $("#xStoreTotal").html(fData.capacity);
                         $("#xStoreCount").html(fData.count);
                         Dialog("Product has been added to your online shop.", 1);
+                    } else {
+                        $("#xStoreTotal").html(fData.capacity);
+                        $("#xStoreCount").html(fData.count);
+                        Dialog("Product has been removed from your online shop.", 1);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                }
+            });
+        })
+    });
+});
+
+
+$(function () {
+    $('.AddToMyWarehouseBtn').each(function (i, el) {
+        var el = $(this);
+        $(this).attr("tabindex", i);
+        el.on('click', function (e) {
+            var elVal = el.val();
+            var _id = el.attr("id");
+            $.ajax("/ajax/stores/" + _id + "/addtowarehouse", {
+                type: 'post',
+                data: { _id: elVal },
+                contentType: false,
+                processData: false,
+                async: true,
+                success: function (data, status, xhr) {
+                    let fData = JSON.parse(data);
+                    if (parseInt(fData.done)) {
+                        $("#xStoreTotal").html(fData.capacity);
+                        $("#xStoreCount").html(fData.count);
+                        Dialog("Product has been added to your warehouse.", 1);
+                    } else {
+                        $("#xStoreTotal").html(fData.capacity);
+                        $("#xStoreCount").html(fData.count);
+                        Dialog("Product has been removed from your warehouse.", 1);
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
