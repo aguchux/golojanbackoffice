@@ -617,7 +617,7 @@ class Core extends Model
 
 		$Sess = new Session;
 
-		$VerifyOTP = mysqli_query($this->dbCon, "select * from golojan_accounts where accid='$accid'");
+		$VerifyOTP = mysqli_query($this->dbCon, "select * from golojan_accounts where accid='$accid' OR slug='$slug'");
 		$VerifyOTP = mysqli_fetch_object($VerifyOTP);
 
 		$otp_pending = (int)$VerifyOTP->otp_pending;
@@ -648,11 +648,11 @@ class Core extends Model
 	public function UserInfo($username, $keyname = null)
 	{
 		if ($keyname == null) {
-			$UserInfo = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+			$UserInfo = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'OR slug='$username'");
 			$UserInfo = mysqli_fetch_object($UserInfo);
 			return $UserInfo;
 		} else {
-			$UserInfo = mysqli_query($this->dbCon, "select {$keyname} from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+			$UserInfo = mysqli_query($this->dbCon, "select {$keyname} from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'OR slug='$username'");
 			$UserInfo = mysqli_fetch_object($UserInfo);
 			if (isset($UserInfo->$keyname)) {
 				return $UserInfo->$keyname;
@@ -682,7 +682,7 @@ class Core extends Model
 
 	public function getSponsor($accid)
 	{
-		$getSponsor = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE accid='$accid'");
+		$getSponsor = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE accid='$accid' OR slug='$slug'");
 		$getSponsor = mysqli_fetch_object($getSponsor);
 		$sponsor = $getSponsor->sponsor;
 		if (isset($sponsor)) {
@@ -696,7 +696,7 @@ class Core extends Model
 
 	public function getReferrer($accid)
 	{
-		$getReferrer = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE accid='$accid'");
+		$getReferrer = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE accid='$accid' OR slug='$slug'");
 		$getReferrer = mysqli_fetch_object($getReferrer);
 		$referrer = $getReferrer->referrer;
 		if (isset($referrer)) {
@@ -713,7 +713,7 @@ class Core extends Model
 
 	public function UserExists($username)
 	{
-		$UserExists = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username'");
+		$UserExists = mysqli_query($this->dbCon, "select * from golojan_accounts where email='$username' OR accid='$username' OR mobile='$username' OR slug='$username'");
 		$UserExists = mysqli_fetch_object($UserExists);
 		if (isset($UserExists->accid)) {
 			return true;
@@ -730,7 +730,7 @@ class Core extends Model
 
 	public function LoadUserBadge($accid)
 	{
-		$LoadBadges = mysqli_query($this->dbCon, "select badges from golojan_accounts where accid='$accid'");
+		$LoadBadges = mysqli_query($this->dbCon, "select badges from golojan_accounts where accid='$accid' OR slug='$slug'");
 		$LoadBadges = mysqli_fetch_object($LoadBadges);
 		$badges = $LoadBadges->badges;
 		$badges = json_decode($badges);
@@ -755,7 +755,7 @@ class Core extends Model
 	 */
 	public function WalletInfo($username)
 	{
-		$WalletInfo = mysqli_query($this->dbCon, "select * from golojan_wallets where accid='$username'");
+		$WalletInfo = mysqli_query($this->dbCon, "select * from golojan_wallets where accid='$username' OR slug='$username'");
 		$WalletInfo = mysqli_fetch_object($WalletInfo);
 		return $WalletInfo;
 	}
@@ -798,7 +798,7 @@ class Core extends Model
 	public function LoadMyCategories($accid, $catid = 0)
 	{
 		$html = "<option value=\"\">SELECT Category</option>";
-		$Categories = mysqli_query($this->dbCon, "SELECT category FROM golojan_products WHERE accid='$accid' AND enabled='1' GROUP by category");
+		$Categories = mysqli_query($this->dbCon, "SELECT category FROM golojan_products WHERE (accid='$accid' OR slug='$slug') AND enabled='1' GROUP by category");
 		while ($cat = mysqli_fetch_object($Categories)) {
 			$Scat = $this->CategoryInfo($cat->category);
 			$Mcat = $this->CategoryInfo($Scat->parentid);
@@ -880,7 +880,7 @@ class Core extends Model
 		if ($catid == 0) {
 			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE accid='$accid' AND enabled='1'");
 		} else {
-			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE (category='$catid' AND accid='$accid')  AND enabled='1'");
+			$Products = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE (category='$catid' AND (accid='$accid' OR slug='$slug'))  AND enabled='1'");
 		}
 		return $Products;
 	}
@@ -933,7 +933,7 @@ class Core extends Model
 
 	public function RunSwitch($product, $accid)
 	{
-		$inStock = mysqli_query($this->dbCon, "SELECT id FROM golojan_stock_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_query($this->dbCon, "SELECT id FROM golojan_stock_list WHERE product='$product' AND (accid='$accid' OR slug='$slug')");
 		$inStock = mysqli_fetch_object($inStock);
 		if (isset($inStock->id)) {
 			return " checked";
@@ -943,7 +943,7 @@ class Core extends Model
 
 	public function RunWarehouseSwitch($product, $accid)
 	{
-		$inStock = mysqli_query($this->dbCon, "SELECT id FROM golojan_warehouse_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_query($this->dbCon, "SELECT id FROM golojan_warehouse_list WHERE product='$product' AND (accid='$accid' OR slug='$slug')");
 		$inStock = mysqli_fetch_object($inStock);
 		if (isset($inStock->id)) {
 			return " checked";
@@ -953,7 +953,7 @@ class Core extends Model
 
 	public function inStock($product, $accid)
 	{
-		$inStock = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE product='$product' AND accid='$accid'");
+		$inStock = mysqli_query($this->dbCon, "SELECT * FROM golojan_stock_list WHERE product='$product' AND (accid='$accid' OR slug='$slug')");
 		$inStock = mysqli_fetch_object($inStock);
 		if (isset($inStock->id)) {
 			return $inStock->id;
@@ -976,7 +976,7 @@ class Core extends Model
 		$Computed = new stdClass;
 		$count = $this->CountStock($accid);
 		$sum = 0;
-		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid'");
+		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid' OR slug='$slug'");
 		while ($stock = mysqli_fetch_object($ComputeStockList)) {
 			$ThisProduct = $this->Productinfo($stock->product);
 			if (isset($ThisProduct->id)) {
@@ -994,7 +994,7 @@ class Core extends Model
 		$Computed = new stdClass;
 		$count = $this->CountWarehouseStock($accid);
 		$sum = 0;
-		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_warehouse_list WHERE accid='$accid'");
+		$ComputeStockList = mysqli_query($this->dbCon, "SELECT product FROM golojan_warehouse_list WHERE accid='$accid' OR slug='$slug'");
 		while ($stock = mysqli_fetch_object($ComputeStockList)) {
 			$ThisProduct = $this->Productinfo($stock->product);
 			if (isset($ThisProduct->id)) {
@@ -1011,7 +1011,7 @@ class Core extends Model
 	public function StoreCapacity($accid)
 	{
 		$sum = 0;
-		$AvailableStoreCapacity = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid'");
+		$AvailableStoreCapacity = mysqli_query($this->dbCon, "SELECT product FROM golojan_stock_list WHERE accid='$accid' OR slug='$slug'");
 		while ($stock = mysqli_fetch_object($AvailableStoreCapacity)) {
 			$ThisProduct = $this->Productinfo($stock->product);
 			$sum += $ThisProduct->selling;
@@ -1025,7 +1025,7 @@ class Core extends Model
 	public function WarehouseCapacity($accid)
 	{
 		$sum = 0;
-		$AvailableStoreCapacity = mysqli_query($this->dbCon, "SELECT product FROM golojan_warehouse_list WHERE accid='$accid'");
+		$AvailableStoreCapacity = mysqli_query($this->dbCon, "SELECT product FROM golojan_warehouse_list WHERE accid='$accid' OR slug='$slug'");
 		while ($stock = mysqli_fetch_object($AvailableStoreCapacity)) {
 			$ThisProduct = $this->Productinfo($stock->product);
 			$sum += $ThisProduct->selling;
@@ -1097,7 +1097,7 @@ class Core extends Model
 
 	public function WarehouseStocklist($accid)
 	{
-		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_warehouse_list WHERE accid='$accid'");
+		$StockInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_warehouse_list WHERE accid='$accid' OR slug='$slug'");
 		$StockInfo = mysqli_fetch_object($StockInfo);
 		return $StockInfo;
 	}
@@ -1128,7 +1128,7 @@ class Core extends Model
 
 	public function RemoveWarehouseStock($product, $accid)
 	{
-		mysqli_query($this->dbCon, "DELETE golojan_warehouse_list.* FROM golojan_warehouse_list  WHERE product='$product' AND accid='$accid'");
+		mysqli_query($this->dbCon, "DELETE golojan_warehouse_list.* FROM golojan_warehouse_list  WHERE product='$product' AND (accid='$accid' OR slug='$slug')");
 		return $this->countAffected();
 	}
 
@@ -1144,7 +1144,7 @@ class Core extends Model
 
 	public function RemoveStock($product, $accid)
 	{
-		mysqli_query($this->dbCon, "DELETE golojan_stock_list.* FROM golojan_stock_list  WHERE product='$product' AND accid='$accid'");
+		mysqli_query($this->dbCon, "DELETE golojan_stock_list.* FROM golojan_stock_list  WHERE product='$product' AND (accid='$accid' OR slug='$slug')");
 		return $this->countAffected();
 	}
 
@@ -1788,14 +1788,14 @@ class Core extends Model
 
 	public function CreditWallet($accid, $amount)
 	{
-		mysqli_query($this->dbCon, "UPDATE golojan_wallets SET open_balance = (open_balance + '{$amount}') where accid='$accid'");
+		mysqli_query($this->dbCon, "UPDATE golojan_wallets SET open_balance = (open_balance + '{$amount}') where accid='$accid' OR slug='$slug'");
 		return (int)mysqli_affected_rows($this->dbCon);
 	}
 
 
 	public function DebitWallet($accid, $amount)
 	{
-		mysqli_query($this->dbCon, "UPDATE golojan_wallets SET open_balance = (open_balance - '{$amount}') where accid='$accid'");
+		mysqli_query($this->dbCon, "UPDATE golojan_wallets SET open_balance = (open_balance - '{$amount}') where accid='$accid' OR slug='$slug'");
 		return (int)mysqli_affected_rows($this->dbCon);
 	}
 
@@ -1856,7 +1856,7 @@ class Core extends Model
 
 	public function MyProducts($accid)
 	{
-		$MyProducts = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE accid='$accid'");
+		$MyProducts = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE accid='$accid' OR slug='$slug'");
 		return $MyProducts;
 	}
 
@@ -1899,7 +1899,7 @@ class Core extends Model
 
 	public  function Bankers($accid)
 	{
-		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid'");
+		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid' OR slug='$slug'");
 		return $Bankers;
 	}
 
@@ -1907,7 +1907,7 @@ class Core extends Model
 	public  function LoadAccountsToSelect($accid)
 	{
 		$html = "";
-		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid'");
+		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid' OR slug='$slug'");
 		while ($bnk = mysqli_fetch_object($Bankers)) {
 			$html .= "<option value=\"{$bnk->id}\">{$bnk->bank_name}({$bnk->account_name})</option>";
 		}
