@@ -21,7 +21,7 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
 
     <link rel="stylesheet" href="<?= $assets ?>css/daterangepicker.css">
-    <link rel="stylesheet" href="<?= $assets ?>css/style.css">
+    <link rel="stylesheet" href="<?= $assets ?>css/style.css?var=<?= time() ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
 

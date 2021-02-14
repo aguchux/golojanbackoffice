@@ -1,6 +1,6 @@
 <div class="section mt-3 text-center">
     <div class="avatar-section FlashGlow_<?= $UserInfo->accid ?>">
-        <a href="javascript:;" class="btn-link">
+        <a href="javascript:;" class="xClickAble">
             <img src="<?= $UserInfo->avatar ?>" alt="<?= $UserInfo->fullname ?>" class="imaged w100 rounded FlashGlow"
                 id="<?= $UserInfo->accid ?>"
                 data-sponsor="<?= $UserInfo->sponsor ?>"><br /><?= "{$UserInfo->fullname}<br/>({$UserInfo->accid})" ?>
@@ -22,7 +22,7 @@
 
             <div class="col-6">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L1U->avatar ?>" alt="<?= $L1U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L1U->accid ?>"
                             data-sponsor="<?= $L1U->sponsor ?>" 
@@ -33,7 +33,7 @@
                             data-up5="<?= $Core->GetUpliner($L1U->accid, 5) ?>"
                             data-up6="<?= $Core->GetUpliner($L1U->accid, 6) ?>"
                             data-up7="<?= $Core->GetUpliner($L1U->accid, 7) ?>"
-                            data-up8="<?= $Core->GetUpliner($L1U->accid, 8) ?>">><br /><?= "{$L1U->fullname}<br/>({$L1U->accid})" ?>
+                            data-up8="<?= $Core->GetUpliner($L1U->accid, 8) ?>"><br /><?= "{$L1U->fullname}<br/>({$L1U->accid})" ?>
                     </a>
                 </div>
             </div>
@@ -58,7 +58,7 @@
 
             <div class="col-3">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L2U->avatar ?>" alt="<?= $L2U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L2U->accid ?>"
                             data-sponsor="<?= $L2U->sponsor ?>"  
@@ -69,7 +69,7 @@
                             data-up5="<?= $Core->GetUpliner($L2U->accid, 5) ?>"
                             data-up6="<?= $Core->GetUpliner($L2U->accid, 6) ?>"
                             data-up7="<?= $Core->GetUpliner($L2U->accid, 7) ?>"
-                            data-up8="<?= $Core->GetUpliner($L2U->accid, 8) ?>">><br /><?= "{$L2U->fullname}<br/>({$L2U->accid})" ?>
+                            data-up8="<?= $Core->GetUpliner($L2U->accid, 8) ?>"><br /><?= "{$L2U->fullname}<br/>({$L2U->accid})" ?>
                     </a>
                 </div>
             </div>
@@ -94,7 +94,7 @@
 
             <div class="col-3">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L3U->avatar ?>" alt="<?= $L3U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L3U->accid ?>"
                             data-sponsor="<?= $L3U->sponsor ?>"
@@ -130,7 +130,7 @@
 
             <div class="col-3">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L4U->avatar ?>" alt="<?= $L4U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L4U->accid ?>" data-sponsor="<?= $L4U->sponsor ?>"
                             data-up1="<?= $Core->GetUpliner($L4U->accid, 1) ?>"
@@ -165,7 +165,7 @@
 
             <div class="col-3 FlashGlow">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L5U->avatar ?>" alt="<?= $L5U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L5U->accid ?>"
                             data-sponsor="<?= $L5U->sponsor ?>"   
@@ -176,7 +176,7 @@
                             data-up5="<?= $Core->GetUpliner($L5U->accid, 5) ?>"
                             data-up6="<?= $Core->GetUpliner($L5U->accid, 6) ?>"
                             data-up7="<?= $Core->GetUpliner($L5U->accid, 7) ?>"
-                            data-up8="<?= $Core->GetUpliner($L5U->accid, 8) ?>">><br /><?= "{$L5U->fullname}<br/>({$L5U->accid})" ?>
+                            data-up8="<?= $Core->GetUpliner($L5U->accid, 8) ?>"><br /><?= "{$L5U->fullname}<br/>({$L5U->accid})" ?>
                     </a>
                 </div>
             </div>
@@ -200,7 +200,7 @@
 
             <div class="col-3 FlashGlow">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L6U->avatar ?>" alt="<?= $L6U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L6U->accid ?>"
                             data-sponsor="<?= $L6U->sponsor ?>"  
@@ -211,7 +211,7 @@
                             data-up5="<?= $Core->GetUpliner($L6U->accid, 5) ?>"
                             data-up6="<?= $Core->GetUpliner($L6U->accid, 6) ?>"
                             data-up7="<?= $Core->GetUpliner($L6U->accid, 7) ?>"
-                            data-up8="<?= $Core->GetUpliner($L6U->accid, 8) ?>">><br /><?= "{$L6U->fullname}<br/>({$L6U->accid})" ?>
+                            data-up8="<?= $Core->GetUpliner($L6U->accid, 8) ?>"><br /><?= "{$L6U->fullname}<br/>({$L6U->accid})" ?>
                     </a>
                 </div>
             </div>
@@ -237,7 +237,7 @@
 
             <div class="col-3 FlashGlow">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L7U->avatar ?>" alt="<?= $L7U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L7U->accid ?>"
                             data-sponsor="<?= $L7U->sponsor ?>"      
@@ -248,7 +248,7 @@
                             data-up5="<?= $Core->GetUpliner($L7U->accid, 5) ?>"
                             data-up6="<?= $Core->GetUpliner($L7U->accid, 6) ?>"
                             data-up7="<?= $Core->GetUpliner($L7U->accid, 7) ?>"
-                            data-up8="<?= $Core->GetUpliner($L7U->accid, 8) ?>">><br /><?= "{$L7U->fullname}<br/>({$L7U->accid})" ?>
+                            data-up8="<?= $Core->GetUpliner($L7U->accid, 8) ?>"><br /><?= "{$L7U->fullname}<br/>({$L7U->accid})" ?>
                     </a>
                 </div>
             </div>
@@ -273,7 +273,7 @@
 
             <div class="col-3 FlashGlow">
                 <div class="avatar-section">
-                    <a href="javascript:;" class="btn-link">
+                    <a href="javascript:;" class="xClickAble">
                         <img src="<?= $L8U->avatar ?>" alt="<?= $L8U->fullname ?>" class="imaged w100 rounded FlashGlow"
                             id="<?= $L8U->accid ?>" data-sponsor="<?= $L8U->sponsor ?>"
                             data-up1="<?= $Core->GetUpliner($L8U->accid, 1) ?>"
@@ -294,3 +294,7 @@
     </div>
 </div>
 <?php endif; ?>
+
+
+
+<div class="section mb-5 text-center"></div>

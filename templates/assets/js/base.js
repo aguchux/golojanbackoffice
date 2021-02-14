@@ -132,76 +132,128 @@ $(function () {
 
 
 $(function () {
+
+
+
+    //http://jsfiddle.net/cnmsc1tm/
+    function getOffset(el) {
+        var rect = el.getBoundingClientRect();
+        return {
+            left: rect.left + window.pageXOffset,
+            top: rect.top + window.pageYOffset,
+            width: rect.width || el.offsetWidth,
+            height: rect.height || el.offsetHeight
+        };
+    }
+
+    function connect(el1, el2, color, thickness) { // draw a line connecting elements
+
+        var div1 = document.getElementById('' + el1 + '');
+        var div2 = document.getElementById('' + el2 + '');
+
+        var off1 = getOffset(div1);
+        var off2 = getOffset(div2);
+
+        // bottom right
+        var x1 = off1.left + off1.width;
+        var y1 = off1.top + off1.height;
+
+        // top right
+        var x2 = off2.left + off2.width;
+        var y2 = off2.top;
+
+
+        // distance
+        var length = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+        // center
+        var cx = ((x1 + x2) / 2) - (length / 2);
+        var cy = ((y1 + y2) / 2) - (thickness / 2);
+        // angle
+        var angle = Math.atan2((y1 - y2), (x1 - x2)) * (180 / Math.PI);
+        // make hr
+        var htmlLine = "<div style='padding:0px; margin:0px; height:" + thickness + "px; background-color:" + color + "; line-height:1px; position:fixed; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />";
+        //
+        // alert(htmlLine);
+        document.body.innerHTML += htmlLine;
+    }
+
+
     $('.FlashGlow').each(function (i, el) {
         var el = $(this);
         $(this).attr("tabindex", i);
-        el.on('mouseenter', function (e) {
+
+        el.on('click', function (e) {
+
             let id = el.attr("id");
             let sponsor = el.data("sponsor");
 
             el.addClass("border-primary");
-            $('img[data-sponsor="' + id + '"]').addClass("border-success");
+            $('img[data-sponsor="' + id + '"]').addClass("border-success").addClass('GlowDiv');
 
             let up1 = el.data("up1");
-            $("#" + up1).addClass("border-success");
+            $("#" + up1).addClass("border-success").addClass('GlowDiv');
 
             let up2 = el.data("up2");
-            $("#" + up2).addClass("border-success");
+            $("#" + up2).addClass("border-success").addClass('GlowDiv');
 
             let up3 = el.data("up3");
-            $("#" + up3).addClass("border-success");
+            $("#" + up3).addClass("border-success").addClass('GlowDiv');
 
             let up4 = el.data("up4");
-            $("#" + up4).addClass("border-success");
+            $("#" + up4).addClass("border-success").addClass('GlowDiv');
 
             let up5 = el.data("up5");
-            $("#" + up5).addClass("border-success");
+            $("#" + up5).addClass("border-success").addClass('GlowDiv');
 
             let up6 = el.data("up6");
-            $("#" + up6).addClass("border-success");
+            $("#" + up6).addClass("border-success").addClass('GlowDiv');
 
             let up7 = el.data("up7");
-            $("#" + up7).addClass("border-success");
+            $("#" + up7).addClass("border-success").addClass('GlowDiv');
 
             let up8 = el.data("up8");
-            $("#" + up8).addClass("border-success");
+            $("#" + up8).addClass("border-success").addClass('GlowDiv');
 
 
         })
 
-        el.on('mouseleave', function (e) {
+
+        el.on('blur', function (e) {
+
             let id = el.attr("id");
             let sponsor = el.data("sponsor");
+
             el.removeClass("border-primary");
-            $('img[data-sponsor="' + id + '"]').removeClass("border-success");
+            $('img[data-sponsor="' + id + '"]').removeClass("border-success").removeClass('GlowDiv');
 
 
             let up1 = el.data("up1");
-            $("#" + up1).removeClass("border-success");
+            $("#" + up1).removeClass("border-success").removeClass('GlowDiv');
 
             let up2 = el.data("up2");
-            $("#" + up2).removeClass("border-success");
+            $("#" + up2).removeClass("border-success").removeClass('GlowDiv');
 
             let up3 = el.data("up3");
-            $("#" + up3).removeClass("border-success");
+            $("#" + up3).removeClass("border-success").removeClass('GlowDiv');
 
             let up4 = el.data("up4");
-            $("#" + up4).removeClass("border-success");
+            $("#" + up4).removeClass("border-success").removeClass('GlowDiv');
 
             let up5 = el.data("up5");
-            $("#" + up5).removeClass("border-success");
+            $("#" + up5).removeClass("border-success").removeClass('GlowDiv');
 
             let up6 = el.data("up6");
-            $("#" + up6).removeClass("border-success");
+            $("#" + up6).removeClass("border-success").removeClass('GlowDiv');
 
             let up7 = el.data("up7");
-            $("#" + up7).removeClass("border-success");
+            $("#" + up7).removeClass("border-success").removeClass('GlowDiv');
 
             let up8 = el.data("up8");
-            $("#" + up8).removeClass("border-success");
+            $("#" + up8).removeClass("border-success").removeClass('GlowDiv');
 
 
         })
+
     });
 });
 
@@ -267,6 +319,28 @@ $(function () {
             error: function (jqXhr, textStatus, errorMessage) {
             }
         });
+    });
+});
+
+
+$(function () {
+    $('.xProductTitle').keyup(function (event) {
+        let inic = parseInt($("#xProductTitle_counter").data('count'));
+        let text = $(this).val();
+        text_len = parseInt(text.length);
+        let remn = inic - text_len;
+        $('#xProductTitle_counter').html(remn).addClass("text-danger");
+    });
+});
+
+
+$(function () {
+    $('.xProductDescription').keyup(function (event) {
+        let inic = parseInt($("#xProductDescription_counter").data('count'));
+        let text = $(this).val();
+        text_len = parseInt(text.length);
+        let remn = inic - text_len;
+        $('#xProductDescription_counter').html(remn).addClass("text-danger");
     });
 });
 
@@ -426,15 +500,18 @@ $(function () {
 
 
 $(function () {
-    $('#LoadCategories').on("change", function (e) {
-        var el = $(this);
-        var elVal = el.val();
+    $('#subcategory_select_input').on("change", function (e) {
+
+        let load = 0;
+        let el = $(this);
+        let elVal = el.val();
         if (elVal == 0) {
-            window.location.href = "/dashboard/marketplace";
+            window.location.href = "/dashboard/sales/warehousing";
         }
         if (elVal >= 1) {
-            window.location.href = "/dashboard/category/" + elVal + "/marketplace";
+            window.location.href = "/dashboard/sales/category/" + elVal+ "/warehousing";
         }
+
     });
 });
 
@@ -442,14 +519,16 @@ $(function () {
 
 $(function () {
     $('#LoadWarehouseCategories').on("change", function (e) {
-        var el = $(this);
-        var elVal = el.val();
+        let load = 0;
+        let el = $(this);
+        let elVal = el.val();
         if (elVal == 0) {
             window.location.href = "/dashboard/merchant/warehousing";
         }
         if (elVal >= 1) {
-            window.location.href = "/dashboard/merchant/" + elVal + "/warehousing";
+            window.location.href = "/dashboard/merchant/category/" + elVal+ "/warehousing";
         }
+
     });
 });
 
@@ -604,73 +683,81 @@ $(function () {
 
 
 $(function () {
-    $('.AddToWarehouseBtn').each(function (i, el) {
+
+    $('body').on('click', '.AddToWarehouseBtn', function (i, el) {
+
+        // your code
         var el = $(this);
-        $(this).attr("tabindex", i);
-        el.on('click', function (e) {
-            var elVal = el.val();
-            var _id = el.attr("id");
-            $.ajax("/ajax/stores/" + _id + "/addproduct", {
-                type: 'post',
-                data: { _id: elVal },
-                contentType: false,
-                processData: false,
-                async: true,
-                success: function (data, status, xhr) {
-                    let fData = JSON.parse(data);
-                    if (parseInt(fData.done)) {
-                        $("#xStoreTotal").html(fData.capacity);
-                        $("#xStoreCount").html(fData.count);
-                        Dialog("Product has been added to your online shop.", 1);
-                    } else {
-                        $("#xStoreTotal").html(fData.capacity);
-                        $("#xStoreCount").html(fData.count);
-                        Dialog("Product has been removed from your online shop.", 1);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
+        var elVal = el.val();
+        var _id = el.attr("id");
+        $.ajax("/ajax/stores/" + _id + "/addproduct", {
+            type: 'post',
+            data: { _id: elVal },
+            contentType: false,
+            processData: false,
+            async: true,
+            success: function (data, status, xhr) {
+                let fData = JSON.parse(data);
+                if (parseInt(fData.done)) {
+                    $("#xStoreTotal").html(fData.capacity);
+                    $("#xStoreCount").html(fData.count);
+                    Dialog("Product has been added to your online shop.", 1);
+                } else {
+                    $("#xStoreTotal").html(fData.capacity);
+                    $("#xStoreCount").html(fData.count);
+                    Dialog("Product has been removed from your online shop.", 1);
                 }
-            });
-        })
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+            }
+        });
+
     });
+
 });
+
+
 
 
 $(function () {
-    $('.AddToMyWarehouseBtn').each(function (i, el) {
+
+    $('body').on('click', '.AddToMyWarehouseBtn', function (i, el) {
         var el = $(this);
-        $(this).attr("tabindex", i);
-        el.on('click', function (e) {
-            var elVal = el.val();
-            var _id = el.attr("id");
-            $.ajax("/ajax/stores/" + _id + "/addtowarehouse", {
-                type: 'post',
-                data: { _id: elVal },
-                contentType: false,
-                processData: false,
-                async: true,
-                success: function (data, status, xhr) {
-                    let fData = JSON.parse(data);
-                    if (parseInt(fData.done)) {
-                        $("#xStoreTotal").html(fData.capacity);
-                        $("#xStoreCount").html(fData.count);
-                        Dialog("Product has been added to your warehouse.", 1);
-                    } else {
-                        $("#xStoreTotal").html(fData.capacity);
-                        $("#xStoreCount").html(fData.count);
-                        Dialog("Product has been removed from your warehouse.", 1);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
+
+        var elVal = el.val();
+        var _id = el.attr("id");
+        $.ajax("/ajax/stores/" + _id + "/addtowarehouse", {
+            type: 'post',
+            data: { _id: elVal },
+            contentType: false,
+            processData: false,
+            async: true,
+            success: function (data, status, xhr) {
+                let fData = JSON.parse(data);
+                if (parseInt(fData.done)) {
+                    $("#xStoreTotal").html(fData.capacity);
+                    $("#xStoreCount").html(fData.count);
+                    Dialog("Product has been added to your warehouse.", 1);
+                } else {
+                    $("#xStoreTotal").html(fData.capacity);
+                    $("#xStoreCount").html(fData.count);
+                    Dialog("Product has been removed from your warehouse.", 1);
                 }
-            });
-        })
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+            }
+        });
+
     });
+
+
 });
+
 
 
 $(function () {
     $('.xMonitoredInput').each(function (i, el) {
+
         var el = $(this);
         $(this).attr("tabindex", i);
         el.on('blur', function (e) {
@@ -732,6 +819,8 @@ $(function () {
         }
     });
 
+
+
     var check_connectivity = {
         is_internet_connected: function () {
             return $.get({
@@ -743,17 +832,40 @@ $(function () {
     };
 
     var myVar = setInterval(() => {
-        check_connectivity.is_internet_connected().done(function () {
-            if ($(".GOLOJAN_device_status").hasClass('text-muted')) {
-                $(".GOLOJAN_device_status").removeClass('text-muted');
+        check_connectivity.is_internet_connected().done(function (data) {
+
+            let jData = JSON.parse(data);
+            if (jData.connected) {
+
+                if ($(".GOLOJAN_device_status").hasClass('text-muted')) {
+                    $(".GOLOJAN_device_status").removeClass('text-muted');
+                }
+                if ($(".GOLOJAN_device_status").hasClass('text-danger')) {
+                    $(".GOLOJAN_device_status").removeClass('text-danger');
+                }
+                $(".GOLOJAN_device_status").addClass('text-success');
+                $(".GOLOJAN_device_status").find('img').attr("src", "/templates/assets/img/online.png");
+                $("#DeviceType").find('img').attr("src", "/_store/devices/" + jData.device + ".svg");
+                $(".GOLOJAN_device_status").find('span').html("<strong>" + jData.ip + "</strong>")
+                $.uiUnlock('');
+
+            } else {
+
+                if ($(".GOLOJAN_device_status").hasClass('text-muted')) {
+                    $(".GOLOJAN_device_status").removeClass('text-muted');
+                }
+                if ($(".GOLOJAN_device_status").hasClass('text-success')) {
+                    $(".GOLOJAN_device_status").removeClass('text-success');
+                }
+                $(".GOLOJAN_device_status").addClass('text-danger');
+                $(".GOLOJAN_device_status").find('img').attr("src", "/templates/assets/img/offline.png");
+                $("#DeviceType").find('img').attr("src", "/_store/devices/none.png");
+                $(".GOLOJAN_device_status").find('span').html("Connect Device")
+                $.uiLock('');
+
             }
-            if ($(".GOLOJAN_device_status").hasClass('text-danger')) {
-                $(".GOLOJAN_device_status").removeClass('text-danger');
-            }
-            $(".GOLOJAN_device_status").addClass('text-success');
-            $(".GOLOJAN_device_status").find('img').attr("src", "/templates/assets/img/online.png");
-            $(".GOLOJAN_device_status").find('span').html("Device is Connected!")
-            $.uiUnlock('');
+
+
         }).fail(function (jqXHR, textStatus, textStatus) {
             if ($(".GOLOJAN_device_status").hasClass('text-muted')) {
                 $(".GOLOJAN_device_status").removeClass('text-muted');
@@ -763,10 +875,11 @@ $(function () {
             }
             $(".GOLOJAN_device_status").addClass('text-danger');
             $(".GOLOJAN_device_status").find('img').attr("src", "/templates/assets/img/offline.png");
+            $("#DeviceType").find('img').attr("src", "/_store/devices/none.png");
             $(".GOLOJAN_device_status").find('span').html("Connect Device")
             $.uiLock('');
         });
-    }, 500);
+    }, 1000);
 
 })(jQuery);
 

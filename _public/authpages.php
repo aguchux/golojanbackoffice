@@ -60,6 +60,7 @@ $Route->add('/auth/forms/{action}', function ($action) {
 
     if ($action == "splash") {
         $Template->redirect("/auth/login");
+  
     } elseif ($action == "register") {
 
         $fullname = $data->fullname;
@@ -67,8 +68,7 @@ $Route->add('/auth/forms/{action}', function ($action) {
         $mobile = $data->mobile;
         $password = $data->password;
 
-        $sponsor = $data->sponsor;
-        $sponsor_char = (int)strlen($sponsor);
+        $sponsor = (int)$data->sponsor;
 
         $mobileExists = $Core->mobileExists($mobile);
         $emailExists = $Core->emailExists($email);
@@ -77,26 +77,21 @@ $Route->add('/auth/forms/{action}', function ($action) {
             $Template->redirect("/auth/register");
         }
 
+        //Process Referral//
+        $Sponsor = $Core->UserInfo($sponsor);
+        $new_sponsor = $Core->Spillover($sponsor);
+        if (isset($Sponsor->accid)) {
+            $referrer = $sponsor;
+        } else {
+            $referrer = root_referrer;
+        }
+        //Process Referral//
+
         $accid = $Core->RegisterAccount($fullname, $email, $mobile, $password);
         if ($accid) {
 
-            if ($sponsor_char) {
-                $Sponsor = $Core->UserInfo($sponsor);
-                if (isset($Sponsor->accid)) {
-                    //Ensure only two legs are filled//
-                    $Core->setSponsor($accid, $sponsor);
-                } {
-                    //Generate Spillover Sponsor//
-                    $new_sponsor = $Core->getSpillover($accid);
-                    $Core->setSponsor($accid, $new_sponsor);
-                    //Generate Spillover Sponsor//
-                }
-            } else {
-                //Generate Spillover Sponsor//
-                $new_sponsor = $Core->getSpillover($accid);
-                $Core->setSponsor($accid, $new_sponsor);
-                //Generate Spillover Sponsor//
-            }
+            $Core->setSponsor($accid, $new_sponsor);
+            $Core->SetUserInfo($accid, "referrer", $referrer);
 
             $Login = $Core->UserInfo($accid);
             //Check if OTP is enabled//
@@ -288,7 +283,7 @@ $Route->add('/auth/forms/{action}', function ($action) {
                 $Core->SetUserInfo($accid, "password", $paswodified);
             }
         }
-            
+
         //$Toast = new Apps\Toast;
         //$Toast->toast('/dashboard/profile','Welcome','Your profile was updated','success');
 

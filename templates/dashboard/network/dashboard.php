@@ -6,8 +6,8 @@
                 <!-- Balance -->
                 <div class="balance">
                     <div class="left">
-                        <span class="title">Unclaimed Balance</span>
-                        <h1 class="total"><?= $Core->ToMoney($Wallet->balance) ?></h1>
+                        <span class="title">Total Recruitment</span>
+                        <h1 class="total"><?= $Core->MyTotalNetwork($UserInfo->accid) ?></h1>
                     </div>
                     <div class="right">
                         <a href="#" class="button flashbutton_level_<?= $UserInfo->level ?>" data-toggle="modal" data-target="#depositActionSheet">
@@ -111,10 +111,27 @@
         </div>
         <!-- * Stats -->
 
-
-
         <!-- Stats -->
         <div class="section">
+            <div class="row mt-2">
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">My Network</div>
+                        <div class="value"><?= $Core->MyTotalNetwork($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <div class="title">My Referrals</div>
+                        <div class="value"><?= $Core->MyReferrals($UserInfo->accid) ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- * Stats -->
+
+        <!-- Stats -->
+        <div class="section mb-5">
             <div class="row mt-2">
                 <div class="col-12 table-responsive">
 
@@ -187,21 +204,3 @@
         <!-- * Stats -->
 
 
-        <!-- Stats -->
-        <div class="section">
-            <div class="row mt-2 mb-4">
-                <div class="col-6">
-                    <div class="stat-box">
-                        <div class="title">My Network</div>
-                        <div class="value"><?= $Core->MyTotalNetwork($UserInfo->accid) ?></div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="stat-box">
-                        <div class="title">My Referrals</div>
-                        <div class="value"><?= $Core->MyReferrals($UserInfo->accid) ?></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- * Stats -->

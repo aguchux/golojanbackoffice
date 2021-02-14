@@ -11,7 +11,7 @@
                 <div class="form-group basic">
                     <div class="input-wrapper">
                         <label class="label" for="username">Email OR Telephone</label>
-                        <input type="text" required class="form-control" id="username" name="username" placeholder="Your Email/Telephone">
+                        <input type="text" required class="form-control" id="username" name="username" placeholder="Your Email/Telephone" autocomplete="off" tabindex="1">
                         <i class="clear-input">
                             <ion-icon name="close-circle"></ion-icon>
                         </i>
@@ -21,7 +21,7 @@
                 <div class="form-group basic">
                     <div class="input-wrapper">
                         <label class="label" for="password">Password</label>
-                        <input type="password" required class="form-control" id="password" name="password" placeholder="Your password">
+                        <input type="password" required class="form-control" id="password" name="password" placeholder="Your password" autocomplete="off" tabindex="2">
                         <i class="clear-input">
                             <ion-icon name="close-circle"></ion-icon>
                         </i>

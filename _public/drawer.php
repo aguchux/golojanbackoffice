@@ -211,14 +211,13 @@
                     <?php endif; ?>
                     <!-- Action Menu Buttons -->
 
-
                     <!-- Platform Main Menus -->
                     <div class="listview-title mt-1">Platform Menu</div>
                     <?php if ($UserInfo->root == "sales") : ?>
                         <!-- menu -->
                         <ul class="listview flush transparent no-line image-listview">
                             <li>
-                                <a href="/dashboard/marketplace" class="item">
+                                <a href="/dashboard/sales/warehousing" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="stats-chart-outline"></ion-icon>
                                     </div>
@@ -323,10 +322,11 @@
                     <?php if ($UserInfo->root == "network") : ?>
                         <!-- menu -->
                         <ul class="listview flush transparent no-line image-listview">
+
                             <li>
                                 <a href="/dashboard/network/networks" class="item">
                                     <div class="icon-box bg-primary">
-                                        <ion-icon name="apps-outline"></ion-icon>
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </div>
                                     <div class="in">
                                         My Network
@@ -334,6 +334,31 @@
                                     </div>
                                 </a>
                             </li>
+
+                            <li>
+                                <a href="/dashboard/network/referrals" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Referrals
+                                        <span class="badge badge-success"><?= $Core->MyReferrals($UserInfo->accid) ?></span>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="/dashboard/network/commissions" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Commissions
+                                    </div>
+                                </a>
+                            </li>
+
+
                         </ul>
                         <!-- * menu -->
                     <?php endif; ?>
@@ -368,6 +393,83 @@
                     <?php endif; ?>
 
                     <?php if ($UserInfo->root == "pos") : ?>
+                        <!-- menu -->
+                        <ul class="listview flush transparent no-line image-listview">
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Sales Desk
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Transactions
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Customers
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Sales Team
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Sales Report
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Manage Products
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="/dashboard/pos/" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">
+                                        Settings & Setup
+                                    </div>
+                                </a>
+                            </li>
+
+                        </ul>
+                        <!-- * menu -->
+
                     <?php endif; ?>
                     <!-- Platform Main Menus -->
 
@@ -376,22 +478,34 @@
                     <div class="listview-title mt-1">Others</div>
                     <ul class="listview flush transparent no-line image-listview">
                         <li>
+                            <a href="/dashboard/wallet" class="item">
+                                <div class="icon-box bg-primary">
+                                    <ion-icon name="wallet-outline"></ion-icon>
+                                </div>
+                                <div class="in">
+                                    Wallet
+                                </div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/dashboard/accounts" class="item">
+                                <div class="icon-box bg-primary">
+                                    <ion-icon name="home-outline"></ion-icon>
+                                </div>
+                                <div class="in">
+                                    Bank Account
+                                </div>
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="/dashboard/profile" class="item">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="person-circle-outline"></ion-icon>
                                 </div>
                                 <div class="in">
                                     My Profile
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/dashboard/accounts" class="item">
-                                <div class="icon-box bg-primary">
-                                    <ion-icon name="wallet-outline"></ion-icon>
-                                </div>
-                                <div class="in">
-                                    Bank Account
                                 </div>
                             </a>
                         </li>

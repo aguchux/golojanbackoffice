@@ -1014,6 +1014,10 @@ blockquote.blockquote .blockquote-footer {
   width: 36px !important;
 }
 
+.imaged.w40 {
+  width: 40px !important;
+}
+
 .imaged.w48 {
   width: 48px !important;
 }
@@ -5194,3 +5198,18 @@ textarea,
 
 
 
+@keyframes glowingdiv {
+  0% {
+    box-shadow: 0 0 10px #2ba805;
+  }
+  50% {
+    box-shadow: 0 0 30px #49e819;
+  }
+  100% {
+    box-shadow: 0 0 10px #2ba805;
+  }
+}
+
+.GlowDiv {
+  animation: glowingdiv 1300ms infinite;
+}
