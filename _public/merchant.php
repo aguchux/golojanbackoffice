@@ -21,7 +21,7 @@ $Route->add('/dashboard/merchant/{page}', function ($root, $page) {
 
 
 
-$Route->add('/dashboard/merchant/{catid}/warehousing', function ($catid) {
+$Route->add('/dashboard/merchant/category/{catid}/warehousing', function ($catid) {
 
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");

@@ -320,7 +320,6 @@ $Route->add('/ajax/stores/{product}/addtowarehouse', function ($product) {
     $Done['capacity'] = $Core->ToMoney($finalcapacity);
 
     echo json_encode($Done);
-    
 }, 'POST');
 
 
@@ -380,4 +379,92 @@ $Route->add('/ajax/settings/{param}', function ($param) {
 
 
     echo $done;
+}, 'POST');
+
+
+
+
+
+$Route->add('/ajax/sales/warehouse/category/load', function () {
+
+    $html = "";
+    $Core = new Apps\Core();
+    $Template = new Apps\Template("/auth/login");
+    $data = $Core->post($_POST);
+
+    $accid = $Template->storage("accid");
+    $UserInfo = $Core->UserInfo($accid);
+    $catid = $data->catid;
+
+    $html .= "<table class=\"table table-bordered rounded\">";
+    $html .= "<thead>";
+    $html .= "<tr>";
+    $html .= "<th scope=\"col\">STOCK LIST</th>";
+    $html .= "</tr>";
+    $html .= "</thead>";
+    $html .= "<tbody>";
+
+    $Products = $Core->CategoryProducts($catid);
+
+    while ($product = mysqli_fetch_object($Products)) {
+        $Category = $Core->CategoryInfo($product->category);
+        $RunSwitch = $Core->RunSwitch($product->id, $UserInfo->accid);
+        if (isset($Category->id)) :
+            $selling = $Core->ToMoney($product->selling);
+            $html .= "<tr>";
+            $html .= "<th scope=\"row\">";
+            $html .= "<ul class=\"listview image-listview text inset\">";
+            $html .= "<li>";
+            $html .= " <a href=\"#\" class=\"item\">";
+            $html .= "<div class=\"media left mr-2\">";
+            $html .= "<img style=\"width:100px\" src=\"{$product->photo}\">";
+            $html .= "</div>";
+            $html .= "<div class=\"in right\">";
+            $html .= "<div>{$product->name}</div>";
+            $html .= "</div>";
+            $html .= "</a>";
+            $html .= "</li>";
+            $html .= "<li>";
+            $html .= "<div class=\"item\">";
+            $html .= "<div class=\"in\">";
+            $html .= "<div>";
+            $html .= "<strong>{$selling}</strong>";
+            $html .= "<div class=\"text-muted\">";
+            $html .= "{$Category->category}";
+            $html .= " </div>";
+            $html .= "</div>";
+            $html .= "<div class=\"custom-control custom-switch\">";
+            $html .= "<input type=\"checkbox\" name=\"<?= $product->id ?>\" class=\"custom-control-input AddToWarehouseBtn\" value=\"<?= $product->id ?>\" id=\"<?= $product->id ?>\"  {$RunSwitch} />";
+            $html .= "<label class=\"custom-control-label\" for=\"<?= $product->id ?>\"></label>";
+            $html .= "</div>";
+            $html .= "</div>";
+            $html .= "</div>";
+            $html .= "</li>";
+            $html .= "</ul>";
+
+            $html .= "</th>";
+            $html .= "</tr>";
+
+
+        endif;
+    }
+
+    $html .= "</tbody>";
+    $html .= "</table>";
+
+    $Template->debug($html);
+}, 'POST');
+
+
+$Route->add('/ajax/merchant/warehouse/category/load', function () {
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+    $data = $Core->post($_POST);
+
+    $catid = $data->catid;
+    $CategoryProducts = $Core->CategoryProducts($catid);
+    $CategoryProducts = json_encode($CategoryProducts);
+
+    $Template->debug($CategoryProducts);
 }, 'POST');

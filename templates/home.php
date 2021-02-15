@@ -27,31 +27,40 @@
 
     <!-- loader -->
     <div id="loader">
-        <img src="<?= $assets ?>img/logo-icon.png" class="loading-icon">
+        <div class="spinner-grow text-white" role="status"></div>
     </div>
     <!-- * loader -->
 
     <!-- App Capsule -->
     <div id="appCapsule">
 
-    <form action="/auth/forms/splash" method="POST">
-                    <?= $Self->tokenize() ?>
-                    <div class="section">
-                        <div class="splash-page mb-5 text-center">
-                            <h1 class="mb-3"><img class="img-responsive" style="height: 130px;" src="<?= $assets ?>img/logo-icon.png" class="logo"></h1>
-                            <h1 class="mb-2">Golojan BackOffice<br /><small><small>Network, Sales & Payments</small></small></h1>
-                            <h4 class="text-muted">De-Golojan Technologies Ltd</h4>
-                            <span class="GOLOJAN_device_status text-center text-muted"> <span> Connecting... </span> </span>
-                        </div>
+        <form action="/auth/forms/splash" method="POST">
+            <?= $Self->tokenize() ?>
+
+            <div class="section">
+                <div class="splash-page mb-5 text-center">
+                    <h1 class="mb-3"><img class="img-responsive" style="height: 130px;" src="<?= $assets ?>img/logo-icon.png" class="logo"></h1>
+                    <h1 class="mb-2">Golojan BackOffice<br /><small><small>Network, Sales & Payments</small></small></h1>
+                    <h4 class="text-muted">De-Golojan Technologies Ltd</h4>
+                    <h1 class="my-5" id="DeviceType"><img style="width: 100px;" class="img-responsive" src="/_store/devices/none.png" class="imaged w100"></h1>
+                    <span class="GOLOJAN_device_status text-center text-muted"> <span> Connecting... </span> </span>
+                </div>
+            </div>
+
+            <div class="fixed-bar">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="/auth/login" class="btn btn-lg btn-outline-secondary btn-block">Login</a>
                     </div>
-                    <div class="fixed-bar">
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-lg btn-primary btn-block ajax" id="splash">Sign in</button>
-                            </div>
-                        </div>
+                    <div class="col-6">
+                        <a href="/auth/register" class="btn btn-lg btn-outline-primary btn-block">Register</a>
                     </div>
-                </form>
+                </div>
+            </div>
+
+
+
+        </form>
 
     </div>
     <!-- * App Capsule -->

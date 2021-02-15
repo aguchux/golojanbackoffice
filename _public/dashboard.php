@@ -23,8 +23,6 @@ $Route->add('/spill', function () {
 
     $spill = $Core->getSpillover(12000);
     $Template->debug($spill);
-
-
 }, 'GET');
 
 
@@ -71,7 +69,6 @@ $Route->add('/dashboard/locations/{location}/switch', function ($location) {
 }, 'GET');
 
 
-
 $Route->add('/dashboard/{page}', function ($page) {
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
@@ -86,51 +83,15 @@ $Route->add('/dashboard/{page}', function ($page) {
     if ($page == "support") {
         $ListFAQs = $Core->ListFAQs();
         $Template->assign("ListFAQs", $ListFAQs);
-    } elseif ($page == "networks") {
-
-        $Level1 = $Core->MyNetwork($accid, 1);
-        $Template->assign("Level1", $Level1);
-
-        $Level2 = $Core->MyNetwork($accid, 2);
-        $Template->assign("Level2", $Level2);
-
-        $Level3 = $Core->MyNetwork($accid, 3);
-        $Template->assign("Level3", $Level3);
-
-        $Level4 = $Core->MyNetwork($accid, 4);
-        $Template->assign("Level4", $Level4);
-
-        $Level5 = $Core->MyNetwork($accid, 5);
-        $Template->assign("Level5", $Level5);
-
-        $Level6 = $Core->MyNetwork($accid, 6);
-        $Template->assign("Level6", $Level6);
-
-        $Level7 = $Core->MyNetwork($accid, 7);
-        $Template->assign("Level7", $Level7);
-
-        $Level8 = $Core->MyNetwork($accid, 8);
-        $Template->assign("Level8", $Level8);
-        
     } elseif ($page == "accounts") {
-
         $PaystackBanking = new Apps\PaystackBanking(paystack_secrete_live);
         $ListBankers = json_decode($PaystackBanking->getBanks());
-
         $ListBankers = $ListBankers->data;
         $Template->assign("ListBankers", $ListBankers);
-
         $Bankers = $Core->Bankers($accid);
         $Template->assign("Bankers", $Bankers);
-        
-    } elseif ($page == "marketplace") {
-
-        $Template->assign("category", 0);
-        $Template->assign("Products", $Core->CategoryProducts(0));
-        $Template->render("dashboard.{$page}");
 
     } elseif ($page == "locations") {
-
         $this_user = $Core->UserInfo($accid);
         $Locations = $Core->Locations();
         $Template->assign("Locations", $Locations);
@@ -143,6 +104,7 @@ $Route->add('/dashboard/{page}', function ($page) {
         $Template->assign("ListVideos", $ListVideos);
     }
 
+    $Template->render("dashboard.{$page}");
 }, 'GET');
 
 
@@ -150,22 +112,6 @@ $Route->add('/dashboard/{page}', function ($page) {
 
 
 
-
-$Route->add('/dashboard/category/{catid}/marketplace', function ($catid) {
-    $Core = new Apps\Core;
-    $Template = new Apps\Template("/auth/login");
-    $Template->addheader("layouts.auth.header");
-    $Template->addfooter("layouts.auth.footer");
-    $Template->assign("title", "Golojan | Back Office");
-
-    $accid = $Template->storage("accid");
-    $root = $Core->UserInfo($accid, "root");
-
-    $Template->assign("category", $catid);
-    $Template->assign("Products", $Core->CategoryProducts($catid));
-    $Template->assign("menukey", "marketplace");
-    $Template->render("dashboard.marketplace");
-}, 'GET');
 
 $Route->add('/dasboard/tutorials/{vid}/learn', function ($vid) {
     $Core = new Apps\Core;

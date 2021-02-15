@@ -162,16 +162,16 @@
                         </div>
 
                         <div class="form-group basic mt-3">
-                            <label class="label" for="title">Product Title/Name (120 chars)</label>
+                            <label class="label" for="title">Product Title/Name (<span id="xProductTitle_counter" data-count="<?= product_title_count ?>"><?= product_title_count ?></span> chars)</label>
                             <div class="input-group mb-2">
-                                <input class="form-control" type="text" name="title" id="title" placeholder="Product Title/Name">
+                                <input class="form-control xProductTitle" type="text" name="title" id="title" maxlength="<?= product_title_count ?>" placeholder="Product Title/Name">
                             </div>
                         </div>
 
                         <div class="form-group basic">
-                            <label class="label" for="description">Product Description(160 chars)</label>
+                            <label class="label" for="description">Product Description(<span id="xProductDescription_counter" data-count="<?= product_description_count ?>"><?= product_description_count ?></span> chars)</label>
                             <div class="input-group mb-2">
-                                <textarea class="form-control" name="description" id="description" placeholder="Product Description"></textarea>
+                                <textarea class="form-control xProductDescription" name="description" id="description" maxlength="<?= product_description_count ?>" placeholder="Product Description"></textarea>
                             </div>
                         </div>
 

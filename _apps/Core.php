@@ -864,6 +864,7 @@ class Core extends Model
 		return $Productinfo;
 	}
 
+	
 	public function CategoryProducts($catid = 0)
 	{
 		if ($catid == 0) {
@@ -1161,6 +1162,13 @@ class Core extends Model
 	{
 		mysqli_query($this->dbCon, "SELECT accid FROM golojan_accounts WHERE referrer='$accid'");
 		return $this->countAffected();
+	}
+
+	public function AccountReferrals($accid)
+	{
+
+		$AccountReferrals = mysqli_query($this->dbCon, "SELECT accid FROM golojan_accounts WHERE referrer='$accid'");
+		return $AccountReferrals;
 	}
 
 	public function MyTotalNetwork($accid)
@@ -1526,7 +1534,7 @@ class Core extends Model
 			}
 			return true;
 		} else {
-			$new_sponsor = (int)$this->getSpillover($accid, $sponsor);
+			$new_sponsor = (int)$this->getSpillover($sponsor);
 			if ($new_sponsor) {
 				if ($this->FillLegs($sponsor, $accid)) {
 					$this->SetUserInfo($accid, "sponsor", $new_sponsor);
@@ -1535,7 +1543,6 @@ class Core extends Model
 			return false;
 		}
 	}
-
 
 
 	public function FillLegs($sponsor, $accid)
@@ -1562,6 +1569,10 @@ class Core extends Model
 		if ($sponsor) {
 
 			$netSP1 = $this->MyNetwork($sponsor, 1);
+			$netCT1 = count($netSP1);
+			if ($netCT1 < 2) {
+				return $sponsor;
+			}
 
 			$netSP2 = $this->MyNetwork($sponsor, 2);
 			$netCT2 = count($netSP2);
@@ -1641,10 +1652,302 @@ class Core extends Model
 					}
 				}
 			}
+
+			$netSP9 = $this->MyNetwork($sponsor, 9);
+			$netCT9 = count($netSP9);
+			if ($netCT9 < 512) {
+				foreach ($netSP8 as $netsp8) {
+					$sub_net = $this->MyNetwork($netsp8, 1);
+					if (count($sub_net) < 2) {
+						return $netsp8;
+					}
+				}
+			}
+
+			$netSP10 = $this->MyNetwork($sponsor, 10);
+			$netCT10 = count($netSP10);
+			if ($netCT10 < 1024) {
+				foreach ($netSP9 as $netsp9) {
+					$sub_net = $this->MyNetwork($netsp9, 1);
+					if (count($sub_net) < 2) {
+						return $netsp9;
+					}
+				}
+			}
+
+			$netSP11 = $this->MyNetwork($sponsor, 11);
+			$netCT11 = count($netSP11);
+			if ($netCT11 < 2048) {
+				foreach ($netSP10 as $netsp10) {
+					$sub_net = $this->MyNetwork($netsp10, 1);
+					if (count($sub_net) < 2) {
+						return $netsp10;
+					}
+				}
+			}
+
+			$netSP12 = $this->MyNetwork($sponsor, 12);
+			$netCT12 = count($netSP12);
+			if ($netCT12 < 2048) {
+				foreach ($netSP11 as $netsp11) {
+					$sub_net = $this->MyNetwork($netsp11, 1);
+					if (count($sub_net) < 2) {
+						return $netsp11;
+					}
+				}
+			}
 		} else {
 
 			//Randomely Get Spillover//
-			$new_sponsor = $this->RandomSpillover($sponsor);
+			$new_sponsor = $this->RandomSpillover();
+			//$this->debug($new_sponsor);
+
+			return $new_sponsor;
+			//Randomely Get Spillover//
+
+		}
+	}
+
+
+
+
+
+	public function Spillover($sponsor = 0)
+	{
+		if ($sponsor) {
+
+			$netSP1 = $this->MyNetwork($sponsor, 1);
+			$netCT1 = count($netSP1);
+			if ($netCT1 < 2) {
+				return $sponsor;
+			}
+
+			$netSP2 = $this->MyNetwork($sponsor, 2);
+			$netCT2 = count($netSP2);
+			if ($netCT2 < 4) {
+				foreach ($netSP1 as $netsp1) {
+					$sub_net = $this->MyNetwork($netsp1, 1);
+					if (count($sub_net) < 2) {
+						return $netsp1;
+					}
+				}
+			}
+
+			$netSP3 = $this->MyNetwork($sponsor, 3);
+			$netCT3 = count($netSP3);
+			if ($netCT3 < 8) {
+				foreach ($netSP2 as $netsp2) {
+					$sub_net = $this->MyNetwork($netsp2, 1);
+					if (count($sub_net) < 2) {
+						return $netsp1;
+					}
+				}
+			}
+
+
+			$netSP4 = $this->MyNetwork($sponsor, 4);
+			$netCT4 = count($netSP4);
+			if ($netCT4 < 16) {
+				foreach ($netSP3 as $netsp3) {
+					$sub_net = $this->MyNetwork($netsp3, 1);
+					if (count($sub_net) < 2) {
+						return $netsp3;
+					}
+				}
+			}
+
+			$netSP5 = $this->MyNetwork($sponsor, 5);
+			$netCT5 = count($netSP5);
+			if ($netCT5 < 32) {
+				foreach ($netSP4 as $netsp4) {
+					$sub_net = $this->MyNetwork($netsp4, 1);
+					if (count($sub_net) < 2) {
+						return $netsp4;
+					}
+				}
+			}
+
+			$netSP6 = $this->MyNetwork($sponsor, 6);
+			$netCT6 = count($netSP6);
+			if ($netCT6 < 64) {
+				foreach ($netSP5 as $netsp5) {
+					$sub_net = $this->MyNetwork($netsp5, 1);
+					if (count($sub_net) < 2) {
+						return $netsp5;
+					}
+				}
+			}
+
+			$netSP7 = $this->MyNetwork($sponsor, 7);
+			$netCT7 = count($netSP7);
+			if ($netCT7 < 128) {
+				foreach ($netSP6 as $netsp6) {
+					$sub_net = $this->MyNetwork($netsp6, 1);
+					if (count($sub_net) < 2) {
+						return $netsp6;
+					}
+				}
+			}
+
+
+			$netSP8 = $this->MyNetwork($sponsor, 8);
+			$netCT8 = count($netSP8);
+			if ($netCT8 < 256) {
+				foreach ($netSP7 as $netsp7) {
+					$sub_net = $this->MyNetwork($netsp7, 1);
+					if (count($sub_net) < 2) {
+						return $netsp7;
+					}
+				}
+			}
+
+			$netSP9 = $this->MyNetwork($sponsor, 9);
+			$netCT9 = count($netSP9);
+			if ($netCT9 < 512) {
+				foreach ($netSP8 as $netsp8) {
+					$sub_net = $this->MyNetwork($netsp8, 1);
+					if (count($sub_net) < 2) {
+						return $netsp8;
+					}
+				}
+			}
+
+			$netSP10 = $this->MyNetwork($sponsor, 10);
+			$netCT10 = count($netSP10);
+			if ($netCT10 < 1024) {
+				foreach ($netSP9 as $netsp9) {
+					$sub_net = $this->MyNetwork($netsp9, 1);
+					if (count($sub_net) < 2) {
+						return $netsp9;
+					}
+				}
+			}
+
+			$netSP11 = $this->MyNetwork($sponsor, 11);
+			$netCT11 = count($netSP11);
+			if ($netCT11 < 2048) {
+				foreach ($netSP10 as $netsp10) {
+					$sub_net = $this->MyNetwork($netsp10, 1);
+					if (count($sub_net) < 2) {
+						return $netsp10;
+					}
+				}
+			}
+
+			$netSP12 = $this->MyNetwork($sponsor, 12);
+			$netCT12 = count($netSP12);
+			if ($netCT12 < 4096) {
+				foreach ($netSP11 as $netsp11) {
+					$sub_net = $this->MyNetwork($netsp11, 1);
+					if (count($sub_net) < 2) {
+						return $netsp11;
+					}
+				}
+			}
+
+
+			$netSP13 = $this->MyNetwork($sponsor, 13);
+			$netCT13 = count($netSP13);
+			if ($netCT13 < 8192) {
+				foreach ($netSP12 as $netsp12) {
+					$sub_net = $this->MyNetwork($netsp12, 1);
+					if (count($sub_net) < 2) {
+						return $netsp12;
+					}
+				}
+			}
+
+
+			$netSP14 = $this->MyNetwork($sponsor, 14);
+			$netCT14 = count($netSP14);
+			if ($netCT14 < 16384) {
+				foreach ($netSP13 as $netsp13) {
+					$sub_net = $this->MyNetwork($netsp13, 1);
+					if (count($sub_net) < 2) {
+						return $netsp13;
+					}
+				}
+			}
+
+
+			$netSP15 = $this->MyNetwork($sponsor, 15);
+			$netCT15 = count($netSP15);
+			if ($netCT15 < 32768) {
+				foreach ($netSP14 as $netsp14) {
+					$sub_net = $this->MyNetwork($netsp14, 1);
+					if (count($sub_net) < 2) {
+						return $netsp14;
+					}
+				}
+			}
+
+
+			$netSP16 = $this->MyNetwork($sponsor, 16);
+			$netCT16 = count($netSP16);
+			if ($netCT16 < 65536) {
+				foreach ($netSP15 as $netsp15) {
+					$sub_net = $this->MyNetwork($netsp15, 1);
+					if (count($sub_net) < 2) {
+						return $netsp15;
+					}
+				}
+			}
+
+
+			$netSP17 = $this->MyNetwork($sponsor, 17);
+			$netCT17 = count($netSP17);
+			if ($netCT17 < 131072) {
+				foreach ($netSP16 as $netsp16) {
+					$sub_net = $this->MyNetwork($netsp16, 1);
+					if (count($sub_net) < 2) {
+						return $netsp16;
+					}
+				}
+			}
+
+
+			$netSP18 = $this->MyNetwork($sponsor, 18);
+			$netCT18 = count($netSP18);
+			if ($netCT18 < 262144) {
+				foreach ($netSP17 as $netsp17) {
+					$sub_net = $this->MyNetwork($netsp17, 1);
+					if (count($sub_net) < 2) {
+						return $netsp17;
+					}
+				}
+			}
+
+
+			$netSP19 = $this->MyNetwork($sponsor, 19);
+			$netCT19 = count($netSP19);
+			if ($netCT19 < 524288) {
+				foreach ($netSP18 as $netsp18) {
+					$sub_net = $this->MyNetwork($netsp18, 1);
+					if (count($sub_net) < 2) {
+						return $netsp18;
+					}
+				}
+			}
+
+
+			$netSP20 = $this->MyNetwork($sponsor, 20);
+			$netCT20 = count($netSP20);
+			if ($netCT20 < 1048576) {
+				foreach ($netSP19 as $netsp19) {
+					$sub_net = $this->MyNetwork($netsp19, 1);
+					if (count($sub_net) < 2) {
+						return $netsp19;
+					}
+				}
+			}
+
+			//Randomely Get Spillover//
+			$new_sponsor = $this->RandomSpillover();
+			return $new_sponsor;
+		} else {
+
+			//Randomely Get Spillover//
+			$new_sponsor = $this->RandomSpillover();
 			//$this->debug($new_sponsor);
 
 			return $new_sponsor;
@@ -1696,9 +1999,9 @@ class Core extends Model
 
 
 
-	public function RandomSpillover($accid, $params = array())
+	public function RandomSpillover($params = array())
 	{
-		$RandomSpillover = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE (rleg='0' OR lleg='0') AND accid!='$accid' ORDER BY created ASC LIMIT 1");
+		$RandomSpillover = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE (rleg='0' OR lleg='0') ORDER BY created ASC LIMIT 1");
 		$RandomSpillover = mysqli_fetch_object($RandomSpillover);
 		return $RandomSpillover->accid;
 	}
