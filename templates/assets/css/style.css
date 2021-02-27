@@ -5030,31 +5030,25 @@ textarea,
 
 @keyframes level_0 {
   0% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
+    box-shadow: 0 0 5px #6236FF;
   }
   50% {
-    background-color: #49e819;
-    box-shadow: 0 0 10px #49e819;
+    box-shadow: 0 0 10px #6236FF;
   }
   100% {
-    background-color: #2ba805;
-    box-shadow: 0 0 5px #2ba805;
+    box-shadow: 0 0 5px #6236FF;
   }
 }
 
 
 @keyframes level_1 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
@@ -5062,100 +5056,79 @@ textarea,
 
 @keyframes level_2 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
 @keyframes level_3 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
 
 @keyframes level_4 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
 @keyframes level_5 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
 @keyframes level_6 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
 @keyframes level_7 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
 @keyframes level_8 {
   0% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
   50% {
-    background-color: #49e819;
     box-shadow: 0 0 10px #49e819;
   }
   100% {
-    background-color: #2ba805;
     box-shadow: 0 0 5px #2ba805;
   }
 }
@@ -5212,4 +5185,39 @@ textarea,
 
 .GlowDiv {
   animation: glowingdiv 1300ms infinite;
+}
+
+
+
+
+.speechbubble {
+	background: #0080ff;
+  border: 3px solid #0075aa;
+	border-radius: .4em;
+  content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 42px solid transparent;
+	border-right-color: #0080ff;
+	border-left: 0;
+	margin-top: -42px;
+	margin-left: -42px;
+
+}
+
+.speechbubble:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 42px solid transparent;
+	border-right-color: #0080ff;
+	border-left: 0;
+	margin-top: -42px;
+	margin-left: -42px;
 }

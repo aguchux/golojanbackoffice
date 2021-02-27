@@ -2,7 +2,7 @@
         <div class="section wallet-card-section pt-1">
             <div class="wallet-card">
 
-                
+
                 <!-- Balance -->
                 <div class="balance">
                     <div class="left">
@@ -21,29 +21,38 @@
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#SellNewItem">
+                        <a href="/dashboard/network/networks">
                             <div class="icon-wrapper bg-primary">
-                                <ion-icon name="people-outline"></ion-icon>
-                            </div>
-                            <strong>Geneology</strong>
-                        </a>
-                    </div>
-                    <div class="item">
-                        <a href="/dashboard/network/network" data-toggle="modal" data-target="#sendActionSheet">
-                            <div class="icon-wrapper bg-success">
                                 <ion-icon name="apps-outline"></ion-icon>
                             </div>
                             <strong>Network</strong>
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#" data-toggle="modal" data-target="#exchangeActionSheet">
-                            <div class="icon-wrapper bg-warning">
-                                <ion-icon name="swap-vertical"></ion-icon>
+                        <a href="/dashboard/network/referrals">
+                            <div class="icon-wrapper bg-success">
+                                <ion-icon name="people-outline"></ion-icon>
                             </div>
-                            <strong>Transfer</strong>
+                            <strong>Referrals</strong>
                         </a>
                     </div>
+                    <div class="item">
+                        <a href="/dashboard/tutorials">
+                            <div class="icon-wrapper bg-warning">
+                                <ion-icon name="play-outline"></ion-icon>
+                            </div>
+                            <strong>Learn</strong>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/dashboard/tools">
+                            <div class="icon-wrapper bg-secondary">
+                                <ion-icon name="flag-outline"></ion-icon>
+                            </div>
+                            <strong>My Tools</strong>
+                        </a>
+                    </div>
+
                 </div>
                 <!-- * Wallet Footer -->
 
@@ -55,37 +64,43 @@
 
         <!-- Stats -->
         <div class="section">
+
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box">
-                        <div class="title">Open Balance</div>
-                        <div class="value text-success"><?= $Core->ToMoney($Wallet->open) ?></div>
+                        <div class="title">Expected Bonus</div>
+                        <div class="value text-primary"><?= $Core->ToMoney(0) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
-                        <div class="title">Closed Balance</div>
-                        <div class="value text-danger"><?= $Core->ToMoney($Wallet->closed) ?></div>
+                        <div class="title">Paid Bonus</div>
+                        <div class="value text-primary"><?= $Core->ToMoney(0) ?></div>
                     </div>
                 </div>
             </div>
 
 
+        </div>
+        <!-- * Stats -->
+
+        <!-- Stats -->
+        <div class="section">
+
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box">
-                        <div class="title">Store Capacity</div>
-                        <div class="value"><?= $Core->ToMoney($StoreInfo->capacity) ?></div>
+                        <div class="title">Next Bonus</div>
+                        <div class="value text-success"><?= $Core->ToMoney(0) ?></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
-                        <div class="title">Volume Stocked</div>
-                        <div class="value"><?= $Core->ToMoney($Core->StockVolume($UserInfo->accid)) ?></div>
+                        <div class="title">Incoming Bonus</div>
+                        <div class="value text-danger"><?= $Core->ToMoney(0) ?></div>
                     </div>
                 </div>
             </div>
-
 
 
         </div>
@@ -94,7 +109,7 @@
 
         <!-- Stats -->
         <div class="section">
-            <div class="row mt-2 mb-4">
+            <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Referred By</div>
@@ -202,5 +217,3 @@
             </div>
         </div>
         <!-- * Stats -->
-
-

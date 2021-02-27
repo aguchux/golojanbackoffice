@@ -31,9 +31,9 @@
                 <tbody>
                     <?php while ($referral = mysqli_fetch_object($AccountReferrals)) :  ?>
                         <tr>
-                            <th scope="row"></th>
-                            <td></td>
-                            <td></td>
+                            <th scope="row"><?= $referral->accid ?></th>
+                            <td><?= $referral->fullname ?></td>
+                            <td><?= date("jS M Y", strtotime($referral->created)) ?></td>
                         </tr>
                     <?php endwhile; ?>
 

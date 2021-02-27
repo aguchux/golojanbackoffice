@@ -1,5 +1,26 @@
 <?php
 
+
+
+$Route->add('/device/connection', function () {
+    $Device = new Apps\Device;
+    $Dinfo = array();
+    $ip = $Device->get_ip();
+    $is_ip = filter_var($ip, FILTER_VALIDATE_IP);
+    if ($is_ip) {
+        $Dinfo['connected'] = 1;
+        $Dinfo['os'] = $Device->get_os();
+        $Dinfo['browser'] = $Device->get_browser();
+        $Dinfo['device'] = $Device->get_device();
+        $Dinfo['ip'] = $Device->get_ip();
+    }else{
+        $Dinfo['connected'] = 0;
+    }
+    $Dinfo = json_encode($Dinfo);
+    echo $Dinfo;
+}, 'GET');
+
+
 $Route->add('/ajax/bankers/getinfo', function () {
     $Done = array();
     $Done['done'] = 0;
@@ -63,12 +84,18 @@ $Route->add('/ajax/bankers/{bankerid}/delete', function ($bankerid) {
 
 
 $Route->add('/ajax/categories/sub/{maincat}/load', function ($maincat) {
-
     $Core = new Apps\Core();
-    $Template = new Apps\Template;
     $LoadSubCategories = $Core->LoadSubCategories($maincat);
-    $Template->debug($LoadSubCategories);
+    echo $LoadSubCategories;
 }, 'POST');
+
+
+$Route->add('/ajax/categories/root/{catid}/load', function ($catid) {
+    $Core = new Apps\Core();
+    $LoadSubCategories = $Core->LoadSubCategories($catid);
+    echo $LoadSubCategories;
+}, 'POST');
+
 
 $Route->add('/ajax/profile/{receipientid}/receipient', function ($receipientid) {
 
@@ -455,7 +482,6 @@ $Route->add('/ajax/sales/warehouse/category/load', function () {
     $Template->debug($html);
 }, 'POST');
 
-
 $Route->add('/ajax/merchant/warehouse/category/load', function () {
 
     $Core = new Apps\Core();
@@ -468,3 +494,37 @@ $Route->add('/ajax/merchant/warehouse/category/load', function () {
 
     $Template->debug($CategoryProducts);
 }, 'POST');
+
+
+
+$Route->add('/ajax/products/feature/{pid}/add', function ($pid) {
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+    $data = $Core->post($_POST);
+
+    $accid = $Template->storage("accid");
+
+    $text_feature_key = $data->text_feature_key;
+    $text_feature_value = $data->text_feature_value;
+
+    $added = $Core->AddProductFeature($pid,$accid,$text_feature_key,$text_feature_value);
+
+    $Template->debug($added);
+
+}, 'POST');
+
+
+$Route->add('/ajax/products/feature/{fid}/remove', function ($fid) {
+
+    $Core = new Apps\Core();
+    $Template = new Apps\Template;
+
+    $removed = $Core->RemoveProductFeature($fid);
+
+    $Template->debug($removed);
+
+}, 'POST');
+
+
+

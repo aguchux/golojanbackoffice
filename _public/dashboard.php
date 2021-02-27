@@ -10,39 +10,40 @@ $Route->add('/dashboard', function () {
     $Template->assign("title", "Golojan | Back Office");
     $accid = $Template->storage("accid");
     $root = $Core->UserInfo($accid, "root");
-    $Core->Relocation($accid);
     $Template->assign("menukey", "dashboard");
-    $Template->render("dashboard.{$root}.dashboard");
+
+    $routed = $Core->Shopify($accid,"dashboard.{$root}.dashboard");
+    $Template->render($routed);
+
 }, 'GET');
-
-
-$Route->add('/spill', function () {
-    $Core = new Apps\Core;
-    $Template = new Apps\Template("/auth/login");
-
-
-    $spill = $Core->getSpillover(12000);
-    $Template->debug($spill);
-}, 'GET');
-
 
 
 $Route->add('/locations/setup', function () {
+
     $Core = new Apps\Core;
     $Template = new Apps\Template("/auth/login");
+    $Template->addheader("layouts.auth.header");
+    $Template->addfooter("layouts.auth.footer");
     $Template->assign("title", "Golojan | Back Office");
-
-    $accid = $Template->storage("accid");
-    $root = $Core->UserInfo($accid, "root");
-
     $Locations = $Core->Locations();
     $Template->assign("Locations", $Locations);
-
     $Template->assign("menukey", "locations");
-    $Template->render("dashboard.setlocation");
+
+    $Template->render("dashboard.locations");
+
 }, 'GET');
 
+$Route->add('/stores/setup', function () {
 
+    $Core = new Apps\Core;
+    $Template = new Apps\Template("/auth/login");
+    $Template->addheader("layouts.auth.header");
+    $Template->addfooter("layouts.auth.footer");
+    $Template->assign("title", "Golojan | Back Office");
+    $Template->assign("menukey", "Store setup");
+    $Template->render("dashboard.setup");
+
+}, 'GET');
 
 
 $Route->add('/dashboard/{root}/switch', function ($root) {
@@ -60,10 +61,7 @@ $Route->add('/dashboard/{root}/switch', function ($root) {
 $Route->add('/dashboard/locations/{location}/switch', function ($location) {
     $Template = new Apps\Template("/auth/login");
     $Core = new Apps\Core;
-
-    $accid = $Template->storage("accid");
-    $root = $Core->UserInfo($accid, "root");
-
+    $accid = $Template->storage("accid");    
     $Core->SetUserInfo($accid, "location", $location);
     $Template->redirect("/dashboard");
 }, 'GET');
@@ -104,13 +102,10 @@ $Route->add('/dashboard/{page}', function ($page) {
         $Template->assign("ListVideos", $ListVideos);
     }
 
-    $Template->render("dashboard.{$page}");
+    $routed = $Core->Shopify($accid,"dashboard.{$page}");
+    $Template->render($routed);
+
 }, 'GET');
-
-
-
-
-
 
 
 $Route->add('/dasboard/tutorials/{vid}/learn', function ($vid) {
@@ -126,4 +121,9 @@ $Route->add('/dasboard/tutorials/{vid}/learn', function ($vid) {
     $Template->assign("VideoInfo", $Core->VideoInfo($vid));
     $Template->assign("menukey", "tutorials");
     $Template->render("dashboard.tutorials_learn");
+
+    $routed = $Core->Shopify($accid,"dashboard.tutorials_learn");
+    $Template->render($routed);
+
+
 }, 'GET');
