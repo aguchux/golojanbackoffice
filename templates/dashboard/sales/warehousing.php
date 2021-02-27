@@ -4,39 +4,14 @@
         <!-- Balance -->
         <div class="balance">
             <div class="left">
-                <span class="title">Available Store Capacity</span>
-                <h1 class="total" id="xStoreTotal"><?= $Core->ToMoney($Core->AvailableStock($UserInfo->accid)) ?></h1>
+                <span class="title">Market Capacity</span>
+                <h1 class="total" id="xStoreTotal"><?= $Core->ToMoney($Core->MarketCapacity()) ?></h1>
             </div>
             <div class="right">
-                <a href="#" class="button" id="xStoreCount"><?= $Core->CountStock($UserInfo->accid) ?></a>
+                <a  id="xStoreCount"><?= $Core->MarkeCountStock() ?></a>
             </div>
         </div>
         <!-- * Balance -->
-        <!-- Wallet Footer -->
-        <div class="wallet-footer row">
-
-
-
-            <div class="form-group basic col-12" id="main_category_box">
-                <div class="input-wrapper">
-                    <h3 class="label">Select Category</h3>
-                    <select class="form-control custom-select" name="main_category" id="maincategoryloader">
-                        <?= $Core->LoadMainCategories() ?>
-                    </select>
-                </div>
-            </div>
-            <div class="d-none" id="sub_category_box_loader"></div>
-            <div class="form-group basic col-12" id="sub_category_box">
-                <div class="input-wrapper">
-                    <h3 class="label">Select Sub Category</h3>
-                    <select class="form-control custom-select" id="subcategory_select_input">
-                        <option value="">Choose Sub Category</option>
-                    </select>
-                </div>
-            </div>
-
-        </div>
-        <!-- * Wallet Footer -->
     </div>
 </div>
 <!-- Wallet Card -->

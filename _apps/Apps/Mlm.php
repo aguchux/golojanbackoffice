@@ -14,9 +14,23 @@ class mlm
 class upgrade
 {
 
-    static public $accid;
-    public function __construct()
+    public $accid;
+    public $level;
+    public $nextlevel;
+    public function __construct($accid)
     {
+        $this->accid = $accid;
+        $Core = new Core;
+        $User = $Core->UserInfo($accid);
+      
+        $_level = $User->level;
+        $next_level = $_level + 1;
+        $this->level = $_level;
+        $this->nextlevel = $next_level;
+
+        
+
+
     }
 }
 

@@ -227,7 +227,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/dashboard/orders" class="item">
+                                <a href="/dashboard/sales/orders" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="fast-food-outline"></ion-icon>
                                     </div>
@@ -235,14 +235,6 @@
                                         Orders & Sales
                                         <span class="badge badge-danger">0</span>
                                     </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/tracking" class="item">
-                                    <div class="icon-box bg-primary">
-                                        <ion-icon name="airplane-outline"></ion-icon>
-                                    </div>
-                                    <div class="in">Track Orders</div>
                                 </a>
                             </li>
 
@@ -491,7 +483,7 @@
                                     <ion-icon name="wallet-outline"></ion-icon>
                                 </div>
                                 <div class="in">
-                                    Wallet
+                                    My Wallet
                                 </div>
                             </a>
                         </li>
@@ -517,6 +509,16 @@
                                 </div>
                             </a>
                         </li>
+
+                        <li>
+                                <a href="/dashboard/tracking" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="airplane-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">Track Orders</div>
+                                </a>
+                            </li>
+
                         <li>
                             <a href="/dashboard/settings" class="item">
                                 <div class="icon-box bg-primary">

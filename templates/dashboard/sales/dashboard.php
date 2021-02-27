@@ -20,33 +20,36 @@
 
         <!-- Wallet Footer -->
         <div class="wallet-footer">
+
             <div class="item">
                 <a href="/dashboard/sales/sell">
                     <div class="icon-wrapper bg-primary">
-                        <ion-icon name="add-outline"></ion-icon>
+                        <ion-icon name="bar-chart-outline"></ion-icon>
                     </div>
                     <strong>Sell Item</strong>
                 </a>
             </div>
+
             <div class="item">
-                <a href="#" data-toggle="modal" data-target="#sendActionSheet">
+                <a href="/dashboard/sales/orders">
                     <div class="icon-wrapper bg-success">
-                        <ion-icon name="arrow-down-outline"></ion-icon>
+                        <ion-icon name="cart-outline"></ion-icon>
                     </div>
-                    <strong>Withdraw</strong>
-                </a>
-            </div>
-            <div class="item">
-                <a href="#" data-toggle="modal" data-target="#exchangeActionSheet">
-                    <div class="icon-wrapper bg-warning">
-                        <ion-icon name="swap-vertical"></ion-icon>
-                    </div>
-                    <strong>Transfer</strong>
+                    <strong>Orders</strong>
                 </a>
             </div>
 
             <div class="item">
-                <a href="#">
+                <a href="/dashboard/sales/warehousing">
+                    <div class="icon-wrapper bg-info">
+                        <ion-icon name="cart-outline"></ion-icon>
+                    </div>
+                    <strong>Warehouse</strong>
+                </a>
+            </div>
+
+            <div class="item">
+                <a href="#" target="_blank">
                     <div class="icon-wrapper bg-success">
                         <ion-icon name="file-tray-stacked-outline"></ion-icon>
                     </div>
@@ -104,7 +107,20 @@
 
     </div>
 
-
+    <div class="row mt-2">
+        <div class="col-6">
+            <div class="stat-box">
+                <div class="title">Successful Orders</div>
+                <div class="value text-success"><?= $Core->ToMoney(0) ?></div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="stat-box">
+                <div class="title">Pending Orders</div>
+                <div class="value text-danger"><?= $Core->ToMoney(0) ?></div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <!-- * Stats -->

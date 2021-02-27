@@ -1160,6 +1160,21 @@ class Core extends Model
 		return $CountStock->stocked;
 	}
 
+	public function MarkeCountStock()
+	{
+		$MarkeCountStock = mysqli_query($this->dbCon, "SELECT COUNT(id) AS stocked FROM golojan_products");
+		$MarkeCountStock = mysqli_fetch_object($MarkeCountStock);
+		return $MarkeCountStock->stocked;
+	}
+
+
+	public function MarketCapacity()
+	{
+		$MarketCapacity = mysqli_query($this->dbCon, "SELECT SUM(bulkprice) AS capacity FROM golojan_products");
+		$MarketCapacity = mysqli_fetch_object($MarketCapacity);
+		return $MarketCapacity->capacity;
+	}
+
 
 	public function CountWarehouseStock($accid)
 	{
@@ -2430,7 +2445,7 @@ class Core extends Model
 	// Sales & Orders//
 	public  function UserOrders($accid, $limit = 50)
 	{
-		$UserOrders = mysqli_query($this->dbCon, "SELECT * FROM golojan_orders WHERE buyer='$accid' OR seller='$accid'");
+		$UserOrders = mysqli_query($this->dbCon, "SELECT * FROM golojan_orders WHERE buyer='$accid' OR accid='$accid'");
 		return $UserOrders;
 	}
 
