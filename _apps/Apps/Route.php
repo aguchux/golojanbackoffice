@@ -27,6 +27,14 @@ class Route{
 		exit();
 	}
 
+	public static function getRoute()
+	{
+		$getURI = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$getURI = parse_url($getURI);
+		return $getURI['path'];
+	}
+	
+
   	public static function add($expression, $function, $method = 'get'){
     	array_push(self::$routes,Array(
       		'expression' => $expression,

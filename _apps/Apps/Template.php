@@ -174,7 +174,7 @@ class Template extends Session
 
 	public function authorize($accid = null)
 	{
-		if (!$this->data[auth_session_key]) {
+		if (!isset($this->data[auth_session_key]) ) {
 			$this->store('auth_time', date('d-m-Y H:i:s'));
 			$this->store('accid', $accid);
 			$this->store(auth_session_key, true);

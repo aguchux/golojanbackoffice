@@ -35,6 +35,18 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
         <script src="<?= $assets ?>js/bootstrap-select.min.js"></script>
         <script src="<?= $assets ?>js/daterangepicker.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js" integrity="sha512-OnkjbJ4TwPpgSmjXACCb5J4cJwi880VRe+vWpPDlr8M38/L3slN5uUAeOeWU2jN+4vN0gImCXFGdJmc0wO4Mig==" crossorigin="anonymous"></script>
+        <script>
+            var input = document.querySelector("#mobile");
+            var iti = window.intlTelInput(input, {
+                initialCountry: "ng",
+                separateDialCode: true,
+                onlyCountries: ["ng"],
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js",
+            });
+            // store the instance variable so we can access it in the console e.g. window.iti.getNumber()
+            window.iti = iti;
+        </script>
         <script src="<?= $assets ?>js/base.js?var=<?= time() ?>"></script>
 
         </body>

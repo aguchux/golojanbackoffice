@@ -227,7 +227,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/dashboard/orders" class="item">
+                                <a href="/dashboard/sales/orders" class="item">
                                     <div class="icon-box bg-primary">
                                         <ion-icon name="fast-food-outline"></ion-icon>
                                     </div>
@@ -483,7 +483,7 @@
                                     <ion-icon name="wallet-outline"></ion-icon>
                                 </div>
                                 <div class="in">
-                                    Wallet
+                                    My Wallet
                                 </div>
                             </a>
                         </li>
@@ -509,6 +509,16 @@
                                 </div>
                             </a>
                         </li>
+
+                        <li>
+                                <a href="/dashboard/tracking" class="item">
+                                    <div class="icon-box bg-primary">
+                                        <ion-icon name="airplane-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">Track Orders</div>
+                                </a>
+                            </li>
+
                         <li>
                             <a href="/dashboard/settings" class="item">
                                 <div class="icon-box bg-primary">
@@ -550,7 +560,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="item">
+                            <a href="/dashboard/tools" class="item">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="flag-outline"></ion-icon>
                                 </div>
@@ -590,30 +600,47 @@
                                 <div class="in">Merchant & Sellers</div>
                             </a>
                         </li>
-                        <li>
-                            <a href="/dashboard/pos/switch" class="item">
-                                <div class="icon-box bg-<?= ($UserInfo->root == "pos") ? 'success' : 'primary' ?>">
-                                    <ion-icon name="cart-outline"></ion-icon>
-                                </div>
-                                <div class="in">Point Of Sale Systems</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/dashboard/logistics/switch" class="item">
-                                <div class="icon-box bg-<?= ($UserInfo->root == "logistics") ? 'success' : 'primary' ?>">
-                                    <ion-icon name="airplane-outline"></ion-icon>
-                                </div>
-                                <div class="in">Delivery & Logistics</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/dashboard/artisan/switch" class="item">
-                                <div class="icon-box bg-<?= ($UserInfo->root == "artisan") ? 'success' : 'primary' ?>">
-                                    <ion-icon name="build-outline"></ion-icon>
-                                </div>
-                                <div class="in">Artisans & Servicemen</div>
-                            </a>
-                        </li>
+
+                        
+                        <?php if ($UserInfo->is_hunter) : ?>
+                            <li>
+                                <a href="/dashboard/hunter/switch" class="item">
+                                    <div class="icon-box bg-<?= ($UserInfo->root == "hunter") ? 'success' : 'primary' ?>">
+                                        <ion-icon name="cart-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">Merchant Hunter</div>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+
+                        <?php if ($UserInfo->is_admin) : ?>
+                            <li>
+                                <a href="/dashboard/pos/switch" class="item">
+                                    <div class="icon-box bg-<?= ($UserInfo->root == "pos") ? 'success' : 'primary' ?>">
+                                        <ion-icon name="cart-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">Point Of Sale Systems</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/logistics/switch" class="item">
+                                    <div class="icon-box bg-<?= ($UserInfo->root == "logistics") ? 'success' : 'primary' ?>">
+                                        <ion-icon name="airplane-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">Delivery & Logistics</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/admin/switch" class="item">
+                                    <div class="icon-box bg-<?= ($UserInfo->root == "admin") ? 'success' : 'primary' ?>">
+                                        <ion-icon name="build-outline"></ion-icon>
+                                    </div>
+                                    <div class="in">MyHQ Administrator</div>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
                     </ul>
 
                     <!-- Location -->

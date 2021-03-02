@@ -10,8 +10,8 @@
             <div class="card-body pb-1">
                 <div class="form-group basic">
                     <div class="input-wrapper">
-                        <label class="label" for="username">Email OR Telephone</label>
-                        <input type="text" required class="form-control" id="username" name="username" placeholder="Your Email/Telephone" autocomplete="off" tabindex="1">
+                        <label class="label" for="username">Email OR Account ID</label>
+                        <input type="text" required class="form-control" id="username" name="username" placeholder="User ID" autocomplete="off" tabindex="1">
                         <i class="clear-input">
                             <ion-icon name="close-circle"></ion-icon>
                         </i>

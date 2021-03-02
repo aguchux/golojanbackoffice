@@ -4,26 +4,16 @@
         <!-- Balance -->
         <div class="balance">
             <div class="left">
-                <span class="title">Total Added Products</span>
-                <h1 class="total" id="xStoreTotal"><?= $Core->ToMoney($Core->AvailableStock($UserInfo->accid)) ?></h1>
+                <span class="title">Added Products</span>
+                <h1 class="total" id="xStoreTotal"><?= $Core->MerchantCountAccount($UserInfo->accid) ?></h1>
             </div>
             <div class="right">
-                <a href="#" data-toggle="modal" data-target="#SellNewItem" class="button">
+                <a href="#" class="button">
                     <ion-icon name="add-outline"></ion-icon>
                 </a>
             </div>
         </div>
         <!-- * Balance -->
-        <!-- Wallet Footer -->
-        <div class="wallet-footer row">
-            <div class="form-group col-12">
-                <h3 class="title col-12">Select by Category</h3>
-                <select class="form-control" style="width: 100%; font-size:20px" id="LoadMyCategories">
-                    <?= $Core->LoadMyCategories($UserInfo->accid) ?>
-                </select>
-            </div>
-        </div>
-        <!-- * Wallet Footer -->
     </div>
 </div>
 <!-- Wallet Card -->
@@ -40,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php while ($product = mysqli_fetch_object($MyProducts)) :
+                <?php while ($product = mysqli_fetch_object($AdminListProducts)) :
                     $Category = $Core->CategoryInfo($product->category);
                 ?>
                     <tr>
@@ -80,14 +70,7 @@
 
 
                         </th>
-                        <th scope="row">
-                            <a href="/dashboard/merchant/products/<?= $product->id ?>/delete" type="button" class="close text-danger xDeleteFeature text-dark">
-                                <ion-icon name="close-outline"></ion-icon>
-                            </a>
-                            <a href="/dashboard/merchant/products/<?= $product->id ?>/edit" type="button" class="text-success close xDeleteFeature text-dark">
-                                <ion-icon name="create"></ion-icon>
-                            </a>
-                        </th>
+                        <th scope="row"> - </th>
                     </tr>
 
                 <?php endwhile; ?>

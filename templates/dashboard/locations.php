@@ -1,8 +1,8 @@
 
-     <div class="section mt-5 px-4">
+     <div class="section mt-4 px-4 text-center">
          <div class="row">
              <?php while ($location = mysqli_fetch_object($Locations)) : ?>
-                 <div class="card col-12 col-sm-6 col-lg-3 col-md-3 col-xs-12 text-center m-2">
+                 <div class="col-12 col-sm-6 col-lg-3 col-md-3 col-xs-12 text-center">
                      <div class="card">
                          <div class="card-body pt-3 pb-3">                    
                                  <img src="./_store/flags/<?= "{$location->flag}.png" ?>" alt="<?= $location->location ?>" class="img-responsive img-rounded w-100">

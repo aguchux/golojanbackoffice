@@ -46,7 +46,7 @@
                     </div>
                     
                     <div class="item">
-                        <a href="#">
+                        <a href="/dashboard/merchant/products">
                             <div class="icon-wrapper bg-success">
                                 <ion-icon name="file-tray-stacked-outline"></ion-icon>
                             </div>

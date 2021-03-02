@@ -61,6 +61,48 @@ $Route->add('/auth/forms/{action}', function ($action) {
     if ($action == "splash") {
         $Template->redirect("/auth/login");
   
+    
+    } elseif ($action == "newmerchant") {
+
+        
+        $firstname = $data->firstname;
+        $lastname = $data->lastname;
+        $email = $data->email;
+        $mobile = $data->mobile;
+
+        $businessname = $data->businessname;
+        $address = $data->address;
+       
+        $password = $Core->GenPassword(6);
+        $sponsor = (int)$data->sponsor;
+
+        $mobileExists = $Core->mobileExists($mobile);
+        $emailExists = $Core->emailExists($email);
+
+        if ($mobileExists || $emailExists) {
+            $Template->redirect("/dashboard/hunter/new-merchant");
+        }
+
+        //Process Referral//
+        $Sponsor = $Core->UserInfo($sponsor);
+        $new_sponsor = $Core->Spillover($sponsor);
+        if (isset($Sponsor->accid)) {
+            $referrer = $sponsor;
+        } else {
+            $referrer = root_referrer;
+        }
+        //Process Referral//
+
+        $accid = $Core->RegisterMerchant($firstname, $lastname, $email, $mobile, $password,$businessname,$address);
+        if ($accid) {
+
+            $Core->setSponsor($accid, $new_sponsor);
+            $Core->SetUserInfo($accid, "referrer", $referrer);
+            $Template->redirect("/dashboard/hunter/merchants");
+
+        }
+        $Template->redirect("/dashboard/hunter/new-merchant");
+
     } elseif ($action == "register") {
 
         $fullname = $data->fullname;
@@ -146,7 +188,7 @@ $Route->add('/auth/forms/{action}', function ($action) {
         if ((int)$Login->accid) {
 
             if (use_express_login) {
-                $Template->authorize($Login->accid);
+                $Template->authorize($Login->accid);                
                 $Template->redirect("/dashboard");
             } else {
 
@@ -268,6 +310,20 @@ $Route->add('/auth/forms/{action}', function ($action) {
             //Authorize this login//
         }
         $Template->redirect("/auth/otp");
+
+
+    } elseif ($action == "updatestore") {
+
+        $accid = $Template->storage("accid");
+        $Store = $Core->StoreInfo($accid);
+
+        $Core->SetStoreInfo($Store->id, "name", $data->name);
+        $Core->SetStoreInfo($Store->id, "url", $data->url);
+        $Core->SetStoreInfo($Store->id, "setup", 1);
+
+        $Template->redirect("/dashboard"); 
+
+        
     } elseif ($action == "profile") {
 
         $accid = $Template->storage("accid");

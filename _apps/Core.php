@@ -9,8 +9,9 @@ namespace Apps;
 use stdClass;
 use \Apps\Model;
 use \Apps\MysqliDb;
-
+use \Gufy\CpanelPhp;
 use \Apps\EmailTemplate;
+use Gufy\CpanelPhp\Cpanel;
 
 use function GuzzleHttp\json_decode;
 
@@ -537,6 +538,25 @@ class Core extends Model
 	}
 
 
+	public function RegisterMerchant($firstname, $lastname, $email, $mobile, $password, $storname, $address)
+	{
+		$pass_word = $this->Passwordify($password);
+		$fullname = "{$firstname} {$lastname}";
+
+		mysqli_query($this->dbCon, "INSERT INTO golojan_accounts(firstname,lastname,fullname,email,mobile,password) VALUES('$firstname','$lastname','$fullname','$email','$mobile','$pass_word')");
+		$accid = (int)$this->getLastId();
+		if ($accid) {
+			$storid = $this->NewStore($accid);
+			$this->SetStoreInfo($storid, "name", $storname);
+			$this->SetStoreInfo($storid, "address", $address);
+			$this->NewWallet($accid);
+			return $accid;
+		}
+		return false;
+	}
+
+
+
 	public function NewWallet($accid)
 	{
 		mysqli_query($this->dbCon, "INSERT INTO golojan_wallets(accid) VALUES('$accid')");
@@ -585,12 +605,23 @@ class Core extends Model
 	}
 
 
-	public function StoreInfo($storeid)
+	public function StoreInfo($storeid, $keyname = null)
 	{
-		$StoreInfo = mysqli_query($this->dbCon, "select * from golojan_stores where id='$storeid' OR accid='$storeid'");
-		$StoreInfo = mysqli_fetch_object($StoreInfo);
-		return $StoreInfo;
+		if ($keyname == null) {
+			$StoreInfo = mysqli_query($this->dbCon, "select * from golojan_stores where id='$storeid' OR accid='$storeid'");
+			$StoreInfo = mysqli_fetch_object($StoreInfo);
+			return $StoreInfo;
+		} else {
+			$StoreInfo = mysqli_query($this->dbCon, "select {$keyname} from golojan_stores where id='$storeid' OR accid='$storeid'");
+			$StoreInfo = mysqli_fetch_object($StoreInfo);
+			if (isset($StoreInfo->$keyname)) {
+				return $StoreInfo->$keyname;
+			}
+		}
+		return (int)false;
 	}
+
+
 
 
 	/**
@@ -783,7 +814,7 @@ class Core extends Model
 	 * @param int $catid 
 	 * @return string 
 	 */
-	public function LoadCategories($catid = 0)
+	public function LoadAllCategories($catid = 0)
 	{
 		$html = "<option value=\"\">SELECT Category</option>";
 		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE enabled='1' ");
@@ -809,13 +840,11 @@ class Core extends Model
 	}
 
 
-
-
 	public function LoadMainCategories($catid = 0)
 	{
 		$html = "<option value=\"\">Choose Main Category</option>";
-		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='0' AND enabled='1' ");
-		while ($cat = mysqli_fetch_object($Categories)) {
+		$LoadMainCategories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='0' AND enabled='1' ");
+		while ($cat = mysqli_fetch_object($LoadMainCategories)) {
 			$selected = ($catid == $cat->id) ? "selected" : "";
 			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
 		}
@@ -823,15 +852,29 @@ class Core extends Model
 	}
 
 
-	public function LoadSubCategories($catid = 0)
+	public function LoadSubCategories($maincat, $catid = 0)
 	{
 		$html = "<option value=\"\">Choose Sub Category</option>";
-		$Categories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='$catid' AND enabled='1' ");
-		while ($cat = mysqli_fetch_object($Categories)) {
-			$html .= "<option value=\"{$cat->id}\">{$cat->category}</option>";
+		$LoadSubCategories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='$maincat' AND enabled='1' ");
+		while ($cat = mysqli_fetch_object($LoadSubCategories)) {
+			$selected = ($catid == $cat->id) ? "selected" : "";
+			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
 		}
 		return $html;
 	}
+
+
+	public function LoadCategories($subcat, $catid = 0)
+	{
+		$html = "<option value=\"\">Choose Sub Category</option>";
+		$LoadCategories = mysqli_query($this->dbCon, "SELECT * FROM golojan_categories WHERE parentid='$subcat' AND enabled='1' ");
+		while ($cat = mysqli_fetch_object($LoadCategories)) {
+			$selected = ($catid == $cat->id) ? "selected" : "";
+			$html .= "<option {$selected} value=\"{$cat->id}\">{$cat->category}</option>";
+		}
+		return $html;
+	}
+
 
 	/**
 	 * @param mixed $catid 
@@ -864,7 +907,43 @@ class Core extends Model
 		return $Productinfo;
 	}
 
-	
+	public function DeleteProduct($id)
+	{
+		mysqli_query($this->dbCon, "DELETE golojan_products.* FROM golojan_products WHERE id='$id'");
+		return (int)$this->countAffected();
+	}
+
+
+
+	public function Submission($productid)
+	{
+		$Submission = mysqli_query($this->dbCon, "select * from golojan_merchant_submissions where productid='$productid'");
+		$Submission = mysqli_fetch_object($Submission);
+		return $Submission;
+	}
+
+
+
+	public function Submitted($productid)
+	{
+		$Submitted = mysqli_query($this->dbCon, "select id from golojan_merchant_submissions where productid='$productid'");
+		$Submitted = mysqli_fetch_object($Submitted);
+		if (isset($Submitted->id)) {
+			return (int)$Submitted->id;
+		}
+		return (int)false;
+	}
+
+
+	public function SubmitProduct($accid, $productid)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_merchant_submissions(accid,productid) VALUES('$accid','$productid')");
+		return (int)$this->getLastId();
+	}
+
+
+
+
 	public function CategoryProducts($catid = 0)
 	{
 		if ($catid == 0) {
@@ -1081,6 +1160,21 @@ class Core extends Model
 		return $CountStock->stocked;
 	}
 
+	public function MarkeCountStock()
+	{
+		$MarkeCountStock = mysqli_query($this->dbCon, "SELECT COUNT(id) AS stocked FROM golojan_products");
+		$MarkeCountStock = mysqli_fetch_object($MarkeCountStock);
+		return $MarkeCountStock->stocked;
+	}
+
+
+	public function MarketCapacity()
+	{
+		$MarketCapacity = mysqli_query($this->dbCon, "SELECT SUM(bulkprice) AS capacity FROM golojan_products");
+		$MarketCapacity = mysqli_fetch_object($MarketCapacity);
+		return $MarketCapacity->capacity;
+	}
+
 
 	public function CountWarehouseStock($accid)
 	{
@@ -1167,7 +1261,7 @@ class Core extends Model
 	public function AccountReferrals($accid)
 	{
 
-		$AccountReferrals = mysqli_query($this->dbCon, "SELECT accid FROM golojan_accounts WHERE referrer='$accid'");
+		$AccountReferrals = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE referrer='$accid'");
 		return $AccountReferrals;
 	}
 
@@ -2151,11 +2245,57 @@ class Core extends Model
 
 
 	// Merchants & Products//
-	public function MerchantAddProduct($accid, $title, $description, $main_category, $sub_category, $bulkprice, $retailprice, $photo, $photos, $enable_pos_sales)
+
+	public function MerchantAdd($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $is_used_product, $enable_pos_sales)
 	{
-		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,category,bulkprice,retailprice,selling,photo,photos,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$bulkprice','$retailprice','$retailprice','$photo','$photos','$enable_pos_sales')");
+		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,subcategory,category,bulkprice,retailprice,selling,is_used_product,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$category','$bulkprice','$retailprice','$retailprice','$is_used_product','$enable_pos_sales')");
 		return (int)$this->getLastId();
 	}
+
+
+	public function AddProductFeature($pid, $accid, $text_feature_key, $text_feature_value)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_products_features(productid,accid,feature_key,feature_value) VALUES('$pid','$accid','$text_feature_key','$text_feature_value')");
+		return (int)$this->getLastId();
+	}
+
+
+	public function RemoveProductFeature($fid)
+	{
+		mysqli_query($this->dbCon, "DELETE  golojan_products_features.* FROM golojan_products_features WHERE id='$fid'");
+		return (int)$this->countAffected();
+	}
+
+
+	public function MerchantAddProduct($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $photo, $photos, $is_used_product, $enable_pos_sales)
+	{
+		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,subcategory,category,bulkprice,retailprice,selling,photo,photos,is_used_product,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$category','$bulkprice','$retailprice','$retailprice','$photo','$photos','$is_used_product','$enable_pos_sales')");
+		return (int)$this->getLastId();
+	}
+
+	public function ProductsInfo($id, $keyname = null)
+	{
+		if ($keyname == null) {
+			$ProductInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_products WHERE id='$id'");
+			$ProductInfo = mysqli_fetch_object($ProductInfo);
+			return $ProductInfo;
+		} else {
+			$ProductInfo = mysqli_query($this->dbCon, "SELECT {$keyname} FROM golojan_products WHERE id='$id'");
+			$ProductInfo = mysqli_fetch_object($ProductInfo);
+			if (isset($ProductInfo->$keyname)) {
+				return $ProductInfo->$keyname;
+			}
+			return false;
+		}
+	}
+
+
+	public function UpdateProductInfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_products SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
 
 	public function MyProducts($accid)
 	{
@@ -2163,10 +2303,21 @@ class Core extends Model
 		return $MyProducts;
 	}
 
+	public function ProductFeatures($productid)
+	{
+		$ProductFeatures = mysqli_query($this->dbCon, "SELECT * FROM golojan_products_features WHERE productid='$productid'");
+		return $ProductFeatures;
+	}
 
-	// Merchants & Products//
 
 
+	public function AdminListProducts()
+	{
+		$AdminListProducts = mysqli_query($this->dbCon, "SELECT * FROM golojan_products");
+		return $AdminListProducts;
+	}
+
+	// Merchants & Products//	
 
 
 	//Locations
@@ -2185,21 +2336,26 @@ class Core extends Model
 		return $LocationInfo;
 	}
 
-	public function Relocation($accid)
+
+	public function Shopify($accid, $route)
 	{
-		$template = new Template;
-		$loc = (int)$this->UserInfo($accid, "location");
-		if ($loc == 0) {
-			$template->redirect("/locations/setup");
+		$loc = $this->UserInfo($accid, "location");
+		$setup = $this->StoreInfo($accid, "setup");
+
+		if ($loc != 0) {
+			if ($setup != 0) {
+				return $route;
+			} else {
+				$this->redirect("/stores/setup");
+			}
+		} else {
+			$this->redirect("/locations/setup");
 		}
-		return false;
 	}
 
 
 
 	//Bank Accounts
-
-
 	public  function Bankers($accid)
 	{
 		$Bankers = mysqli_query($this->dbCon, "SELECT * FROM golojan_bankers WHERE accid='$accid' OR slug='$slug'");
@@ -2289,9 +2445,52 @@ class Core extends Model
 	// Sales & Orders//
 	public  function UserOrders($accid, $limit = 50)
 	{
-		$UserOrders = mysqli_query($this->dbCon, "SELECT * FROM golojan_orders WHERE buyer='$accid' OR seller='$accid'");
+		$UserOrders = mysqli_query($this->dbCon, "SELECT * FROM golojan_orders WHERE buyer='$accid' OR accid='$accid'");
 		return $UserOrders;
 	}
+
+
+
+	public  function OrderInfo($id)
+	{
+		$OrderInfo = mysqli_query($this->dbCon, "SELECT * FROM golojan_orders WHERE id='$id'");
+		$OrderInfo = mysqli_fetch_object($OrderInfo);
+		return $OrderInfo;
+	}
+
+	public function SetOrderInfo($id, $key, $val)
+	{
+		mysqli_query($this->dbCon, "UPDATE golojan_orders SET $key='$val' where id='$id'");
+		return mysqli_affected_rows($this->dbCon);
+	}
+
+
+	public function OrderCommissioners($orderid)
+	{
+		$com = new stdClass;
+		$Order = $this->OrderInfo($orderid);
+		$Store = $this->StoreInfo($Order->storeid);
+		$Product = $this->Productinfo($Order->productid);
+		$com->product = $Order->productid;
+		$com->store_owner = $Store->accid;
+		$Owner = $this->UserInfo($Store->accid);
+		$com->store_owner_referrer = $Owner->referrer;
+		$Merchant = $this->UserInfo($Product->accid);
+		$com->merchant_referrer = $Merchant->referrer;
+		return $com;
+	}
+
+
+	public  function SalesLevelCommission($accid)
+	{
+		$User = $this->UserInfo($accid);
+		$_level = $User->level;
+		$Level = $this->LevelInfo($_level);
+		return $Level->commission;
+	}
+
+
+
 	// Sales & Orders//
 
 
@@ -2346,5 +2545,314 @@ class Core extends Model
 	{
 		mysqli_query($this->dbCon, "UPDATE dati_siteinfo SET value='$value' WHERE name='$name'");
 		return $this->countAffected();
+	}
+
+
+
+
+
+
+
+
+
+
+	public  function AdminListAccount()
+	{
+		$AdminListAccount = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts");
+		return $AdminListAccount;
+	}
+
+
+	public  function AdminCountAccount()
+	{
+		$AdminCountAccount = mysqli_query($this->dbCon, "SELECT count(accid) AS xcnt FROM golojan_accounts");
+		$AdminCountAccount = mysqli_fetch_object($AdminCountAccount);
+		return $AdminCountAccount->xcnt;
+	}
+
+
+	public  function MerchantCountAccount($accid)
+	{
+		$MerchantCountAccount = mysqli_query($this->dbCon, "SELECT count(accid) AS xcnt FROM golojan_accounts WHERE referrer='$accid'");
+		$MerchantCountAccount = mysqli_fetch_object($MerchantCountAccount);
+		return $MerchantCountAccount->xcnt;
+	}
+
+
+	public  function MerchantListAccounts($accid)
+	{
+		$MerchantListAccounts = mysqli_query($this->dbCon, "SELECT * FROM golojan_accounts WHERE referrer='$accid'");
+		return $MerchantListAccounts;
+	}
+
+	public  function AdminListDeposits()
+	{
+		$AdminListDeposits = mysqli_query($this->dbCon, "SELECT * FROM golojan_fundings");
+		return $AdminListDeposits;
+	}
+
+	public  function AdminCountDeposits()
+	{
+		$AdminCountDeposits = mysqli_query($this->dbCon, "SELECT count(id) AS xcnt FROM golojan_fundings");
+		$AdminCountDeposits = mysqli_fetch_object($AdminCountDeposits);
+		return $AdminCountDeposits->xcnt;
+	}
+
+	public  function AdminSumDeposits()
+	{
+		$AdminSumDeposits = mysqli_query($this->dbCon, "SELECT SUM(amount) AS xcnt FROM golojan_fundings");
+		$AdminSumDeposits = mysqli_fetch_object($AdminSumDeposits);
+		return (float)$AdminSumDeposits->xcnt;
+	}
+
+
+
+
+
+	public  function AdminListWithdrawals()
+	{
+		$AdminListWithdrawals = mysqli_query($this->dbCon, "SELECT * FROM golojan_withdrawals");
+		return $AdminListWithdrawals;
+	}
+
+	public  function AdminCountWithdrawals()
+	{
+		$AdminCountWithdrawals = mysqli_query($this->dbCon, "SELECT count(id) AS xcnt FROM golojan_withdrawals");
+		$AdminCountWithdrawals = mysqli_fetch_object($AdminCountWithdrawals);
+		return $AdminCountWithdrawals->xcnt;
+	}
+	public  function AdminSumWithdrawals()
+	{
+		$AdminSumWithdrawals = mysqli_query($this->dbCon, "SELECT SUM(amount) AS xcnt FROM golojan_withdrawals");
+		$AdminSumWithdrawals = mysqli_fetch_object($AdminSumWithdrawals);
+		return (float)$AdminSumWithdrawals->xcnt;
+	}
+
+
+
+
+
+
+	public  function AdminListTransfers()
+	{
+		$AdminListTransfers = mysqli_query($this->dbCon, "SELECT * FROM golojan_transfers");
+		return $AdminListTransfers;
+	}
+
+	public  function AdminCountTransfers()
+	{
+		$AdminCountTransfers = mysqli_query($this->dbCon, "SELECT count(id) AS xcnt FROM golojan_transfers");
+		$AdminCountTransfers = mysqli_fetch_object($AdminCountTransfers);
+		return $AdminCountTransfers->xcnt;
+	}
+	public  function AdminSumTransfers()
+	{
+		$AdminSumTransfers = mysqli_query($this->dbCon, "SELECT SUM(amount) AS xcnt FROM golojan_transfers");
+		$AdminSumTransfers = mysqli_fetch_object($AdminSumTransfers);
+		return (float)$AdminSumTransfers->xcnt;
+	}
+
+
+
+	public  function AdminListSubmissions()
+	{
+		$AdminListSubmissions = mysqli_query($this->dbCon, "SELECT * FROM golojan_merchant_submissions");
+		return $AdminListSubmissions;
+	}
+
+	public  function AdminCountSubmissions()
+	{
+		$AdminCountSubmissions = mysqli_query($this->dbCon, "SELECT count(id) AS xcnt FROM golojan_merchant_submissions");
+		$AdminCountSubmissions = mysqli_fetch_object($AdminCountSubmissions);
+		return $AdminCountSubmissions->xcnt;
+	}
+	public  function AdminSumSubmissions()
+	{
+		$AdminSumSubmissions = mysqli_query($this->dbCon, "SELECT SUM(amount) AS xcnt FROM golojan_merchant_submissions");
+		$AdminSumSubmissions = mysqli_fetch_object($AdminSumSubmissions);
+		return (float)$AdminSumSubmissions->xcnt;
+	}
+
+
+
+	public  function AdminSumWallets()
+	{
+		$AdminSumWallets = mysqli_query($this->dbCon, "SELECT SUM(open_balance + closed_balance) AS xcnt FROM golojan_wallets");
+		$AdminSumWallets = mysqli_fetch_object($AdminSumWallets);
+		return (float)$AdminSumWallets->xcnt;
+	}
+
+
+	public  function AdminSumOpenWallets()
+	{
+		$AdminSumOpenWallets = mysqli_query($this->dbCon, "SELECT SUM(open_balance) AS xcnt FROM golojan_wallets");
+		$AdminSumOpenWallets = mysqli_fetch_object($AdminSumOpenWallets);
+		return (float)$AdminSumOpenWallets->xcnt;
+	}
+
+
+
+	public  function AdminSumClosedWallets()
+	{
+		$AdminSumClosedWallets = mysqli_query($this->dbCon, "SELECT SUM(closed_balance) AS xcnt FROM golojan_wallets");
+		$AdminSumClosedWallets = mysqli_fetch_object($AdminSumClosedWallets);
+		return (float)$AdminSumClosedWallets->xcnt;
+	}
+
+
+
+
+	public  function domainExists($domain)
+	{
+		$domainExists = mysqli_query($this->dbCon, "SELECT id FROM golojan_domains WHERE domain='$domain'");
+		$domainExists = mysqli_fetch_object($domainExists);
+		if (isset($domainExists->id)) {
+			return (int)$domainExists->id;
+		}
+		return 0;
+	}
+
+
+	public  function addDomain($accid, $domain)
+	{
+		$Cpanel = new Cpanel([
+			'host'        =>  cpanel_host, // ip or domain complete with its protocol and port
+			'username'    =>  cpanel_user, // username of your server, it usually root.
+			'auth_type'   =>  'password', // set 'hash' or 'password'
+			'password'    =>  cpanel_password, // long hash or your user's password
+		]);
+		$result = $Cpanel->execute_action(
+			CPANEL_API_2,
+			'SubDomain',
+			'addsubdomain',
+			cpanel_user,
+			array(
+				'domain'        => $domain,
+				'rootdomain'    => cpanel_domain,
+				'dir'           => '/public_html',
+				'disallowdot'   => '1',
+			)
+		);
+		$result = json_decode($result);
+		$data = $result->cpanelresult->data[0];
+		$resultint = $data->result;
+		$_domain = "{$domain}." . cpanel_domain;
+		$domain_key = md5($_domain . $accid);
+		if ($resultint && !$this->domainExists($_domain)) {
+			mysqli_query($this->dbCon, "INSERT INTO golojan_domains(accid,domain,domain_key) VALUES('$accid','$_domain','$domain_key')");
+			$this->resetZone($_domain);
+		}
+		return $data->result;
+	}
+
+
+
+	public  function removeDomain($accid, $domain)
+	{
+		$Cpanel = new Cpanel([
+			'host'        =>  cpanel_host, // ip or domain complete with its protocol and port
+			'username'    =>  cpanel_user, // username of your server, it usually root.
+			'auth_type'   =>  'password', // set 'hash' or 'password'
+			'password'    =>  cpanel_password, // long hash or your user's password
+		]);
+		$result = $Cpanel->execute_action(
+			CPANEL_API_2,
+			'SubDomain',
+			'delsubdomain',
+			cpanel_user,
+			array(
+				'domain'        =>  "{$domain}." . cpanel_domain
+			)
+		);
+		$result = json_decode($result);
+		$data = $result->cpanelresult->data[0];
+		$resultint = $data->result;
+		$_domain = "{$domain}." . cpanel_domain;
+		if ($resultint) {
+			$did = $this->domainExists($_domain);
+			mysqli_query($this->dbCon, "DELETE golojan_domains.* FROM golojan_domains WHERE id='$did'");
+			$this->resetZone($_domain);
+		}
+		return $data->result;
+	}
+
+
+	public  function addZone($domain)
+	{
+		$Cpanel = new Cpanel([
+			'host'        =>  cpanel_host, // ip or domain complete with its protocol and port
+			'username'    =>  cpanel_user, // username of your server, it usually root.
+			'auth_type'   =>  'password', // set 'hash' or 'password'
+			'password'    =>  cpanel_password, // long hash or your user's password
+		]);
+		$result = $Cpanel->execute_action(
+			CPANEL_API_2,
+			'ZoneEdit',
+			'add_zone_record',
+			cpanel_user,
+			array(
+				'domain'  => $domain,
+				'name' => 'sub',
+				'type'    => 'A',
+				'address' => cpanel_ip,
+				'ttl' => '14400',
+				'class' => 'IN'
+			)
+		);
+		$result = json_decode($result);
+		$data = $result->cpanelresult->data[0];
+		$resultint = $data->result;
+		return $resultint;
+	}
+
+
+
+	public  function removeZone($domain)
+	{
+		$Cpanel = new Cpanel([
+			'host'        =>  cpanel_host, // ip or domain complete with its protocol and port
+			'username'    =>  cpanel_user, // username of your server, it usually root.
+			'auth_type'   =>  'password', // set 'hash' or 'password'
+			'password'    =>  cpanel_password, // long hash or your user's password
+		]);
+		$result = $Cpanel->execute_action(
+			CPANEL_API_2,
+			'SubDomain',
+			'delsubdomain',
+			cpanel_user,
+			array(
+				'domain'        =>  "{$domain}." . cpanel_domain,
+				'line' => '1'
+			)
+		);
+		$result = json_decode($result);
+		$data = $result->cpanelresult->data[0];
+		$resultint = $data->result;
+		return $resultint;
+	}
+
+
+
+	public  function resetZone($domain)
+	{
+		$Cpanel = new Cpanel([
+			'host'        =>  cpanel_host, // ip or domain complete with its protocol and port
+			'username'    =>  cpanel_user, // username of your server, it usually root.
+			'auth_type'   =>  'password', // set 'hash' or 'password'
+			'password'    =>  cpanel_password, // long hash or your user's password
+		]);
+		$result = $Cpanel->execute_action(
+			CPANEL_API_2,
+			'ZoneEdit',
+			'resetzone',
+			cpanel_user,
+			array(
+				'domain' =>  $domain
+			)
+		);
+		$result = json_decode($result);
+		$data = $result->cpanelresult->data[0];
+		$resultint = $data->result;
+		return $resultint;
 	}
 }

@@ -8,8 +8,17 @@ ini_set('error_reporting', E_ALL);
 if (file_exists(DOT . '/config/config.php')) {
 	include(__DIR__ . '/config/config.php');
 	require __DIR__ . '/vendor/autoload.php';
+
 	date_default_timezone_set(default_timezone);
+
 	$Route = new Apps\Route;
+	$Core = new Apps\Core;
+	$Template = new Apps\Template;
+	
+	if($Template->auth){
+		$accid = $Template->storage('accid');
+	}
+
 } else {
 	die('config.php not found!');
 }

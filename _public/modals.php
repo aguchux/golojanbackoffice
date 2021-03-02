@@ -154,9 +154,20 @@
                         <div class="form-group basic d-none" id="sub_category_box_loader"></div>
                         <div class="form-group basic" id="sub_category_box">
                             <div class="input-wrapper">
-                                <label class="label" for="subcategory_select_input">Select Sub Category</label>
-                                <select class="form-control custom-select" id="subcategory_select_input" name="sub_category">
+                                <label class="label" for="subcategory_selector_input">Select Sub Category</label>
+                                <select class="form-control custom-select" id="subcategory_selector_input" name="sub_category">
                                     <option value="">Choose Sub Category</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group basic d-none" id="rootcategory_box_loader"></div>
+
+                        <div class="form-group basic" id="rootcategory_box">
+                            <div class="input-wrapper">
+                                <label class="label" for="rootcategory_selector_input">Select Category</label>
+                                <select class="form-control custom-select" id="rootcategory_selector_input" name="root_category">
+                                    <option value="">Choose Category</option>
                                 </select>
                             </div>
                         </div>
@@ -200,96 +211,52 @@
 
                         </div>
 
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-6 col-sm-12">
+                                <ul class="listview image-listview text mb-2 m-0 p-0">
 
-                        <div class="form-group basic">
-
-                            <div class="row">
-
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 mb-2">
-                                    <div class="custom-file-upload" id="custom-file-upload-1">
-                                        <input type="file" name="productphotos[]" id="productphotos1" required aria-required="true" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="1">
-                                        <label for="productphotos1">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-1" class="text-primary">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
+                                    <li>
+                                        <div class="item">
+                                            <div class="in">
+                                                <div>
+                                                    Product is Used
+                                                    <div class="text-muted">
+                                                        Check this for used/fairly used product</strong>
                                                     </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 mb-2">
-                                    <div class="custom-file-upload" id="custom-file-upload-2">
-                                        <input type="file" name="productphotos[]" id="productphotos2" required aria-required="true" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="2">
-                                        <label for="productphotos2">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-2">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                                                    </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3">
-                                    <div class="custom-file-upload" id="custom-file-upload-3">
-                                        <input type="file" name="productphotos[]" id="productphotos3" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="3">
-                                        <label for="productphotos3">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-3">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                                                    </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3">
-                                    <div class="custom-file-upload" id="custom-file-upload-4">
-                                        <input type="file" name="productphotos[]" id="productphotos4" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="4">
-                                        <label for="productphotos4">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-4">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                                                    </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-
+                                                </div>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="is_used_product" class="custom-control-input" value="1" id="is_used_product" />
+                                                    <label class="custom-control-label" for="is_used_product"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
+                            <div class="col-12 col-md-6 col-lg-6 col-sm-12">
+                                <ul class="listview image-listview text mb-2 m-0">
 
+                                    <li>
+                                        <div class="item">
+                                            <div class="in">
+                                                <div>
+                                                    Add to Point of Sale (POS).
+                                                    <div class="text-muted">
+                                                        Your team can sell this item locally over our POS business platform.</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="enable_pos_sales" class="custom-control-input" value="1" id="enable_pos_sales" />
+                                                    <label class="custom-control-label" for="enable_pos_sales"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
 
-                        <ul class="listview image-listview text mb-2 m-0">
-
-                            <li>
-                                <div class="item">
-                                    <div class="in">
-                                        <div>
-                                            Add to Point of Sale (POS).
-                                            <div class="text-muted">
-                                                Your team can sell this item locally over our POS business platform.</strong>
-                                            </div>
-                                        </div>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="enable_pos_sales" class="custom-control-input" value="1" id="enable_pos_sales" />
-                                            <label class="custom-control-label" for="enable_pos_sales"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
 
                         <div class="form-group basic mb-5">
                             <button type="submit" class="btn btn-primary btn-block btn-lg">Submit Product</button>
