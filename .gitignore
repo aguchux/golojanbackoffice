@@ -1,5 +1,6 @@
 vendor/
 _store/
+_dkim/
 .vscode/
 config/
 composer.lock

@@ -15,14 +15,22 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
     <meta charset="utf-8" />
     <base href="<?= domain ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <title><?= $title ?></title>
     <link rel="stylesheet" href="<?= $assets ?>css/bootstrap-select.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
 
     <link rel="stylesheet" href="<?= $assets ?>css/daterangepicker.css">
-    <link rel="stylesheet" href="<?= $assets ?>css/style.css?var=<?= time() ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+
+    <?php if (isset($editproduct)) : ?>
+        <!-- include summernote css/js -->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <?php endif; ?>
+
+    <link rel="stylesheet" href="<?= $assets ?>css/style.css">
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.min.css" integrity="sha512-yye/u0ehQsrVrfSd6biT17t39Rg9kNc+vENcCXZuMz2a+LWFGvXUnYuWUW6pbfYj1jcBb/C39UZw2ciQvwDDvg==" crossorigin="anonymous" />
 
@@ -55,7 +63,7 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
     </div>
     <!-- * loader -->
 
-    
+
     <?php if ($menukey == "dashboard") : ?>
         <!-- App Header -->
         <div class="appHeader bg-primary text-light">

@@ -6,12 +6,10 @@
                 <div class="action-sheet-content">
                     <form action="/merchants/<?= $ProductInfo->id ?>/edititem" method="POST" enctype="multipart/form-data" autocomplete="off">
                         <?= $Self->tokenize() ?>
-                        <input type="hidden" name="array_of_uploaded_photos" id="array_of_uploaded_photos" value="">
-
                         <div class="form-group basic" id="main_category_box">
                             <div class="input-wrapper">
                                 <label class="label" for="maincategoryloader">Select Category</label>
-                                <select class="form-control form-control-lg custom-select text-primary" id="maincategoryloader" name="main_category">
+                                <select class="form-control form-control-lg custom-select" id="maincategoryloader" name="main_category" required aria-required="true">
                                     <?= $Core->LoadMainCategories($ProductInfo->maincategory) ?>
                                 </select>
                             </div>
@@ -20,7 +18,7 @@
                         <div class="form-group basic" id="sub_category_box">
                             <div class="input-wrapper">
                                 <label class="label" for="subcategory_selector_input">Select Sub Category</label>
-                                <select class="form-control form-control-lg custom-select text-primary" id="subcategory_selector_input" name="sub_category">
+                                <select class="form-control form-control-lg custom-select" id="subcategory_selector_input" name="sub_category" required aria-required="true">
                                     <?= $Core->LoadSubCategories($ProductInfo->maincategory, $ProductInfo->subcategory) ?>
                                 </select>
                             </div>
@@ -29,7 +27,7 @@
                         <div class="form-group basic" id="rootcategory_box">
                             <div class="input-wrapper">
                                 <label class="label" for="rootcategory_selector_input">Select Category</label>
-                                <select class="form-control form-control-lg custom-select text-primary" id="rootcategory_selector_input" name="root_category">
+                                <select class="form-control form-control-lg custom-select" id="rootcategory_selector_input" name="root_category">
                                     <?= $Core->LoadCategories($ProductInfo->subcategory, $ProductInfo->category) ?>
                                 </select>
                             </div>
@@ -40,77 +38,52 @@
                         <div class="form-group basic mt-3">
                             <label class="label" for="title">Product Title/Name (<span id="xProductTitle_counter" data-count="<?= product_title_count ?>"><?= product_title_count ?></span> chars)</label>
                             <div class="input-group mb-2">
-                                <input class="form-control form-control-lg xProductTitle text-primary" type="text" name="title" id="title" maxlength="<?= product_title_count ?>" placeholder="Product Title/Name" value="<?= $ProductInfo->name ?>">
+                                <input class="form-control form-control-lg xProductTitle" required aria-required="true" type="text" name="title" id="title" maxlength="<?= product_title_count ?>" placeholder="Product Title/Name" value="<?= $ProductInfo->name ?>">
                             </div>
                         </div>
 
                         <div class="form-group basic">
                             <label class="label" for="description">Product Description(<span id="xProductDescription_counter" data-count="<?= product_description_count ?>"><?= product_description_count ?></span> chars)</label>
                             <div class="input-group mb-2">
-                                <textarea class="form-control form-control-lg xProductDescription text-primary" name="description" id="description" maxlength="<?= product_description_count ?>" placeholder="Product Description"><?= $ProductInfo->description ?></textarea>
+                                <textarea class="form-control form-control-lg xProductDescription" required aria-required="true" name="description" id="description" maxlength="<?= product_description_count ?>" placeholder="Product Description"><?= $ProductInfo->description ?></textarea>
                             </div>
                         </div>
-
-
-                        <div class="form-group basic row">
-
-                            <div class="col-12 col-md-6 col-lg-6 col-sm-12">
-                                <div class="item">
-                                    <div class="in">
-                                        <div>
-                                            Product is Used
-                                            <div class="text-muted">
-                                                Check this for used/fairly used product</strong>
-                                            </div>
-                                        </div>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="is_used_product" class="custom-control-input" value="1" id="is_used_product" <?= $ProductInfo->is_used_product ? 'checked' : ''  ?> />
-                                            <label class="custom-control-label" for="is_used_product"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6 col-lg-6 col-sm-12">
-                                <div class="item">
-                                    <div class="in">
-                                        <div>
-                                            Add to Point of Sale (POS).
-                                            <div class="text-muted">
-                                                Your team can sell this item locally over our POS business platform.</strong>
-                                            </div>
-                                        </div>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="enable_pos_sales" class="custom-control-input" value="1" id="enable_pos_sales" <?= $ProductInfo->enable_pos_sales ? 'checked' : ''  ?> />
-                                            <label class="custom-control-label" for="enable_pos_sales"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-
 
 
                         <div class="form-group basic">
 
                             <div class="row">
-                                <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
+                                <div class="col-12 col-md-4 col-sm-12 col-xs-12 col-lg-4">
                                     <label class="label" for="bulkprice">Bulk Price</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="bulkpriceinput"><?= $LocationInfo->currency_code ?></span>
                                         </div>
-                                        <input type="number" class="form-control form-control-lg text-primary" name="bulkprice" placeholder="0" value="<?= $ProductInfo->bulkprice ?>">
+                                        <input type="number" class="form-control form-control-lg" required aria-required="true" id="bulkprice" name="bulkprice" data-markup="<?= retail_markup_rate ?>" placeholder="0" value="<?= $ProductInfo->bulkprice ?>">
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
-                                    <label class="label" for="retailprice">Retail Price</label>
+
+                                <div class="col-12 col-md-4 col-sm-12 col-xs-12 col-lg-4 py-3">
+                                    <div class="item">
+                                        <div class="in">
+                                            <div>
+                                                Charge VAT (<?= system_vat_rate ?>%)?
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" name="charge_vat" class="custom-control-input" value="1" id="charge_vat" <?= $ProductInfo->charge_vat?'checked':'' ?> />
+                                                <label class="custom-control-label" for="charge_vat"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4 col-sm-12 col-xs-12 col-lg-4">
+
+                                    <label class="label" for="retailprice">Retail Price (<strong><?= retail_markup_rate ?>% Markup</strong>)</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="retailpriceinput"><?= $LocationInfo->currency_code ?></span>
                                         </div>
-                                        <input type="number" class="form-control form-control-lg text-primary" name="retailprice" placeholder="0" value="<?= $ProductInfo->retailprice ?>">
+                                        <input type="number" class="form-control form-control-lg" required aria-required="true" id="retailprice" name="retailprice" data-markup="<?= retail_markup_rate ?>" placeholder="0" value="<?= $ProductInfo->retailprice ?>">
                                     </div>
                                 </div>
                             </div>
@@ -120,66 +93,32 @@
 
                         <div class="form-group basic">
 
-                            <div class="row">
+                            <div class="row" id="uploaded_images">
 
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 mb-2">
-                                    <div class="custom-file-upload" id="custom-file-upload-1">
-                                        <input type="file" name="productphotos[0]" id="productphotos1" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="1">
-                                        <label for="productphotos1" style="background-image: url(<?= $ProductInfo->photo_0  ?>);no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-1" class="text-primary">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                                                    </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
+                                <?php for ($i = 0; $i < $CountPhotos; $i++) : ?>
+                                    <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 my-1  alert-dismissible" role="alert" id="uploaded_images-<?= $i ?>">
+                                        <a href="#" type="button" class="close text-primary RemovexProductPhotoUploaderDiv" style="z-index: 20000;" aria-label="Close">
+                                            <ion-icon name="close-outline" size="large"></ion-icon>
+                                        </a>
+                                        <div class="custom-file-upload" id="custom-file-upload-<?= $i ?>">
+                                            <input type="hidden" value="<?= $Photos[$i] ?>" name="array_of_uploaded_photos[]" id="array_of_uploaded_photos" hidden>
+                                            <input type="file" name="productphotos[<?= $Photos[$i] ?>]" id="productphotos<?= $i ?>" accept=".png, .jpg, .jpeg" class="ProductPhotoUploader" tabindex="<?= $i ?>">
+                                            <label for=" productphotos<?= $i ?>" style="background-image:url(<?= $Photos[$i] ?>)" class="file-uploaded"><span>Photo <?= $i ?></span></label>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endfor; ?>
 
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 mb-2">
-                                    <div class="custom-file-upload" id="custom-file-upload-2">
-                                        <input type="file" name="productphotos[1]" id="productphotos2" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="2">
-                                        <label for="productphotos2" style="background-image: url(<?= $ProductInfo->photo_1  ?>);no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">
+
+                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 my-1" id="xProductPhotoUploaderDiv">
+                                    <div class="custom-file-upload" id="custom-file-upload-<?= $CountPhotos ?>">
+                                        <input type="file" name="productpho" id="productphotos<?= $CountPhotos ?>" class="xProductPhotoUploader" accept=".png, .jpg, .jpeg" tabindex="<?= $CountPhotos ?>">
+                                        <label for="productphotos<?= $CountPhotos ?>">
                                             <span>
                                                 <strong>
-                                                    <div id="xActivityLoader-2">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
+                                                    <div id="MainxActivityLoader" class="xActivityLoader">
+                                                        <ion-icon name="add-outline"></ion-icon>
                                                     </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3">
-                                    <div class="custom-file-upload" id="custom-file-upload-3">
-                                        <input type="file" name="productphotos[2]" id="productphotos3" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="3">
-                                        <label for="productphotos3" style="background-image: url(<?= $ProductInfo->photo_2  ?>);no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-3">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                                                    </div>
-                                                    <i>Upload a Picture</i>
-                                                </strong>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3">
-                                    <div class="custom-file-upload" id="custom-file-upload-4">
-                                        <input type="file" name="productphotos[3]" id="productphotos4" accept=".png, .jpg, .jpeg" class="xProductPhotoUploader" tabindex="4">
-                                        <label for="productphotos4" style="background-image: url(<?= $ProductInfo->photo_3  ?>);no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">
-                                            <span>
-                                                <strong>
-                                                    <div id="xActivityLoader-4">
-                                                        <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                                                    </div>
-                                                    <i>Upload a Picture</i>
+                                                    <i>Add New Photo</i>
                                                 </strong>
                                             </span>
                                         </label>
@@ -189,6 +128,113 @@
                             </div>
 
                         </div>
+
+
+
+
+                        <div class="form-group basic">
+
+                            <div class="row">
+                                <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
+                                    <label class="label" for="suplier_sku">Supplier SKU#</label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">SKU#</span>
+                                        </div>
+                                        <input type="text" class="form-control form-control-lg" required aria-required="true" id="suplier_sku" name="suplier_sku">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
+                                    <label class="label" for="product_type">Product Type (Physical/Digital)</label>
+                                    <div class="input-group mb-2">
+                                        <select class="form-control form-control-lg" required aria-required="true" name="product_type" id="product_type">
+                                            <option value="">Select Type</option>
+                                            <option value="physical">Physical</option>
+                                            <option value="physical">Digital (Downloadable)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-6 col-sm-12">
+                                <ul class="listview image-listview text mb-2 m-0 p-0">
+
+                                    <li>
+                                        <div class="item">
+                                            <div class="in">
+                                                <div>
+                                                    Product is Used
+                                                    <div class="text-muted">
+                                                        Check this for used/fairly used product
+                                                    </div>
+                                                </div>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="is_used_product" class="custom-control-input" value="1" id="is_used_product" <?= $ProductInfo->is_used_product?'checked':'' ?> />
+                                                    <label class="custom-control-label" for="is_used_product"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-6 col-sm-12">
+                                <ul class="listview image-listview text mb-2 m-0">
+
+                                    <li>
+                                        <div class="item">
+                                            <div class="in">
+                                                <div>
+                                                    Add to Point of Sale (POS).
+                                                    <div class="text-muted">
+                                                        Your team can sell this item locally over our POS business platform.
+                                                    </div>
+                                                </div>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" name="enable_pos_sales" class="custom-control-input" value="1" id="enable_pos_sales" <?= $ProductInfo->enable_pos_sales?'checked':'' ?> />
+                                                    <label class="custom-control-label" for="enable_pos_sales"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group basic">
+
+                            <div class="row">
+
+                                <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
+                                    <label class="label" for="product_type">Select Brand (if any)</label>
+                                    <div class="input-group mb-2">
+                                        <select class="form-control form-control-lg" name="product_brand" id="product_brand">
+                                            <?= $Core->ListBrandsToSelect() ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
+                                    <label class="label" for="product_weight">Shipping Weight (kg)</label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">(kg)</span>
+                                        </div>
+                                        <input type="number" class="form-control form-control-lg" required aria-required="true" id="product_weight" name="product_weight" placeholder="0" step="0.1" min="0" max="1000">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
 
                         <div class="form-group basic">
                             <hr class="my-2 p-0" />
