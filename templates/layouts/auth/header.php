@@ -23,10 +23,8 @@ $LocationInfo = $Core->LocationInfo($UserInfo->location);
 
     <link rel="stylesheet" href="<?= $assets ?>css/daterangepicker.css">
 
-    <?php if (isset($editproduct)) : ?>
-        <!-- include summernote css/js -->
-        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <?php endif; ?>
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $assets ?>css/style.css">
 

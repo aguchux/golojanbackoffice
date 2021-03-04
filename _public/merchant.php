@@ -201,8 +201,10 @@ $Route->add('/merchants/sellitem', function () {
     $added = $Core->MerchantAdd($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $is_used_product, $enable_pos_sales,$product_brand,$product_weight,$suplier_sku,$product_type,$charge_vat);
 
     if ($added) {
-        $Template->redirect("/dashboard/merchant/products/{$added}/add");
+        $Template->redirect("/dashboard/merchant/products/{$added}/edit");
     }
+    $Template->redirect("/dashboard/merchant/products");
+
 }, 'POST');
 
 
@@ -264,8 +266,12 @@ $Route->add('/merchants/{pid}/edititem', function ($pid) {
 
     $title = $data->title;
     $Core->UpdateProductInfo($pid, "name", $title);
+    
     $description = $data->description;
     $Core->UpdateProductInfo($pid, "description", $description);
+    
+    $long_description = $data->long_description;
+    $Core->UpdateProductInfo($pid, "long_description", $long_description);
 
     $is_used_product = 0;
     if (isset($data->is_used_product)) {
@@ -304,7 +310,7 @@ $Route->add('/merchants/{pid}/edititem', function ($pid) {
 
     $product_weight = $data->product_weight;
     $Core->UpdateProductInfo($pid, "product_weight", $product_weight);
-    
+
 
     $Template->redirect("/dashboard/merchant/products/{$pid}/edit");
 
