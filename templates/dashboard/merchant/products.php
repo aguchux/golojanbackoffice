@@ -14,16 +14,6 @@
             </div>
         </div>
         <!-- * Balance -->
-        <!-- Wallet Footer -->
-        <div class="wallet-footer row">
-            <div class="form-group col-12">
-                <h3 class="title col-12">Select by Category</h3>
-                <select class="form-control" style="width: 100%; font-size:20px" id="LoadMyCategories">
-                    <?= $Core->LoadMyCategories($UserInfo->accid) ?>
-                </select>
-            </div>
-        </div>
-        <!-- * Wallet Footer -->
     </div>
 </div>
 <!-- Wallet Card -->
@@ -41,12 +31,12 @@
             </thead>
             <tbody>
                 <?php while ($product = mysqli_fetch_object($MyProducts)) :
-                    $Category = $Core->CategoryInfo($product->category);
+                    $Category = $Core->CategoryInfo($product->subcategory);
                 ?>
                     <tr>
                         <th scope="row">
                             <div class="media left mr-2">
-                                <img style="width:100px" src="<?= $product->photo ?>">
+                                <img style="width:200px; margin:0 auto;" src="<?= $product->photo ?>">
                             </div>
                         </th>
                         <th scope="row">

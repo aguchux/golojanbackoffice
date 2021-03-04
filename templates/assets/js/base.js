@@ -653,7 +653,23 @@ $(function () {
     });
 });
 
+$(function () {
+    
+    $('.summernote').summernote({
+        height: 150,   //set editable area's height
+        codemirror: { // codemirror options
+            theme: 'monokai'
+        }
+    });
 
+    $('.longsummernote').summernote({
+        height: 300,   //set editable area's height
+        codemirror: { // codemirror options
+            theme: 'monokai'
+        }
+    });
+    
+});
 
 $(function () {
     $('#LoadWarehouseCategories').on("change", function (e) {

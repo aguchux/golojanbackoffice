@@ -48,14 +48,7 @@
             window.iti = iti;
         </script>
 
-        <?php if (isset($editproduct)) : ?>
-            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $('.summernote').summernote();
-                });
-            </script>
-        <?php endif; ?>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
         <script src="<?= $assets ?>js/base.js?vers=<?= time() ?>"></script>
 

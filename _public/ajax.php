@@ -175,6 +175,7 @@ $Route->add('/ajax/profile/upload', function () {
         $handle->process($FileDir);
         if ($handle->processed) {
             $img_url =  $handle->file_dst_pathname;
+            $img_url =  domain . ltrim($img_url,"./");
             $handle->clean();
             $result['done'] = 1;
             $result['image'] = $img_url;
@@ -206,14 +207,15 @@ $Route->add('/ajax/products/photos/upload', function () {
         $handle->dir_chmod = 0777;
         $handle->image_resize    = true;
         $handle->image_ratio_crop = true;
-        $handle->image_y    =  500;
-        $handle->image_x    =  500;
+        $handle->image_y    =  350;
+        $handle->image_x    =  350;
         $handle->image_convert = 'jpg';
         $handle->image_ratio = true;
 
         $handle->process($FileDir);
         if ($handle->processed) {
             $img_url =  $handle->file_dst_pathname;
+            $img_url =  domain . ltrim($img_url,"./");
             $result['done'] = 1;
             $result['image'] = $img_url;
             $handle->clean();
@@ -524,41 +526,3 @@ $Route->add('/ajax/products/feature/{fid}/remove', function ($fid) {
     $Template->debug($removed);
 }, 'POST');
 
-
-
-
-
-
-
-$Route->add('/ajax/photos/{pid}/massupload', function ($pid) {
-
-    $Template = new Apps\Template("/auth/login");
-
-    $FileDir = "./_store/products/{$pid}/uploads";
-
-    $handle = new \Verot\Upload\Upload($_FILES['imagefile']);
-    if ($handle->uploaded) {
-
-        $handle->file_new_name_body = sha1($_FILES['imagefile']['name'] .  time());
-
-        $handle->dir_auto_create = true;
-        $handle->image_resize    = true;
-        $handle->image_ratio_crop = true;
-        $handle->image_y    =  500;
-        $handle->image_x    =  500;
-
-        $handle->file_overwrite = true;
-        $handle->dir_chmod = 0777;
-        $handle->image_ratio = true;
-
-        $handle->process($FileDir);
-        if ($handle->processed) {
-            $img_url =  $handle->file_dst_pathname;
-            $handle->clean();
-            echo $img_url;
-        } else {
-            echo 'FAILED';
-        }
-        echo 'FAILED';
-    }
-}, 'GET');

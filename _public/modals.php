@@ -10,7 +10,7 @@
                     <form action="/payments/addfund" method="POST" enctype="multipart/form-data" autocomplete="off">
                         <?= $Self->tokenize() ?>
                         <div class="form-group basic">
-                            <label class="label" for="amount">Enter Amount</label>
+                            <label class="h5" for="amount">Enter Amount</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="amount"><?= $LocationInfo->currency_code ?></span>
@@ -21,7 +21,7 @@
 
                         <div class="form-group basic">
                             <div class="input-wrapper">
-                                <label class="label" for="method">Select Payment Method</label>
+                                <label class="h5" for="method">Select Payment Method</label>
                                 <select class="form-control custom-select" id="method" name="method">
                                     <option value="paystack">Online Payment (Instant)</option>
                                 </select>
@@ -53,7 +53,7 @@
                     <form action="/payments/withdrawfund" method="POST" enctype="multipart/form-data" autocomplete="off">
                         <?= $Self->tokenize() ?>
                         <div class="form-group basic">
-                            <label class="label" for="amount">Enter Amount</label>
+                            <label class="h5" for="amount">Enter Amount</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="amount"><?= $LocationInfo->currency_code ?></span>
@@ -64,7 +64,7 @@
 
                         <div class="form-group basic">
                             <div class="input-wrapper">
-                                <label class="label" for="method">Destination Account</label>
+                                <label class="h5" for="method">Destination Account</label>
                                 <select required aria-required="true" class="form-control custom-select" id="account" name="account">
                                     <option value=""> - Select Account - </option>
                                     <?= $Core->LoadAccountsToSelect($UserInfo->accid) ?>
@@ -98,7 +98,7 @@
                         <?= $Self->tokenize() ?>
 
                         <div class="form-group basic">
-                            <label class="label" for="receipient_id">Receipient Account</label>
+                            <label class="h5" for="receipient_id">Receipient Account</label>
                             <input type="text" style="font-size:200%;" class="form-control form-control-lg" pattern="\d*" id="receipient_id" name="receipient" placeholder="Reciepient's ID">
                             <i class="clear-input">
                                 <ion-icon name="person-outline"></ion-icon>
@@ -110,7 +110,7 @@
 
                         </div>
                         <div class="form-group basic">
-                            <label class="label">Enter Amount</label>
+                            <label class="h5">Enter Amount</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="amount_on_transfer"><?= $LocationInfo->currency_code ?></span>
@@ -147,7 +147,7 @@
                         <input type="hidden" name="array_of_uploaded_photos" id="array_of_uploaded_photos" value="">
                         <div class="form-group basic" id="main_category_box">
                             <div class="input-wrapper">
-                                <label class="label" for="maincategoryloader">Select Category</label>
+                                <label class="h5" for="maincategoryloader">Select Category</label>
                                 <select class="form-control custom-select" id="maincategoryloader" name="main_category" required aria-required="true">
                                     <?= $Core->LoadMainCategories() ?>
                                 </select>
@@ -156,7 +156,7 @@
                         <div class="form-group basic d-none" id="sub_category_box_loader"></div>
                         <div class="form-group basic" id="sub_category_box">
                             <div class="input-wrapper">
-                                <label class="label" for="subcategory_selector_input">Select Sub Category</label>
+                                <label class="h5" for="subcategory_selector_input">Select Sub Category</label>
                                 <select class="form-control custom-select" id="subcategory_selector_input" name="sub_category" required aria-required="true">
                                     <option value="">Choose Sub Category</option>
                                 </select>
@@ -167,7 +167,7 @@
 
                         <div class="form-group basic" id="rootcategory_box">
                             <div class="input-wrapper">
-                                <label class="label" for="rootcategory_selector_input">Select Category</label>
+                                <label class="h5" for="rootcategory_selector_input">Select Category</label>
                                 <select class="form-control custom-select" id="rootcategory_selector_input" name="root_category">
                                     <option value="">Choose Category</option>
                                 </select>
@@ -176,24 +176,30 @@
 
 
                         <div class="form-group basic mt-3">
-                            <label class="label" for="title">Product Title/Name (<span id="xProductTitle_counter" data-count="<?= product_title_count ?>"><?= product_title_count ?></span> chars)</label>
-                            <div class="input-group mb-2">
-                                <input class="form-control xProductTitle" type="text" name="title" id="title" maxlength="<?= product_title_count ?>" placeholder="Product Title/Name" required aria-required="true">
+                            <div class="row">
+                                <div class="col-12 col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                                    <label class="h5" for="title">Product Title/Name (<span id="xProductTitle_counter" data-count="<?= product_title_count ?>"><?= product_title_count ?></span> chars)</label>
+                                    <div class="input-group mb-2">
+                                        <input class="form-control xProductTitle w-100" type="text" name="title" id="title" maxlength="<?= product_title_count ?>" placeholder="Product Title/Name" required aria-required="true">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group basic">
-                            <label class="label" for="description">Product Short Description(<span id="xProductDescription_counter" data-count="<?= product_short_description_count ?>"><?= product_short_description_count ?></span> chars)</label>
-                            <div class="input-group mb-2">
-                                <textarea class="form-control xProductDescription summernote" name="description" id="description" maxlength="<?= product_short_description_count ?>" placeholder="Product Description" required aria-required="true"></textarea>
+                            <div class="row">
+                                <div class="col-12 col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                                    <label class="h5" for="description">Product Short Description(<span id="xProductDescription_counter" data-count="<?= product_short_description_count ?>"><?= product_short_description_count ?></span> chars)</label>
+                                    <textarea class="form-control xProductDescription w-100" style="width: 100%;" name="description" id="description" maxlength="<?= product_short_description_count ?>" placeholder="Product Short Description" required aria-required="true"></textarea>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group basic">
 
                             <div class="row">
-                            <div class="col-12 col-md-4 col-sm-12 col-xs-12 col-lg-4">
-                                    <label class="label" for="bulkprice">Bulk Price</label>
+                                <div class="col-12 col-md-4 col-sm-12 col-xs-12 col-lg-4">
+                                    <label class="h5" for="bulkprice">Bulk Price</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="bulkpriceinput"><?= $LocationInfo->currency_code ?></span>
@@ -215,7 +221,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4 col-sm-12 col-xs-12 col-lg-4">
-                                    <label class="label" for="retailprice">Retail Price (<strong><?= retail_markup_rate ?>% Markup</strong>)</label>
+                                    <label class="h5" for="retailprice">Retail Price (<strong><?= retail_markup_rate ?>% Markup</strong>)</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="retailpriceinput"><?= $LocationInfo->currency_code ?></span>
@@ -232,7 +238,7 @@
 
                             <div class="row">
                                 <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
-                                    <label class="label" for="suplier_sku">Supplier SKU#</label>
+                                    <label class="h5" for="suplier_sku">Supplier SKU#</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">SKU#</span>
@@ -241,12 +247,13 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
-                                    <label class="label" for="product_type">Product Type (Physical/Digital)</label>
+                                    <label class="h5" for="product_type">Product Type (Physical/Digital)</label>
                                     <div class="input-group mb-2">
                                         <select class="form-control form-control-lg" required aria-required="true" name="product_type" id="product_type">
                                             <option value="">Select Type</option>
                                             <option value="physical">Physical</option>
-                                            <option value="physical">Digital (Downloadable)</option>
+                                            <option value="digital">Digital (Downloadable)</option>
+                                            <option value="services">Services/Artisans</option>
                                         </select>
                                     </div>
                                 </div>
@@ -307,7 +314,7 @@
                             <div class="row">
 
                                 <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
-                                    <label class="label" for="product_type">Select Brand (if any)</label>
+                                    <label class="h5" for="product_type">Select Brand (if any)</label>
                                     <div class="input-group mb-2">
                                         <select class="form-control form-control-lg" name="product_brand" id="product_brand">
                                             <?= $Core->ListBrandsToSelect() ?>
@@ -316,7 +323,7 @@
                                 </div>
 
                                 <div class="col-12 col-md-6 col-sm-6 col-xs-2 col-lg-6">
-                                    <label class="label" for="product_weight">Shipping Weight (kg)</label>
+                                    <label class="h5" for="product_weight">Shipping Weight (kg)</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">(kg)</span>
