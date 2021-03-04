@@ -71,9 +71,12 @@ $Route->add('/dashboard/merchant/products/{pid}/add', function ($pid) {
     $Template->assign("ProductInfo", $ProductInfo);
     $Template->assign("ProductFeatures", $Core->ProductFeatures($pid));
 
-    $Photos = $ProductInfo->photos;
-    $Photos = json_decode($Photos);
+    $Photos = json_decode($ProductInfo->photos);
     $Template->assign("Photos", $Photos);
+    $CountPhotos = count($Photos);
+    $Template->assign("CountPhotos",  $CountPhotos);
+
+    $Template->assign("editproduct",  true);
 
     $Template->assign("menukey", "Product: {$ProductInfo->id}");
     $Template->render("dashboard.{$root}.add-product");
@@ -97,6 +100,17 @@ $Route->add('/dashboard/merchant/products/{pid}/edit', function ($pid) {
     $ProductInfo = $Core->ProductInfo($pid);
     $Template->assign("ProductInfo", $ProductInfo);
     $Template->assign("ProductFeatures", $Core->ProductFeatures($pid));
+
+    $Photos = json_decode($ProductInfo->photos);
+
+    //$Template->debug($Photos);
+
+    $Template->assign("Photos", $Photos);
+    $CountPhotos = count($Photos);
+    $Template->assign("CountPhotos",  $CountPhotos);
+
+    $Template->assign("ProductFeatures", $Core->ProductFeatures($pid));
+    $Template->assign("editproduct",  true);
 
     $Template->assign("menukey", "Product: {$ProductInfo->id}");
     $Template->render("dashboard.{$root}.edit-product");
@@ -155,16 +169,18 @@ $Route->add('/merchants/sellitem', function () {
     $Template = new Apps\Template("/auth/login");
     $accid = $Template->storage("accid");
     $data = $Core->post($_POST);
+    
     $main_category = $data->main_category;
     $sub_category = $data->sub_category;
     $category = $data->root_category;
+
     $title = $data->title;
     $description = $data->description;
-    $is_used_product = 0;
 
     $bulkprice = $data->bulkprice;
     $retailprice = $data->retailprice;
 
+    $is_used_product = 0;
     if (isset($data->is_used_product)) {
         $is_used_product = $data->is_used_product;
     }
@@ -172,7 +188,17 @@ $Route->add('/merchants/sellitem', function () {
     if (isset($data->enable_pos_sales)) {
         $enable_pos_sales = $data->enable_pos_sales;
     }
-    $added = $Core->MerchantAdd($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $is_used_product, $enable_pos_sales);
+    $charge_vat = 0;
+    if (isset($data->charge_vat)) {
+        $charge_vat = $data->charge_vat;
+    }
+    $product_brand = $data->product_brand;
+    $product_weight = $data->product_weight;
+    $suplier_sku = $data->suplier_sku;
+    $product_type = $data->product_type;
+
+
+    $added = $Core->MerchantAdd($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $is_used_product, $enable_pos_sales,$product_brand,$product_weight,$suplier_sku,$product_type,$charge_vat);
 
     if ($added) {
         $Template->redirect("/dashboard/merchant/products/{$added}/add");
@@ -199,7 +225,7 @@ $Route->add('/merchants/{pid}/submitproduct', function ($pid) {
     $Template = new Apps\Template("/auth/login");
     $accid = $Template->storage("accid");
     //Makesure Delete will not affect other datase resources//
-    $submitted = $Core->SubmitProduct($accid,$pid);
+    $submitted = $Core->SubmitProduct($accid, $pid);
     //Makesure Delete will not affect other datase resources//
     if ($submitted) {
         $Template->redirect("/dashboard/merchant/products/{$pid}/submit");
@@ -215,6 +241,8 @@ $Route->add('/merchants/{pid}/edititem', function ($pid) {
     $accid = $Template->storage("accid");
     $data = $Core->post($_POST);
 
+    $ProductInfo = $Core->ProductInfo($pid);
+        
     $main_category = $data->main_category;
     $Core->UpdateProductInfo($pid, "maincategory", $main_category);
 
@@ -224,18 +252,11 @@ $Route->add('/merchants/{pid}/edititem', function ($pid) {
     $root_category = $data->root_category;
     $Core->UpdateProductInfo($pid, "category", $root_category);
 
-    $array_of_uploaded_photos = $data->array_of_uploaded_photos;
-    $photos = trim($array_of_uploaded_photos, ",");
-    $photos = explode(",", $photos);
+    $photos = $data->array_of_uploaded_photos;
 
     $photo_count = (int)count($photos);
     if ($photo_count) {
-        foreach ($photos as $index => $pho) {
-            if (strlen($pho) > 40) {
-                $Core->UpdateProductInfo($pid, "photo_{$index}", $pho);
-            }
-        }
-        $photo = $photos[array_rand($photos)];
+        $photo = $photos[0];
         $photos = json_encode($photos);
         $Core->UpdateProductInfo($pid, "photos", $photos);
         $Core->UpdateProductInfo($pid, "photo", $photo);
@@ -257,65 +278,38 @@ $Route->add('/merchants/{pid}/edititem', function ($pid) {
         $enable_pos_sales = $data->enable_pos_sales;
     }
     $Core->UpdateProductInfo($pid, "enable_pos_sales", $enable_pos_sales);
+    
 
     $bulkprice = $data->bulkprice;
     $Core->UpdateProductInfo($pid, "bulkprice", $bulkprice);
+
+    $charge_vat = 0;
+    if (isset($data->charge_vat)) {
+        $charge_vat = $data->charge_vat;
+    }
+    $Core->UpdateProductInfo($pid, "charge_vat", $charge_vat);
+
     $retailprice = $data->retailprice;
     $Core->UpdateProductInfo($pid, "retailprice", $retailprice);
 
+
+    $suplier_sku = $data->suplier_sku;
+    $Core->UpdateProductInfo($pid, "suplier_sku", $suplier_sku);
+
+    $product_type = $data->product_type;
+    $Core->UpdateProductInfo($pid, "product_type", $product_type);
+
+    $product_brand = $data->product_brand;
+    $Core->UpdateProductInfo($pid, "product_brand", $product_brand);
+
+    $product_weight = $data->product_weight;
+    $Core->UpdateProductInfo($pid, "product_weight", $product_weight);
+    
 
     $Template->redirect("/dashboard/merchant/products/{$pid}/edit");
+
 }, 'POST');
 
 
 
-
-
-$Route->add('/merchants/{pid}/sellitem', function ($pid) {
-    
-    $Core = new Apps\Core;
-    $Template = new Apps\Template("/auth/login");
-    $data = $Core->post($_POST);
-
-    $array_of_uploaded_photos = $data->array_of_uploaded_photos;
-    $photos = trim($array_of_uploaded_photos, ",");
-    $photos = explode(",", $photos);
-
-    $photo_count = (int)count($photos);
-    if ($photo_count) {
-        foreach ($photos as $index => $pho) {
-            if (strlen($pho) > 40) {
-                $Core->UpdateProductInfo($pid, "photo_{$index}", $pho);
-            }
-        }
-        $photo = $photos[array_rand($photos)];
-        $photos = json_encode($photos);
-        $Core->UpdateProductInfo($pid, "photos", $photos);
-        $Core->UpdateProductInfo($pid, "photo", $photo);
-    }
-
-    $title = $data->title;
-    $Core->UpdateProductInfo($pid, "name", $title);
-    $description = $data->description;
-    $Core->UpdateProductInfo($pid, "description", $description);
-
-    $is_used_product = 0;
-    if (isset($data->is_used_product)) {
-        $is_used_product = $data->is_used_product;
-    }
-    $Core->UpdateProductInfo($pid, "is_used_product", $is_used_product);
-
-    $enable_pos_sales = 0;
-    if (isset($data->enable_pos_sales)) {
-        $enable_pos_sales = $data->enable_pos_sales;
-    }
-    $Core->UpdateProductInfo($pid, "enable_pos_sales", $enable_pos_sales);
-
-    $bulkprice = $data->bulkprice;
-    $Core->UpdateProductInfo($pid, "bulkprice", $bulkprice);
-    $retailprice = $data->retailprice;
-    $Core->UpdateProductInfo($pid, "retailprice", $retailprice);
-
-    $Template->redirect("/dashboard/merchant/products");
-}, 'POST');
 

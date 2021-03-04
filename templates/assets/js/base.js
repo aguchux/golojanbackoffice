@@ -1,19 +1,28 @@
 
-///////////////////////////////////////////////////////////////////////////
-// Loader
-$(document).ready(function () {
-    setTimeout(() => {
-        $("#loader").fadeToggle(250);
-    }, 800); // hide delay when page load
+
+$(function () {
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Loader
+    $(document).ready(function () {
+        setTimeout(() => {
+            $("#loader").fadeToggle(250);
+        }, 800); // hide delay when page load
+    });
+    ///////////////////////////////////////////////////////////////////////////
+
+
 });
-///////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////////////////////////////////////
-// Go Back
-$(".goBack").click(function (e) {
-    e.preventDefault ? e.preventDefault() : e.returnValue = false;
-    window.history.go(-1);
+$(function () {
+    ///////////////////////////////////////////////////////////////////////////
+    // Go Back
+    $(".goBack").click(function (e) {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+        window.history.go(-1);
+    });
+
 });
 
 
@@ -42,35 +51,6 @@ $(function () {
     });
 
 });
-///////////////////////////////////////////////////////////////////////////
-/*
-$(function () {
-
-    $('button.ajax').on("click", function (e) {
-        if ( $(this).hasClass('ajax') ) {
-            e.preventDefault();
-            var _fom = $(this).closest("form");
-            var _url =_fom.attr('action');
-            $.ajax(_url, {
-                type: 'post',
-                data: _fom.serialize(),
-                contentType: false,
-                processData: false,
-                async: true,
-                success: function (data, status, xhr) {
-                    var jData = JSON.parse(data);
-                    alert(jData.status);
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert(jData.errorMessage);
-                }
-            });
-        }
-    });
-
-});
-*/
-
 
 
 
@@ -89,6 +69,19 @@ $(function () {
 
 
 
+$(function () {
+
+    $('#bulkprice').on("input", function (e) {
+
+        let txt = $(this).val();
+        let markup = $(this).data('markup');
+        let percent = parseFloat((markup / 100) * txt);
+        let retail_text = parseFloat(txt) + percent;
+        $('#retailprice').val(parseFloat(retail_text));
+
+    });
+
+});
 
 
 $(function () {
@@ -323,6 +316,7 @@ $(function () {
     });
 });
 
+
 $(function () {
     $('#MagicUploaderBtn').click(function (e) {
         $('#MagicUploader').trigger("click");
@@ -509,20 +503,31 @@ $(function () {
 
 
 
+$(function () {
+    $('body').on('click', '.RemovexProductPhotoUploaderDiv', function () {
+        $(this).parent().remove();
+        //if ($('.uploaded_image').length >= max_uploads) {
+        //$('#select_file').hide();
+        //} else {
+        // $('#select_file').show();
+        //}
+    });
+});
+
+//$('body').on('click', '.xDeleteFeature', function (event) {
 ///////////////////////////////////////////////////////////////////////////
+
 $(function () {
 
     let array_of_uploaded_photos = [];
     array_of_uploaded_photos.splice(0, array_of_uploaded_photos.length);
 
     $('.xProductPhotoUploader').each(function (i, $fileUpload) {
+
         // Refs
         var $fileUpload = $(this),
-            $filelabel = $fileUpload.next('label'),
-            $filelabelText = $filelabel.find('span'),
-            filelabelDefault = $filelabelText.text(),
-            tabindex = $fileUpload.attr("tabindex");
-
+            tabindex = parseInt($fileUpload.attr("tabindex")),
+            newtabindex = ++tabindex;
         $fileUpload.on('change', function (event) {
 
             var name = $fileUpload.val().split('\\').pop(),
@@ -539,31 +544,27 @@ $(function () {
                 processData: false,
                 async: true,
                 beforeSend: function () {
-                    $("#xActivityLoader-" + tabindex).html("<div class=\"spinner-grow text-primary\" role=\"status\"></div>");
+                    $("#MainxActivityLoader").html("<div class=\"spinner-grow text-primary\" role=\"status\"></div>");
                 },
                 success: function (data, status, xhr) {
                     let jDATA = JSON.parse(data);
                     let doneInt = parseInt(jDATA.done);
                     let doneUrl = (jDATA.image).toString();
                     if (doneInt) {
-                        array_of_uploaded_photos[tabindex] = doneUrl;
-                        $filelabel
-                            .addClass('file-uploaded')
-                            .css('background-image', 'url(' + tmppath + ')');
-                        $filelabelText.text(name);
-                        $("#array_of_uploaded_photos").val(array_of_uploaded_photos);
+                        $('#xProductPhotoUploaderDiv').before('<div class="col-6 col-md-3 col-sm-6 col-xs-6 col-lg-3 my-1  alert-dismissible" role="alert" id="uploaded_images-' + newtabindex + '"><a href="javascript:;" type="button" class="close text-white RemovexProductPhotoUploaderDiv" data-dismiss="alert" style="z-index: 20000;" data-bs-dismiss="alert" aria-label="Close"><ion-icon name="close-outline" size="large"></ion-icon></a><div class="custom-file-upload" id="custom-file-upload-' + newtabindex + '"><input type="hidden" value="' + doneUrl + '" name="array_of_uploaded_photos[]" id="array_of_uploaded_photos" hidden><input type="file" name="productphotos[]" id="productphotos' + newtabindex + '" accept=".png, .jpg, .jpeg" class="ProductPhotoUploader" tabindex="' + newtabindex + '""><label for="productphotos' + newtabindex + '" style="background-image:url(' + doneUrl + ')" class="file-uploaded"><span>' + name + '</span></label></div></div>');
+                        $fileUpload.attr("tabindex", newtabindex);
                     }
-                    $("#xActivityLoader-" + tabindex).html("<ion-icon name=\"arrow-up-circle-outline\"></ion-icon>");
+                    $("#MainxActivityLoader").html("<ion-icon name=\"add-outline\"></ion-icon>");
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
-                    $filelabel.removeClass('file-uploaded');
-                    $filelabelText.text(filelabelDefault);
+                    $("#MainxActivityLoader").html("<ion-icon name=\"add-outline\"></ion-icon>");
                 }
             });
 
         });
     });
 });
+
 ///////////////////////////////////////////////////////////////////////////
 
 $(function () {
@@ -730,8 +731,7 @@ $(function () {
 
 
 $(function () {
-
-    $(document).on('click', '.xDeleteFeature', function (event) {
+    $('body').on('click', '.xDeleteFeature', function (event) {
 
         let featureid = $(this).attr('id');
         $.ajax("/ajax/products/feature/" + featureid + "/remove", {

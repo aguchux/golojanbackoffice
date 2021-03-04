@@ -876,6 +876,20 @@ class Core extends Model
 	}
 
 
+
+	public function ListBrandsToSelect($bid=0)
+	{
+		$html = "<option value=\"\">Select Brand</option>";
+		$ListBrandsToSelect = mysqli_query($this->dbCon, "SELECT * FROM golojan_brands WHERE enabled='1'");
+		while ($brand = mysqli_fetch_object($ListBrandsToSelect)) {
+			$selected = ($bid == $brand->id) ? "selected" : "";
+			$html .= "<option {$selected} value=\"{$brand->id}\">{$brand->name}</option>";
+		}
+		return $html;
+	}
+	
+
+
 	/**
 	 * @param mixed $catid 
 	 * @return object|null 
@@ -2246,9 +2260,9 @@ class Core extends Model
 
 	// Merchants & Products//
 
-	public function MerchantAdd($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $is_used_product, $enable_pos_sales)
+	public function MerchantAdd($accid, $title, $description, $main_category, $sub_category, $category, $bulkprice, $retailprice, $is_used_product, $enable_pos_sales,$product_brand,$product_weight,$suplier_sku,$product_type,$charge_vat)
 	{
-		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,subcategory,category,bulkprice,retailprice,selling,is_used_product,enable_pos_sales) VALUES('$accid','$title','$description','$main_category','$sub_category','$category','$bulkprice','$retailprice','$retailprice','$is_used_product','$enable_pos_sales')");
+		mysqli_query($this->dbCon, "INSERT INTO golojan_products(accid,name,description,maincategory,subcategory,category,bulkprice,retailprice,selling,is_used_product,enable_pos_sales,product_brand,product_weight,suplier_sku,product_type,charge_vat) VALUES('$accid','$title','$description','$main_category','$sub_category','$category','$bulkprice','$retailprice','$retailprice','$is_used_product','$enable_pos_sales','$product_brand','$product_weight','$suplier_sku','$product_type','$charge_vat')");
 		return (int)$this->getLastId();
 	}
 

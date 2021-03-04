@@ -13,7 +13,7 @@ $Route->add('/device/connection', function () {
         $Dinfo['browser'] = $Device->get_browser();
         $Dinfo['device'] = $Device->get_device();
         $Dinfo['ip'] = $Device->get_ip();
-    }else{
+    } else {
         $Dinfo['connected'] = 0;
     }
     $Dinfo = json_encode($Dinfo);
@@ -508,10 +508,9 @@ $Route->add('/ajax/products/feature/{pid}/add', function ($pid) {
     $text_feature_key = $data->text_feature_key;
     $text_feature_value = $data->text_feature_value;
 
-    $added = $Core->AddProductFeature($pid,$accid,$text_feature_key,$text_feature_value);
+    $added = $Core->AddProductFeature($pid, $accid, $text_feature_key, $text_feature_value);
 
     $Template->debug($added);
-
 }, 'POST');
 
 
@@ -523,8 +522,43 @@ $Route->add('/ajax/products/feature/{fid}/remove', function ($fid) {
     $removed = $Core->RemoveProductFeature($fid);
 
     $Template->debug($removed);
-
 }, 'POST');
 
 
 
+
+
+
+
+$Route->add('/ajax/photos/{pid}/massupload', function ($pid) {
+
+    $Template = new Apps\Template("/auth/login");
+
+    $FileDir = "./_store/products/{$pid}/uploads";
+
+    $handle = new \Verot\Upload\Upload($_FILES['imagefile']);
+    if ($handle->uploaded) {
+
+        $handle->file_new_name_body = sha1($_FILES['imagefile']['name'] .  time());
+
+        $handle->dir_auto_create = true;
+        $handle->image_resize    = true;
+        $handle->image_ratio_crop = true;
+        $handle->image_y    =  500;
+        $handle->image_x    =  500;
+
+        $handle->file_overwrite = true;
+        $handle->dir_chmod = 0777;
+        $handle->image_ratio = true;
+
+        $handle->process($FileDir);
+        if ($handle->processed) {
+            $img_url =  $handle->file_dst_pathname;
+            $handle->clean();
+            echo $img_url;
+        } else {
+            echo 'FAILED';
+        }
+        echo 'FAILED';
+    }
+}, 'GET');

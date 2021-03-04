@@ -47,7 +47,17 @@
             // store the instance variable so we can access it in the console e.g. window.iti.getNumber()
             window.iti = iti;
         </script>
-        <script src="<?= $assets ?>js/base.js?var=<?= time() ?>"></script>
+
+        <?php if (isset($editproduct)) : ?>
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('.summernote').summernote();
+                });
+            </script>
+        <?php endif; ?>
+
+        <script src="<?= $assets ?>js/base.js?vers=<?= time() ?>"></script>
 
         </body>
 
